@@ -2,7 +2,8 @@
 
 var _ = require('lodash');
 var Sequelize = require('sequelize');
-var Genre = require('./genre');
+var database = require('./_db');
+var Genre = require('./genre')(database);
 
 module.exports = function (db) {
 
@@ -18,17 +19,14 @@ module.exports = function (db) {
     }, {
         instanceMethods: {
             findSimilar: function () {
-              return this.Model.findAll({
-                where: {
-                  id: {
-                    $ne: this.id
-                  },
-                  tags: {
-                    $overlap: this.instrumentTags
-                  }
-                }
-              });
-          }
+              return Genre.getComposers({
+                      where:{
+                        id:{
+                          $ne: this.id
+                        }
+                      }
+                    });
+              }
         },
     });
 };
