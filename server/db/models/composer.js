@@ -7,7 +7,7 @@ var Genre = require('./genre')(database);
 
 module.exports = function (db) {
 
-    db.define('composer', {
+    db.define('composer', { 
         firstName: {
             type: Sequelize.STRING,
             allowNull: false
@@ -15,6 +15,12 @@ module.exports = function (db) {
         lastName: {
             type: Sequelize.STRING,
             allowNull: false
+        },
+        fullName: {
+            type: Sequelize.VIRTUAL,
+            get: function () {
+              return this.firstName + " " + this.lastName;
+            }
         }
     }, {
         instanceMethods: {
