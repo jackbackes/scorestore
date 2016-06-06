@@ -1,6 +1,15 @@
 'use strict';
 var db = require('./_db');
-module.exports = db;
+var User = require('./models/user')(db);
+var Song = require('./models/song')(db);
+// var Composer = require('./models/composer')(db)
 
-require('./models/user')(db);
+
+// Song.belongsTo(Composer);
+// Song.belongsTo(Genre);
+// Song.belongsToMany(Order, {through: 'song_order'});
+// Review.belongsTo(Song);
+
+
+module.exports = db;
 
