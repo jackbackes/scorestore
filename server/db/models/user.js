@@ -17,7 +17,10 @@ module.exports = function (db) {
           get: function() {
             return this.firstName + ' ' + this.lastName;
           }
-        }
+        },
+        isGuest: {
+          type: Sequelize.BOOLEAN
+        },
         email: {
             type: Sequelize.STRING,
             allowNull: false
