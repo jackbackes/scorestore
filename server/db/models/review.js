@@ -15,6 +15,9 @@ module.exports = function (db) {
         }
       },
       description: {
-        type: Sequelize.TEXT
+        type: Sequelize.TEXT,
+        validate: {
+          len: [5]
+        }
       }
     }

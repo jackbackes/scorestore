@@ -1,4 +1,5 @@
 'use strict';
+
 var db = require('./_db');
 var User = require('./models/user')(db);
 var Song = require('./models/song')(db);
@@ -24,3 +25,4 @@ User.hasMany(Review);
 
 
 module.exports = db;
+
