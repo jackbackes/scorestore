@@ -1,8 +1,10 @@
 var sinon = require('sinon');
-var expect = require('chai').expect;
+var chai = require('chai');
+var expect = chai.expect;
+chai.use(require('chai-things'));
 
 var Sequelize = require('sequelize');
-var dbURI = 'postgres://localhost:5432/testing-fsg';
+var dbURI = 'postgres://localhost:5432/testingfsg';
 var db = new Sequelize(dbURI, {
     logging: false
 });
@@ -149,6 +151,46 @@ describe('User model', function () {
                     expect(sanitizedUser.salt).to.be.undefined;
                 });
             });
+        });
+
+        describe('fullNameVirtual', function () {
+            var createUser = function () {
+                return User.create({ firstName: "Barack", lastName: 'Obama', email: 'obama@gmail.com' });
+            };
+
+            it('returns the full name string', function() {
+                createUser().then(function (user) {
+                    expect(user.fullName).to.equal("Barack Obama");
+                });
+            });
+        });
+
+        describe('email field', function () {
+
+            it('throws an error if email is not provided', function() {
+                var user = User.build({ firstName: "Barack", lastName: 'Obama' })
+                return user.validate()
+                .then(function (err) {
+                    expect(err).to.exist;
+                    expect(err.errors).to.contain.a.thing.with.property('path', 'email');
+                });
+            });
+
+           it('throws and error if email is not unique', function (done) {
+                User.create({email: 'obama@gmail.com'})
+                .then(function () {
+                    User.create({ email:'obama@gmail.com' })
+                    .then(function () {
+                        expect.fail();
+                        done();
+                    })
+                    .catch(function(err) {
+                        expect(err).to.exist;
+                        expect(err.errors).to.contain.a.thing.with.property('path', 'email');
+                        done();
+                    });
+                });
+           });
         });
 
     });

@@ -2,8 +2,7 @@
 
 
 var Sequelize = require('sequelize');
-var database = require('./_db');
-var Genre = require('./genre')(database);
+
 
 module.exports = function (db) {
 
@@ -24,20 +23,21 @@ module.exports = function (db) {
         }
     }, {
         instanceMethods: {
+            // revise to reflect no composer-genre through table
             findSimilar: function () {
-              return this.Model.findAll({
-                include: [{
-                  model: Genre,
-                  through: {
-                    where: {
-                      genreId: this.genreId,
-                      composerId: {
-                        $ne: this.id
-                      }
-                    }
-                  }
-                }]
-            });
+              // return this.Model.findAll({
+              //   include: [{
+              //     model: Genre,
+              //     through: {
+              //       where: {
+              //         genreId: this.genreId,
+              //         composerId: {
+              //           $ne: this.id
+              //         }
+              //       }
+              //     }
+              //   }]
+            // });
         },
     }
   });
