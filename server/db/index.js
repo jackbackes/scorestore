@@ -31,7 +31,3 @@ Review.belongsTo(User);
 
 
 module.exports = db;
-
-
-// const models = require('./models')
-// const User = models.User;
