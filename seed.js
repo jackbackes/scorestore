@@ -24,19 +24,41 @@ const Order = db.model('order');
 const Review = db.model('review');
 const Song = db.model('song');
 const Composer = db.model('composer');
-const Promise = require('sequelize').Promise;
+const Genre = db.model('genre');
+const SongOrder = db.model('song_order');
+// const Promise = require('sequelize').Promise;
+const Promise = require('bluebird');
 
 var seedUsers = function () {
 
     var users = [
         {
+            firstName: 'Omri',
+            lastName: 'Bernstein',
+            isGuest: false,
             email: 'testing@fsa.com',
-            password: 'password'
+            password: 'password',
+            twitter_id: "123",
+            facebook_id: "123",
+            google_id: "123",
+            isAdmin: false
         },
         {
+            firstName: 'Barack',
+            lastName: 'Obama',
+            isGuest: false,
             email: 'obama@gmail.com',
-            password: 'potus'
+            password: 'potus',
+            isAdmin: 'true',
+            twitter_id: "123",
+            facebook_id: "123",
+            google_id: "123",
+            isAdmin: true
+        },{
+            email: "guest@mcguesterson.com",
+            isGuest: true
         }
+
     ];
 
     var creatingUsers = users.map(function (userObj) {
@@ -80,13 +102,13 @@ let seedComposers = function(resolvedSeedSongs){
   }
 
   // set composer for each song.
-  return resolvedSeedSongs.spread( (symphonyNo5) => Promise.all([
+  return Promise.all(resolvedSeedSongs).spread( (symphonyNo5) => Promise.all([
     symphonyNo5.createComposer(composers.beethoven)
   ]))
 }
 
 let seedOrders = function(resolvedSeedUsers){
-  let orders = [testingOrder] = [
+  let orders = [
     {
       songs: [
         { songId: 1, quantity: 10 },
@@ -103,21 +125,22 @@ let seedOrders = function(resolvedSeedUsers){
         zipCode: 75252
       }
     }]
-  return resolvedSeedUsers.spread( (testing, obama) => [
+  let testingOrder = orders[0];
+  return Promise.all(resolvedSeedUsers).spread( (testing, obama) => [
     testing.createOrder( {
-      //add the time of the order
-      time: testingOrder.time
+      Song: testingOrder.songs
     }, {
       include: [
         //include the correct user
         {model: User, where: {id: testingOrder.userId}},
         //include the songs into the order
-        {model: Song, where: {id: [testingOrder.songs[0].songId, testingOrder.songs[1].songId, testingOrder.songs[2].songId]}}
+        Song
       ]
       //add the shipping address
     } ).then(order => order.createAddress( testingOrder.shippingAddress ) )
   ] )
 };
+
 let seedReviews = function(resolvedSeedUsers){
   let reviews = [
     { userId: 1, songId: 1, rating: 5, description: "I loved it!"},
@@ -125,7 +148,7 @@ let seedReviews = function(resolvedSeedUsers){
     { userId: 1, songId: 2, rating: 5, description: "I don't understand the bad review. I loved it!"}
   ]
   let testingReview = reviews[0];
-  return resolvedSeedUsers.spread( (testing, obama ) => [
+  return Promise.all(resolvedSeedUsers).spread( (testing, obama ) => [
     testing.createReview( {
       rating: testingReview.rating,
       description: testingReview.description
@@ -135,7 +158,7 @@ let seedReviews = function(resolvedSeedUsers){
 
 db.sync({ force: true })
     .then(function () {
-        return Promise.all(seedUsers(), seedSongs())
+        return Promise.all([seedUsers(), seedSongs()])
                       .spread( (resolvedSeedUsers, resolvedSeedSongs) => Promise.all(
                         seedComposers(resolvedSeedSongs),
                         seedOrders(resolvedSeedUsers),
