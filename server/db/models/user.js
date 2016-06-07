@@ -5,7 +5,7 @@ var Sequelize = require('sequelize');
 
 module.exports = function (db) {
 
-    db.define('user', {
+    return db.define('user', {
         firstName: { //add full name virtual
           type: Sequelize.STRING
         },

@@ -6,7 +6,7 @@ var Genre = require('./genre');
 
 module.exports = function (db) {
 
-    db.define('composer', {
+    return db.define('composer', {
         firstName: {
             type: Sequelize.STRING,
             allowNull: false

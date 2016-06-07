@@ -5,7 +5,7 @@ var Sequelize = require('sequelize');
 
 module.exports = function (db) {
 
-    db.define('order', {
+    return db.define('order', {
       shipped: {
         type: Sequelize.BOOLEAN,
         defaultValue: false
