@@ -1,12 +1,13 @@
 'use strict';
 
-var _ = require('lodash');
+
 var Sequelize = require('sequelize');
-var Genre = require('./genre');
+var database = require('./_db');
+var Genre = require('./genre')(database);
 
 module.exports = function (db) {
 
-    db.define('composer', {
+    db.define('composer', { 
         firstName: {
             type: Sequelize.STRING,
             allowNull: false
@@ -14,21 +15,30 @@ module.exports = function (db) {
         lastName: {
             type: Sequelize.STRING,
             allowNull: false
+        },
+        fullName: {
+            type: Sequelize.VIRTUAL,
+            get: function () {
+              return this.firstName + " " + this.lastName;
+            }
         }
     }, {
         instanceMethods: {
             findSimilar: function () {
               return this.Model.findAll({
-                where: {
-                  id: {
-                    $ne: this.id
-                  },
-                  tags: {
-                    $overlap: this.instrumentTags
+                include: [{
+                  model: Genre,
+                  through: {
+                    where: {
+                      genreId: this.genreId,
+                      composerId: {
+                        $ne: this.id
+                      }
+                    }
                   }
-                }
-              });
-          }
+                }]
+            });
         },
-    });
+    }
+  });
 };

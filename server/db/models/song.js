@@ -31,7 +31,8 @@ module.exports = function (db) {
         },
         imageURL: {
             type: Sequelize.STRING,
-            allowNull: false
+            allowNull: false,
+            defaultValue: './images/default-image.jpg'
         },
         instrumentTags: {
             type: Sequelize.ARRAY(Sequelize.STRING),
@@ -46,7 +47,7 @@ module.exports = function (db) {
                 });
               }
 
-              this.setDataValue('tags', tags);
+              this.setDataValue('instrumentTags', tags);
 
             }
         },
@@ -64,7 +65,7 @@ module.exports = function (db) {
                   id: {
                     $ne: this.id
                   },
-                  tags: {
+                  instrumentTags: {
                     $overlap: this.instrumentTags
                   }
                 }
