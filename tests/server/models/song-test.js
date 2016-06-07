@@ -4,6 +4,7 @@ var expect = chai.expect;
 chai.use(require('chai-things'));
 
 var Sequelize = require('sequelize');
+var Promise = require('sequelize').Promise;
 var dbURI = 'postgres://localhost:5432/testingfsg';
 var db = new Sequelize(dbURI, {
     logging: false
@@ -129,7 +130,6 @@ describe('Associations', function () {
                 .then(function () {
                     throw Error('Promise should have rejected');
                   }, function (err) {
-                    console.log('here', err)
                     expect(err).to.exist;
                     expect(err.message).to.contain('invalid input syntax');
                   });
@@ -148,18 +148,65 @@ describe('Associations', function () {
 
         });
 
+        describe('setInstrumentTags setter', function () {
 
+            it('adds array of tags to song', function () {
+                createSong()
+                .then(function (song) {
+                    return song.set('instrumentTags', ['piano', 'french horn', 'guitar', 'saxophone']).save()
+                        .then(function () {
+                            expect(song.instrumentTags).to.have.lengthOf(4);
+                            expect(song.instrumentTags).to.include('french horn');
+
+                        });
+                });
+            });
+
+            it('adds comma-delimited string of tags to song', function () {
+                createSong()
+                .then(function (song) {
+                    return song.set('instrumentTags', 'piano, french horn, guitar, saxophone').save()
+                        .then(function () {
+                            expect(song.instrumentTags).to.have.lengthOf(4);
+                            expect(song.instrumentTags).to.include('saxophone');
+                        });
+                });
+            });
+
+        });
+
+        describe('instance methods', function () {
+
+            it('findSimilar finds similar songs', function () {
+                Promise.all([createSong(), createSong(), createSong(), createSong()])
+                    .spread(function (song1, song2, song3, song4) {
+                        return Promise.all([
+                            song1.set('instrumentTags', ['piano', 'guitar', 'saxophone']).save(),
+                            song2.set('instrumentTags', 'french horn').save(),
+                            song3.set('instrumentTags', ['piano', 'french horn', 'guitar', 'saxophone']).save(),
+                            song4.set('instrumentTags', ['piano', 'french horn', 'guitar', 'saxophone']).save()
+                            ])
+                        })
+                    .spread(function(song1, song2, song3, song4) {
+                        song2.findSimilar()
+                        .then(function (similarSongs) {
+                            expect(similarSongs).to.have.lengthOf(2);
+                        });
+                    });
+            });
+
+        });
 
         describe('Order-Song Association', function () {
 
-            beforeEach('Create Order and Song', function () { 
-                createSong = function () {
-                    return Song.create({ title: 'song1', description: 'the first song', fileName: '/song1', price: 5.00, inventoryQuantity: 5});
-                };
-                createOrder = function () {
-                    return Order.create();
-                };
-            });
+            // beforeEach('Create Order and Song', function () { 
+            //     createSong = function () {
+            //         return Song.create({ title: 'song1', description: 'the first song', fileName: '/song1', price: 5.00, inventoryQuantity: 5});
+            //     };
+            //     createOrder = function () {
+            //         return Order.create();
+            //     };
+            // });
 
             it('creates and orderId and SongId on order-song table when an order is made', function () { 
                 var songId, orderId;
