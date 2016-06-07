@@ -10,6 +10,9 @@ module.exports = function (db) {
             type: Sequelize.STRING,
             allowNull: false
         },
+        subtitle: {
+          type: Sequelize.STRING
+        },
         description: {
             type: Sequelize.TEXT,
             allowNull: false
@@ -54,7 +57,7 @@ module.exports = function (db) {
             type: Sequelize.STRING
         },
         publicDomainStatus: {
-            type: Sequelize.ENUM('public', 'private') //placeholder for license information to include later 
+            type: Sequelize.ENUM('public', 'private') //placeholder for license information to include later
         }
     }, {
         instanceMethods: {

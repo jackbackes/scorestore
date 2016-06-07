@@ -12,10 +12,13 @@ const OrderSong = require('./models/orderSong')(db)
 Song.belongsTo(Composer);
 Song.belongsTo(Genre);
 Order.hasMany(Song, {through: 'song_order'});
+Order.hasOne(Address);
+Order.belongsTo(User);
 Review.belongsTo(Song);
 
 User.hasMany(Address);
 User.hasMany(Review);
+User.hasMany(Order);
 Review.belongsTo(User);
 
 
