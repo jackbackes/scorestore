@@ -70,7 +70,7 @@ let seedSongs = function(){
   return Promise.all(creatingSongs);
 };
 
-let seedComposers = function(seedSongs){
+let seedComposers = function(resolvedSeedSongs){
   //populate this object with composer data. set an object title so that it can be used in the "setComposer" command below.
   let composers = {
     beethoven: {
@@ -80,15 +80,14 @@ let seedComposers = function(seedSongs){
   }
 
   // set composer for each song.
-  return seedSongs.spread( (symphonyNo5) => Promise.all([
-    symphonyNo5.setComposer(composers.beethoven)
+  return resolvedSeedSongs.spread( (symphonyNo5) => Promise.all([
+    symphonyNo5.createComposer(composers.beethoven)
   ]))
 }
 
-let seedOrders = function(){
+let seedOrders = function(resolvedSeedUsers){
   let orders = [testingOrder] = [
     {
-      time: Date.now(),
       songs: [
         { songId: 1, quantity: 10 },
         { songId: 2, quantity: 1 },
@@ -104,7 +103,7 @@ let seedOrders = function(){
         zipCode: 75252
       }
     }]
-  return seedUsers.spread( (testing, obama) => [
+  return resolvedSeedUsers.spread( (testing, obama) => [
     testing.createOrder( {
       //add the time of the order
       time: testingOrder.time
@@ -116,17 +115,17 @@ let seedOrders = function(){
         {model: Song, where: {id: [testingOrder.songs[0].songId, testingOrder.songs[1].songId, testingOrder.songs[2].songId]}}
       ]
       //add the shipping address
-    } ).createAddress( testingOrder.shippingAddress )
+    } ).then(order => order.createAddress( testingOrder.shippingAddress ) )
   ] )
 };
-let seedReviews = function(){
+let seedReviews = function(resolvedSeedUsers){
   let reviews = [
     { userId: 1, songId: 1, rating: 5, description: "I loved it!"},
     { userId: 2, songId: 2, rating: 0, description: "I hated it!"},
     { userId: 1, songId: 2, rating: 5, description: "I don't understand the bad review. I loved it!"}
   ]
   let testingReview = reviews[0];
-  return seedUsers.spread( (testing, obama ) => [
+  return resolvedSeedUsers.spread( (testing, obama ) => [
     testing.createReview( {
       rating: testingReview.rating,
       description: testingReview.description
@@ -136,7 +135,12 @@ let seedReviews = function(){
 
 db.sync({ force: true })
     .then(function () {
-        return seedUsers();
+        return Promise.all(seedUsers(), seedSongs())
+                      .spread( (resolvedSeedUsers, resolvedSeedSongs) => Promise.all(
+                        seedComposers(resolvedSeedSongs),
+                        seedOrders(resolvedSeedUsers),
+                        seedReviews(resolvedSeedUsers)
+                      ));
     })
     .then(function () {
         console.log(chalk.green('Seed successful!'));
