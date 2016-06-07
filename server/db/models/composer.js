@@ -1,6 +1,6 @@
 'use strict';
 
-var _ = require('lodash');
+
 var Sequelize = require('sequelize');
 var database = require('./_db');
 var Genre = require('./genre')(database);
@@ -25,14 +25,20 @@ module.exports = function (db) {
     }, {
         instanceMethods: {
             findSimilar: function () {
-              return Genre.getComposers({
-                      where:{
-                        id:{
-                          $ne: this.id
-                        }
+              return this.Model.findAll({
+                include: [{
+                  model: Genre,
+                  through: {
+                    where: {
+                      genreId: this.genreId,
+                      composerId: {
+                        $ne: this.id
                       }
-                    });
-              }
+                    }
+                  }
+                }]
+            });
         },
-    });
+    }
+  });
 };

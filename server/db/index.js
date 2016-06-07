@@ -11,8 +11,10 @@ var Review = require('./models/review')(db);
 Song.belongsTo(Composer);
 Song.belongsTo(Genre);
 Song.belongsToMany(Order, {through: 'song_order'});
+Order.belongsToMany(Song, {through: 'song_order'});
 
 Composer.belongsToMany(Genre, {through: 'composer_genre'});
+Genre.belongsToMany(Composer, {through: 'composer_genre'});
 
 Review.belongsTo(Song);
 Review.belongsTo(User);
