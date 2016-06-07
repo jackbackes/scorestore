@@ -105,13 +105,17 @@ let seedOrders = function(){
         zipCode: 75252
       }
     }]
-  orders.map( orderObj => {
-    let order = Order.findOrCreate({
-      where: {
-        time: orderObj.time,
-      }
-    })
-  } )
+  return seedUsers.spread( (testing, obama) => [
+    testing.createOrder( {
+      time: orders[0].time
+    }, {
+      include: [
+        {model: User},
+        {model: Address, required: true},
+        {model: Song}
+      ]
+    } );
+  ] )
 };
 let seedReviews = function(){
   let reviews = [
@@ -119,6 +123,12 @@ let seedReviews = function(){
     { userId: 2, songId: 2, rating: 0, description: "I hated it!"},
     { userId: 1, songId: 2, rating: 5, description: "I don't understand the bad review. I loved it!"}
   ]
+  return seedUsers.spread( (testing, obama ) => [
+    testing.createReview( {
+      reviews[0].rating,
+      reviews[0].description
+    } )
+  ])
 };
 
 db.sync({ force: true })
