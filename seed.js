@@ -88,7 +88,7 @@ let seedComposers = function(seedSongs){
 
 let seedOrders = function(){
   let orders = [
-    {
+    testingOrder: {
       time: Date.now(),
       songs: [
         { songId: 1, quantity: 10 },
@@ -107,26 +107,29 @@ let seedOrders = function(){
     }]
   return seedUsers.spread( (testing, obama) => [
     testing.createOrder( {
-      time: orders[0].time
+      //add the time of the order
+      time: testingOrder.time
     }, {
       include: [
-        {model: User},
-        {model: Address, required: true},
-        {model: Song}
+        //include the correct user
+        {model: User, where: {id: testingOrder.userId}},
+        //include the songs into the order
+        {model: Song, where: {id: [testingOrder.songs[0].songId, testingOrder.songs[1].songId, testingOrder.songs[2].songId]}}
       ]
-    } );
+      //add the shipping address
+    } ).createAddress( testingOrder.shippingAddress );
   ] )
 };
 let seedReviews = function(){
   let reviews = [
-    { userId: 1, songId: 1, rating: 5, description: "I loved it!"},
+    testingReview: { userId: 1, songId: 1, rating: 5, description: "I loved it!"},
     { userId: 2, songId: 2, rating: 0, description: "I hated it!"},
     { userId: 1, songId: 2, rating: 5, description: "I don't understand the bad review. I loved it!"}
   ]
   return seedUsers.spread( (testing, obama ) => [
     testing.createReview( {
-      reviews[0].rating,
-      reviews[0].description
+      testingReview.rating,
+      testingReview.description
     } )
   ])
 };
