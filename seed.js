@@ -48,7 +48,7 @@ var seedUsers = function () {
 };
 
 let seedSongs = function(){
-  let songs = {
+  let songs = [
     {
       title: "Symphony No. 5 in C Minor",
       subtitle: "First Movement",
@@ -62,7 +62,7 @@ let seedSongs = function(){
       sourceURL: "???",
       publicDomainStatus: "public"
     }
-  }
+  ]
   let creatingSongs = songs.map(function (songObj) {
       return Song.create(songObj);
   });
@@ -83,12 +83,11 @@ let seedComposers = function(seedSongs){
   return seedSongs.spread( (symphonyNo5) => Promise.all([
     symphonyNo5.setComposer(composers.beethoven)
   ]))
-  })
 }
 
 let seedOrders = function(){
-  let orders = [
-    testingOrder: {
+  let orders = [testingOrder] = [
+    {
       time: Date.now(),
       songs: [
         { songId: 1, quantity: 10 },
@@ -97,11 +96,11 @@ let seedOrders = function(){
       ],
       userId: 1,
       shippingAddress: {
-        firstName: "Jimmy"
-        lastName: "Neutron"
-        address: "123 Mars Avenue"
-        city: "MoonBase"
-        state: "TX"
+        firstName: "Jimmy",
+        lastName: "Neutron",
+        address: "123 Mars Avenue",
+        city: "MoonBase",
+        state: "TX",
         zipCode: 75252
       }
     }]
@@ -117,19 +116,20 @@ let seedOrders = function(){
         {model: Song, where: {id: [testingOrder.songs[0].songId, testingOrder.songs[1].songId, testingOrder.songs[2].songId]}}
       ]
       //add the shipping address
-    } ).createAddress( testingOrder.shippingAddress );
+    } ).createAddress( testingOrder.shippingAddress )
   ] )
 };
 let seedReviews = function(){
   let reviews = [
-    testingReview: { userId: 1, songId: 1, rating: 5, description: "I loved it!"},
+    { userId: 1, songId: 1, rating: 5, description: "I loved it!"},
     { userId: 2, songId: 2, rating: 0, description: "I hated it!"},
     { userId: 1, songId: 2, rating: 5, description: "I don't understand the bad review. I loved it!"}
   ]
+  let testingReview = reviews[0];
   return seedUsers.spread( (testing, obama ) => [
     testing.createReview( {
-      testingReview.rating,
-      testingReview.description
+      rating: testingReview.rating,
+      description: testingReview.description
     } )
   ])
 };

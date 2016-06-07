@@ -17,4 +17,5 @@ module.exports = function (db) {
       description: {
         type: Sequelize.TEXT
       }
-    }
+    })
+  }
