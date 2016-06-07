@@ -1,6 +1,29 @@
 'use strict';
-var db = require('./_db');
+const db = require('./_db');
+const User = require('./models/user')(db);
+const Song = require('./models/song')(db);
+const Address = require('./models/address')(db);
+const Review = require('./models/review')(db);
+const Composer = require('./models/composer')(db)
+const OrderSong = require('./models/orderSong')(db)
+
+
+
+Song.belongsTo(Composer);
+Song.belongsTo(Genre);
+Order.hasMany(Song, {through: 'song_order'});
+Order.hasOne(Address);
+Order.belongsTo(User);
+Review.belongsTo(Song);
+
+User.hasMany(Address);
+User.hasMany(Review);
+User.hasMany(Order);
+Review.belongsTo(User);
+
+
 module.exports = db;
 
-require('./models/user')(db);
 
+// const models = require('./models')
+// const User = models.User;
