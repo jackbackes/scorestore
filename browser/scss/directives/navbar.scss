@@ -22,6 +22,23 @@ navbar {
     font-size: 16px;
   }
 
+  #search-bar {
+    margin-top: 10px;
+    margin-left: 50px;
+    width: 500px;
+    float: left;
+  }
+
+  // .right-inner-addon {
+  //   position: relative;
+  // }
+
+  // .right-inner-addon i {
+  //   position: absolute;
+  //   right: 0px;
+  //   padding: 10px 12px;
+  // }
+
   .nav > li > a {
     cursor: pointer;
     transition: color 0.2s;
@@ -41,6 +58,7 @@ navbar {
     float: right;
     border: 1px solid black;
     margin-top: 10px;
+    margin-left: 20px;
     background: none;
     outline: none !important;
   }

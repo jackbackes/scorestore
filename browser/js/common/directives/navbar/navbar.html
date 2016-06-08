@@ -4,11 +4,24 @@
             <fullstack-logo></fullstack-logo>
         </div>
         <ul class="nav navbar-nav">
-            <li ng-repeat="item in items" ng-show="!item.auth || isLoggedIn()">
-                <a ui-sref-active="active" ui-sref="{{ item.state }}">{{ item.label }}</a>
+            <li><a ui-sref-active="active" ui-sref="home">{{ home.label }}</a></li>
+            <li>
+                <div class="input-group" id="search-bar">
+                  <input type="text" class="form-control" placeholder="Search for...">
+                  <span class="input-group-btn">
+                    <button class="btn btn-default" type="button">Search</button>
+                  </span>
+                </div><!-- /input-group -->
             </li>
         </ul>
-        <button ng-show="!user" ui-sref="login" class="btn login-button">Login</button>
+        <ul>
+            <div ng-show="!isLoggedIn()" ng-repeat="button in loggedOutButtons">
+                <button ui-sref="{{button.state}}" class="btn login-button">{{button.label}}</button>
+            <div>
+            <div ng-show="isLoggedIn()" ng-repeat="button in loggedInButtons">
+                <button ui-sref="{{button.state}}" class="btn login-button">{{button.label}}</button>
+            <div>
+        </ul>
         <div ng-show="user" class="welcome">
             <span>Welcome, {{ user.email }}!</span>
             <a ng-click="logout()">Logout</a>
