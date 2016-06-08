@@ -5,7 +5,6 @@ var Sequelize = require('sequelize');
 var database = require('../_db');
 var Song = require('./song')(database);
 
-
 module.exports = function (db) {
 
     db.define('composer', { 
@@ -26,11 +25,12 @@ module.exports = function (db) {
     }, {
         instanceMethods: {
             findSimilar: function () {
+              var that = this;
               return Song.findAll({
                 where: {
                   composerId: this.id
-                },
-                group: ['genreId']
+                }
+                // group: ['genreId']
               })
               .then(function(songs) {
                 return Promise.all(songs.map(function(a){
@@ -38,13 +38,27 @@ module.exports = function (db) {
                 }));
               })
               .then(function(genres) {
-                return this.Model.findAll({
+                return Song.findAll({
                   where: {
                     genreId: {
                       $in: genres
                     },
                     composerId: {
-                      $ne: this.id
+                      $ne: that.id
+                    }
+                  }
+                });
+              })
+              .then(function (songs) {
+                return Promise.all(songs.map(function(a){
+                  return a.composerId;
+                }));
+              })
+              .then(function(composers) {
+                return that.Model.findAll({
+                  where: {
+                    id: {
+                      $in: composers
                     }
                   }
                 });
@@ -52,4 +66,5 @@ module.exports = function (db) {
             }
         },
     });
+    return db.model('composer');
 };

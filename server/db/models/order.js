@@ -22,5 +22,6 @@ module.exports = function (db) {
       total: {
         type: Sequelize.DECIMAL
       }
-    })
-  }
+    });
+    return db.model('order');
+  };

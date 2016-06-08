@@ -11,6 +11,15 @@ var Order = require('./models/order')(db);
 var OrderSong = require('./models/orderSong')(db);
 var Photo = require('./models/photo')(db);
 
+Song = db.model('song');
+User = db.model('user');
+Composer = db.model('composer');
+Genre = db.model('genre');
+Address = db.model('address');
+Review = db.model('review');
+Order = db.model('order');
+OrderSong = db.model('song_order');
+Photo = db.model('photo');
 
 Song.belongsTo(Composer);
 Song.belongsTo(Genre);

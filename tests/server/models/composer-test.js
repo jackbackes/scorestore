@@ -2,48 +2,51 @@ var sinon = require('sinon');
 var chai = require('chai');
 var expect = chai.expect;
 chai.use(require('chai-things'));
+process.env.NODE_ENV = 'testing';
 
 var Sequelize = require('sequelize');
 var Promise = require('sequelize').Promise;
-var dbURI = 'postgres://localhost:5432/testingfsg';
-var db = new Sequelize(dbURI, {
-    logging: false
-});
+var db = require('../../../server/db');
+// var dbURI = 'postgres://localhost:5432/testingfsg';
+// var db = new Sequelize(dbURI, {
+//     logging: false
+// });
 
-require('../../../server/db/models/song')(db);
-// require('../../../server/db/models/order')(db);
-// require('../../../server/db/models/orderSong')(db);
-require('../../../server/db/models/genre')(db);
-// // require('../../../server/db/models/review')(db);
-require('../../../server/db/models/composer')(db);
-// require('../../../server/db/models/address')(db);
-// require('../../../server/db/models/photo')(db);
-// require('../../../server/db/models/user')(db);
+// require('../../../server/db/models/song')(db);
+// // require('../../../server/db/models/order')(db);
+// // require('../../../server/db/models/orderSong')(db);
+// require('../../../server/db/models/genre')(db);
+// // // require('../../../server/db/models/review')(db);
+// require('../../../server/db/models/composer')(db);
+// // require('../../../server/db/models/address')(db);
+// // require('../../../server/db/models/photo')(db);
+// // require('../../../server/db/models/user')(db);
 
 var Song = db.model('song');
-// var Order = db.model('order');
-// var orderSong = db.model('song_order');
+console.log('%%%%%%%%%%%%%%%%%%', Song.associations);
+// // var Order = db.model('order');
+// // var orderSong = db.model('song_order');
 var Genre = db.model('genre');
-// var Review = db.model('review');
+// // var Review = db.model('review');
 var Composer = db.model('composer');
-// var Address = db.model('address');
-// var Photo = db.model('photo');
-// var User = db.model('user');
+// // var Address = db.model('address');
+// // var Photo = db.model('photo');
+// // var User = db.model('user');
 
-Song.belongsTo(Composer);
-Song.belongsTo(Genre);
-// Song.belongsToMany(Order, {through: 'song_order'});
-// Order.belongsToMany(Song, {through: 'song_order'});
+// Song.belongsTo(Composer);
+// Song.belongsTo(Genre);
+// // Song.belongsToMany(Order, {through: 'song_order'});
+// // Order.belongsToMany(Song, {through: 'song_order'});
 
 
-// Review.belongsTo(Song);
-// Review.belongsTo(User);
+// // Review.belongsTo(Song);
+// // Review.belongsTo(User);
 
-// User.hasMany(Address);
-// User.hasMany(Review);
+// // User.hasMany(Address);
+// // User.hasMany(Review);
 
-// Song.belongsTo(Photo);
-// User.belongsTo(Photo);
+// // Song.belongsTo(Photo);
+// // User.belongsTo(Photo);
 
 describe('Composer Model', function () {
 
@@ -57,24 +60,24 @@ describe('Composer Model', function () {
     // createPhoto;
 
     beforeEach('Sync DB', function () {
-        // createGenre = function (genre) {
-        //     return Genre.create({genreName: genre});
-        // };
-        // createAddress = function () {
-        //     return Address.create({ firstName: 'John', lastName: 'Smith', address: '1 Main Street', city: 'New York', State: 'NY', zipCode: '10001'});
-        // };
-        // createComposer = function () {
-        //     return Composer.create({ firstName: 'Jim', lastName: 'Jones'});
-        // };
-        // createReview = function () {
-        //     return Review.create({rating: 5, description: 'Great song'});
-        // };
-        // createUser = function () {
-        //     return User.create({ firstName: "Barack", lastName: 'Obama', email: 'obama@gmail.com'})
-        // };
-        // createPhoto = function () {
-        //     return Photo.create({ isLocal: true});
-        // };
+    //     // createGenre = function (genre) {
+    //     //     return Genre.create({genreName: genre});
+    //     // };
+    //     // createAddress = function () {
+    //     //     return Address.create({ firstName: 'John', lastName: 'Smith', address: '1 Main Street', city: 'New York', State: 'NY', zipCode: '10001'});
+    //     // };
+    //     // createComposer = function () {
+    //     //     return Composer.create({ firstName: 'Jim', lastName: 'Jones'});
+    //     // };
+    //     // createReview = function () {
+    //     //     return Review.create({rating: 5, description: 'Great song'});
+    //     // };
+    //     // createUser = function () {
+    //     //     return User.create({ firstName: "Barack", lastName: 'Obama', email: 'obama@gmail.com'})
+    //     // };
+    //     // createPhoto = function () {
+    //     //     return Photo.create({ isLocal: true});
+    //     // };
        return db.sync({ force: true });
     });
 
@@ -104,11 +107,13 @@ describe('Composer Model', function () {
         describe('fullNameVirtual', function () {
             
 
-            it('returns the full name string', function() {
+            it('returns the full name string', function(done) {
                 Composer.create({ firstName: 'Jim', lastName: 'Jones'})
                 .then(function (composer) {
                     expect(composer.fullName).to.equal("Jim Jones");
-                });
+                    done();
+                })
+                .catch(done);
             });
         });
 
@@ -157,7 +162,7 @@ describe('Composer Model', function () {
                 });
             });
 
-                it('finds similar composers based on genre', function () {
+                it('finds similar composers based on genre', function (done) {
                     Promise.all([
                         song1.setGenre(genre1),
                         song2.setGenre(genre1),
@@ -173,12 +178,15 @@ describe('Composer Model', function () {
                         ]);
                     })
                     .spread(function() {
-                        composer1.findSimilar()
+                        return composer1.findSimilar()
                         .then(function(similarComposers) {
-                            console.log('Here', similarComposers);
                             expect(similarComposers[0].id).to.equal(composer2.id);
                             expect(similarComposers).to.have.lengthOf(1);
+                            done();
                         });
+                    })
+                    .catch(function (err) {
+                        done(err);
                     });
                 });
 

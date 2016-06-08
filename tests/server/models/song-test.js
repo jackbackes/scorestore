@@ -14,13 +14,16 @@ require('../../../server/db/models/song')(db);
 require('../../../server/db/models/order')(db);
 require('../../../server/db/models/orderSong')(db);
 require('../../../server/db/models/genre')(db);
+require('../../../server/db/models/composer')(db);
 
 var Song = db.model('song');
 var Order = db.model('order');
 var orderSong = db.model('song_order');
 var Genre = db.model('genre');
+var Composer = db.model('composer');
 
 Song.belongsTo(Genre);
+Song.belongsTo(Composer);
 Song.belongsToMany(Order, {through: 'song_order'});
 Order.belongsToMany(Song, {through: 'song_order'});
 
@@ -106,13 +109,14 @@ describe('Song Model', function () {
                 };
             });
 
-            it('adds array of tags to song', function () {
+            it('adds array of tags to song', function (done) {
                 createSong()
                 .then(function (song) {
                     return song.set('instrumentTags', ['piano', 'french horn', 'guitar', 'saxophone']).save()
                         .then(function () {
                             expect(song.instrumentTags).to.have.lengthOf(4);
                             expect(song.instrumentTags).to.include('french horn');
+                            done();
 
                         });
                 });
@@ -150,7 +154,7 @@ describe('Song Model', function () {
 
             })
 
-            it('findSimilarByInstrument finds similar songs based on instruments', function () {
+            it('findSimilarByInstrument finds similar songs based on instruments', function (done) {
                 Promise.all([createSong(), createSong(), createSong(), createSong()])
                     .spread(function (song1, song2, song3, song4) {
                         return Promise.all([
@@ -164,12 +168,13 @@ describe('Song Model', function () {
                         song2.findSimilarByInstruments()
                         .then(function (similarSongs) {
                             expect(similarSongs).to.have.lengthOf(2);
+                            done();
                         });
                     });
             });
 
 
-            it('findSimilarByGenre finds similar songs based on genres', function () {
+            it('findSimilarByGenre finds similar songs based on genres', function (done) {
                 Promise.all([createSong(), createSong(), createSong(), createSong()])
                     .spread(function (song1, song2, song3, song4) {
                         return Promise.all([
@@ -184,6 +189,7 @@ describe('Song Model', function () {
                         .then(function(similarSongs) {
                             expect(similarSongs[0].id).to.equal(song4.id)
                             expect(similarSongs).to.have.lengthOf(1);
+                            done();
                         });
                     });
             });
@@ -201,7 +207,7 @@ describe('Song Model', function () {
                 };
             });
 
-            it('creates and orderId and SongId on order-song table when an order is made', function () { 
+            it('creates and orderId and SongId on order-song table when an order is made', function (done) { 
                 var songId, orderId;
                 createOrder()
                 .then(function(order) {
@@ -223,6 +229,7 @@ describe('Song Model', function () {
                     expect(orderSong.orderId).to.equal(orderId);
                     expect(orderSong.songId).to.equal(songId);
                     expect(orderSong.quantity).to.equal(2);
+                    done();
                 });
             });
         });
