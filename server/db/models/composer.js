@@ -2,6 +2,8 @@
 
 
 var Sequelize = require('sequelize');
+var database = require('../_db');
+var Song = require('./song')(database);
 
 
 module.exports = function (db) {
@@ -23,22 +25,31 @@ module.exports = function (db) {
         }
     }, {
         instanceMethods: {
-            // revise to reflect no composer-genre through table
             findSimilar: function () {
-              // return this.Model.findAll({
-              //   include: [{
-              //     model: Genre,
-              //     through: {
-              //       where: {
-              //         genreId: this.genreId,
-              //         composerId: {
-              //           $ne: this.id
-              //         }
-              //       }
-              //     }
-              //   }]
-            // });
+              return Song.findAll({
+                where: {
+                  composerId: this.id
+                },
+                group: ['genreId']
+              })
+              .then(function(songs) {
+                return Promise.all(songs.map(function(a){
+                  return a.genreId;
+                }));
+              })
+              .then(function(genres) {
+                return this.Model.findAll({
+                  where: {
+                    genreId: {
+                      $in: genres
+                    },
+                    composerId: {
+                      $ne: this.id
+                    }
+                  }
+                });
+              });    
+            }
         },
-    }
-  });
+    });
 };

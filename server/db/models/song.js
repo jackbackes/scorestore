@@ -54,29 +54,47 @@ module.exports = function (db) {
         }
     }, {
         instanceMethods: {
-            findSimilar: function () {
-              return this.Model.findAll({
-                where: {
-                  id: {
-                    $ne: this.id
-                  },
-                  instrumentTags: {
-                    $overlap: this.instrumentTags
-                  }
+          findSimilarByInstruments: function () {
+            return this.Model.findAll({
+              where: {
+                id: {
+                  $ne: this.id
+                },
+                instrumentTags: {
+                  $overlap: this.instrumentTags
                 }
-              });
+              }
+            });
+          },
+          findSimilarByGenre: function () {
+            return this.Model.findAll({
+              where: {
+                id: {
+                  $ne: this.id
+                },
+                genreId: this.genreId
+              }
+            });
           }
         },
         classMethods: {
-            findByTag: function (tag) {
-              return this.findAll({
-                where: {
-                  instrumentTags: {
-                    $contains: [tag]
-                  }
+          findByInstrumentTag: function (tag) {
+            return this.findAll({
+              where: {
+                instrumentTags: {
+                  $contains: [tag]
                 }
-              });
-            }
+              }
+            });
+          },
+          findByGenre: function (genre) {
+            return this.findAll({
+              include: [Genre],
+              where: {
+                genreName: genre
+              }
+            });
+          }
         },
     });
 };

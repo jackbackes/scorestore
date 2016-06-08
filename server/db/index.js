@@ -26,5 +26,7 @@ User.hasMany(Review);
 Song.belongsTo(Photo);
 User.belongsTo(Photo);
 
+Order.belongsTo(Address); // are we connecting the address to the order, user or both?
+
 module.exports = db;
 
