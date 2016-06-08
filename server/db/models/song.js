@@ -5,7 +5,7 @@ var Sequelize = require('sequelize');
 
 module.exports = function (db) {
 
-     db.define('songs', {
+     return db.define('song', {
         title: {
             type: Sequelize.STRING,
             allowNull: false
@@ -55,7 +55,7 @@ module.exports = function (db) {
             type: Sequelize.STRING
         },
         publicDomainStatus: {
-            type: Sequelize.ENUM('public', 'private') //placeholder for license information to include later 
+            type: Sequelize.ENUM('public', 'private') //placeholder for license information to include later
         }
     }, {
         instanceMethods: {

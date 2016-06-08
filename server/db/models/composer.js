@@ -2,12 +2,11 @@
 
 
 var Sequelize = require('sequelize');
-var database = require('./_db');
-var Genre = require('./genre')(database);
+// var Genre = require('./genre')(database);
 
 module.exports = function (db) {
 
-    db.define('composer', { 
+    db.define('composer', {
         firstName: {
             type: Sequelize.STRING,
             allowNull: false
@@ -27,7 +26,7 @@ module.exports = function (db) {
             findSimilar: function () {
               return this.Model.findAll({
                 include: [{
-                  model: Genre,
+                  model: db.model('genre'),
                   through: {
                     where: {
                       genreId: this.genreId,

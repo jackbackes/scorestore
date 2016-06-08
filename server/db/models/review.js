@@ -20,4 +20,5 @@ module.exports = function (db) {
           len: [5]
         }
       }
-    }
+    })
+  }
