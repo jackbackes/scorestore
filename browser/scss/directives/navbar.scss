@@ -1,9 +1,13 @@
 navbar {
 
+
   display: block;
-  background: white;
+  background-color: white;
   border-bottom: 1px solid black;
   box-shadow: 1px 1px 14px -3px black;
+  height: 100px;
+  width: 100%;
+  position: fixed;
 
   .container {
     width: 91%;
@@ -28,16 +32,6 @@ navbar {
     width: 500px;
     float: left;
   }
-
-  // .right-inner-addon {
-  //   position: relative;
-  // }
-
-  // .right-inner-addon i {
-  //   position: absolute;
-  //   right: 0px;
-  //   padding: 10px 12px;
-  // }
 
   .nav > li > a {
     cursor: pointer;
