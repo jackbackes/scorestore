@@ -86,7 +86,7 @@ describe( '/api/v1', function () {
                                        response.should.have.deep.property( 'fullName', "Guest McGuesterson" );
                                        response.should.not.have.deep.property('isGuest');
                                        done();
-                                     }
+                                     })
         let adminRequest = adminAgent.post('/api/v1/user').send( manualUser ).expect(201).end( (err, response) => {
           if(err) return done(err);
           response.body.should.be.an( 'object' );
@@ -99,7 +99,6 @@ describe( '/api/v1', function () {
           if(err) return done(err);
           response.body.should.not.have.any.keys('firstName','lastName','fullName','password');
           done();
-        )
       } )
     } )
     describe( '/:userId', function () {
@@ -534,4 +533,5 @@ describe( '/api/v1', function () {
       } )
     } )
   } )
+} )
 } )
