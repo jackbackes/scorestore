@@ -28,10 +28,11 @@ require( '../../../server/db/models/genre' )( db );
 require( '../../../server/db/models/address' )( db );
 require( '../../../server/db/models/review' )( db );
 
+var adminAgent, guestAgent, authdAgent;
+var app;
+let User, Song, Composer, Genre, Address, Review;
 
-describe( '/api/v1', function () {
-  var app;
-  let User, Song, Composer, Genre, Address, Review;
+describe( '/api/v1', function (  ) {
 
   beforeEach( 'Sync DB', function () {
     return db.sync( {
@@ -39,8 +40,12 @@ describe( '/api/v1', function () {
     } );
   } );
 
+
   beforeEach( 'Create app', function () {
     app = require( '../../../server/app' )( db );
+    adminAgent = supertestAsPromised.agent( app );
+    guestAgent = supertestAsPromised.agent( app );
+    authdAgent = supertestAsPromised.agent( app );
     User = db.model( 'user' );
     Song = db.model( 'song' );
     Composer = db.model( 'composer' );
@@ -49,13 +54,7 @@ describe( '/api/v1', function () {
     Review = db.model( 'review' );
   } );
 
-  let adminAgent, guestAgent, authdAgent;
 
-  beforeEach( 'Create admin, guest, and authenticated agents', function () {
-    adminAgent = supertestAsPromised.agent( app );
-    guestAgent = supertestAsPromised.agent( app );
-    authdAgent = supertestAsPromised.agent( app );
-  } );
   const authdInfo = {
     id: 1,
     firstName: "Joe",
@@ -79,31 +78,23 @@ describe( '/api/v1', function () {
   };
 
 
-  beforeEach( 'Create admin and authd users', function ( done ) {
-    let authd = User.create( authdInfo )
+  beforeEach( 'Create admin user and login', function () {
     let admin = User.create( adminInfo )
-    return Promise.all( [authd, admin] ).then( ()=> done() ).catch( (err)=> done(err) );
+      .then( () => adminAgent.post( '/login' )
+        .send( adminInfo ) )
   } );
 
-  beforeEach( 'Login with admin and authd users', function ( done ) {
-    return Promise.all( [
-      authdAgent.post( '/login' )
-      .send( authdInfo ),
-      adminAgent.post( '/login' )
-      .send( adminInfo )
-    ] ).then( ()=> done() ).catch( done )
+  beforeEach( 'Create authd user and login', function () {
+    let authd = User.create( authdInfo )
+      .then( () => authdAgent.post( '/login' )
+        .send( authdInfo ) )
   } )
 
-  afterEach( 'Log Out with admin and authd users', function ( done ) {
-    return Promise.all( [
-      authdAgent.get( '/logout' ),
-      adminAgent.post( '/logout' )
-    ]).then(() => done()).catch(err => done(err))
-  } )
 
-  describe( '/user', function (done) {
-    describe( 'POST', function (done) {
-      it( 'creates a new user and returns user data', function ( done ) {
+  describe( '/user', function () {;
+
+    describe( 'POST', function () {
+      it( 'creates a new user and returns user data', function (  ) {
         let manualUser = {
           firstName: "Ima",
           lastName: "ManualUser",
@@ -126,7 +117,7 @@ describe( '/api/v1', function () {
           isAdmin: "false"
         }
         let guestRequest = guestAgent.post( '/api/v1/user' )
-          .send( JSON.stringify(guestRegister) )
+          .send( JSON.stringify( guestRegister ) )
           .expect( 201 )
           .end( ( err, response ) => {
             if ( err ) throw err;
@@ -135,7 +126,7 @@ describe( '/api/v1', function () {
             response.should.not.have.deep.property( 'isGuest' );
           } )
         let adminRequest = adminAgent.post( '/api/v1/user' )
-          .send( JSON.stringify(manualUser) )
+          .send( JSON.stringify( manualUser ) )
           .expect( 201 )
           .end( ( err, response ) => {
             if ( err ) throw err;
@@ -148,16 +139,18 @@ describe( '/api/v1', function () {
               .that.is.a.boolean.that.equals( true );
           } )
         let authdRequest = authdAgent.post( '/api/v1/user' )
-          .send( JSON.stringify(newUserInfo) )
+          .send( JSON.stringify( newUserInfo ) )
           .expect( 401 )
           .end( ( err, response ) => {
             if ( err ) throw err;
             response.body.should.not.have.any.keys( 'firstName', 'lastName', 'fullName', 'password' );
           } )
-        return Promise.all([authdRequest, adminRequest, guestRequest]).then(done).catch(done)
+        return Promise.all( [ authdRequest, adminRequest, guestRequest ] )
+          .then( done )
+          .catch( done )
       } )
       describe( '/:userId', function () {
-        describe( 'GET', function () {
+        describe( 'GET', function () {;
           it( 'returns a user with the specified id', function ( done ) {
             guestAgent.get( '/api/v1/user/1 ' )
               .expect( 200 )
@@ -167,7 +160,7 @@ describe( '/api/v1', function () {
                 done();
               } )
           } )
-          it( 'the results are sanitized if the user is not an admin', function (done) {
+          it( 'the results are sanitized if the user is not an admin', function ( done ) {
             guestAgent.get( '/api/v1/user/1 ' )
               .expect( 200 )
               .end( ( err, response ) => {
@@ -176,7 +169,7 @@ describe( '/api/v1', function () {
                 done();
               } )
           } )
-          it( 'admins see unsanitized results ', function (done) {
+          it( 'admins see unsanitized results ', function ( done ) {
             adminAgent.get( '/api/v1/user/1' )
               .expect( 200 )
               .end( ( err, response ) => {
@@ -194,7 +187,7 @@ describe( '/api/v1', function () {
                   done();
                 } )
             } )
-            it( 'users can see unsanitized results for their own account', function () {
+            it( 'users can see unsanitized results for their own account', function ( done ) {
               authdAgent.get( '/api/v1/user/1' )
                 .expect( 200 )
                 .end( ( err, response ) => {
@@ -228,521 +221,754 @@ describe( '/api/v1', function () {
             } )
             it( "a user cannot delete another user's account", function ( done ) {
               return Promise.all( [
-                authdAgent.delete( '/api/v1/user/3' ).expect( 403 ).end(),
-                guestAgent.delete( '/api/v1/user/1 ' ).expect( 401 ).end()
-              ]).then(()=>done()).catch(done)
+                  authdAgent.delete( '/api/v1/user/3' )
+                  .expect( 403 )
+                  .end(),
+                  guestAgent.delete( '/api/v1/user/1 ' )
+                  .expect( 401 )
+                  .end()
+                ] )
+                .then( () => done() )
+                .catch( done )
             } )
           } )
           describe( 'PUT', function () {
             let patchUser1 = {
               firstName: "Jeffey"
             }
-            it( 'admin can update a user with the specified id (acts as patch, not replace)', function (done) {
-              adminAgent.put( '/api/v1/user/1' ).send( patchUser1 ).expect( 201 ).end( (err, response) => {
-                if(err) return done(err);
-                adminAgent.get( '/api/v1/user/1' ).end( (err, response) => {
-                  if(err) return done(err);
-                  response.body.firstName.should.equal( patchUser1.firstName );
-                  response.body.lastName.should.equal( authdInfo.lastName );
-                  done();
-                })
-              })
+            it( 'admin can update a user with the specified id (acts as patch, not replace)', function ( done ) {
+              adminAgent.put( '/api/v1/user/1' )
+                .send( JSON.stringify( patchUser1 ) )
+                .expect( 200 )
+                .end( ( err, response ) => {
+                  if ( err ) return done( err );
+                  adminAgent.get( '/api/v1/user/1' )
+                    .end( ( err, response ) => {
+                      if ( err ) return done( err );
+                      response.body.firstName.should.equal( patchUser1.firstName );
+                      response.body.lastName.should.equal( authdInfo.lastName );
+                      done();
+                    } )
+                } )
             } )
-            it( 'a user can update their own account', function (done) {
-              authdAgent.put( '/api/v1/user/1' ).send( patchUser1 ).expect( 201 ).end( (err, response) => {
-                if(err) return done(err);
-                adminAgent.get( '/api/v1/user/1' ).end( (err, response) => {
-                  if(err) return done(err);
-                  response.body.firstName.should.equal( patchUser1.firstName );
-                  response.body.lastName.should.equal( authdInfo.lastName );
-                  done();
-                })
-              })
+            it( 'a user can update their own account', function ( done ) {
+              authdAgent.put( '/api/v1/user/1' )
+                .send( JSON.stringify( patchUser1 ) )
+                .expect( 200 )
+                .end( ( err, response ) => {
+                  if ( err ) return done( err );
+                  adminAgent.get( '/api/v1/user/1' )
+                    .end( ( err, response ) => {
+                      if ( err ) return done( err );
+                      response.body.firstName.should.equal( patchUser1.firstName );
+                      response.body.lastName.should.equal( authdInfo.lastName );
+                      done();
+                    } )
+                } )
             } )
-            it( 'a guest user cannot update their own account', function (done) {
-              guestAgent.put( '/api/v1/user/3' ).send( patchUser1 ).expect( 401 ).end(done)
+            it( 'a guest user cannot update their own account', function ( done ) {
+              guestAgent.put( '/api/v1/user/3' )
+                .send( JSON.stringify( patchUser1 ) )
+                .expect( 401 )
+                .end( done )
             } )
-            it( "a user cannot update someone else's account", function (done) {
-              return Promise.all([
-                authdAgent.put( '/api/v1/user/2' ).send( patchUser1 ).expect( 403 ).end(),
-                guestAgent.put( '/api/v1/user/1' ).send( patchUser1 ).expect( 401 ).end()
-              ]).then(done).catch(done);
+            it( "a user cannot update someone else's account", function ( done ) {
+              return Promise.all( [
+                  authdAgent.put( '/api/v1/user/2' )
+                  .send( JSON.stringify( patchUser1 ) )
+                  .expect( 403 )
+                  .end(),
+                  guestAgent.put( '/api/v1/user/1' )
+                  .send( JSON.stringify( patchUser1 ) )
+                  .expect( 401 )
+                  .end()
+                ] )
+                .then( done )
+                .catch( done );
             } )
           } )
         } )
       } )
     } )
-    describe( '/users', function (done) {
-      describe( "GET", function (done) {
-        it( 'returns a list of all users', function (done) {
-          return Promise.all([
-            adminAgent.get( '/api/v1/users' ).end( (err, response) => {
-              if(err) throw err;
-              response.body.should.be.an( 'array' );
-              response.body.should.not.have.deep.property( 'salt' );
-            }),
-            guestAgent.get( '/api/v1/users' ).end( (err, response) => {
-              if(err) throw err;
-              response.body.should.be.an( 'array' );
-              response.body.should.not.have.deep.property( 'password' );
-              response.body.should.not.have.deep.property( 'salt' );
-            }),
-            authdAgent.get( '/api/v1/users' ).end( (err, response) => {
-              if(err) throw err;
-              response.body.should.be.an( 'array' );
-              response.body.should.not.have.deep.property( 'password' )
-              response.body.should.not.have.deep.property( 'salt' );
-            })
-          ]).then(done).catch(done);
+    describe( '/users', function () {;
+
+      describe( "GET", function () {
+        it( 'returns a list of all users', function ( done ) {
+          return Promise.all( [
+              adminAgent.get( '/api/v1/users' )
+              .end( ( err, response ) => {
+                if ( err ) throw err;
+                response.body.should.be.an( 'array' );
+                response.body.should.not.have.deep.property( 'salt' );
+              } ),
+              guestAgent.get( '/api/v1/users' )
+              .end( ( err, response ) => {
+                if ( err ) throw err;
+                response.body.should.be.an( 'array' );
+                response.body.should.not.have.deep.property( 'password' );
+                response.body.should.not.have.deep.property( 'salt' );
+              } ),
+              authdAgent.get( '/api/v1/users' )
+              .end( ( err, response ) => {
+                if ( err ) throw err;
+                response.body.should.be.an( 'array' );
+                response.body.should.not.have.deep.property( 'password' )
+                response.body.should.not.have.deep.property( 'salt' );
+              } )
+            ] )
+            .then( done )
+            .catch( done );
         } )
 
       } )
-      describe( "?", function (done) {
-        it( 'takes query parameters', function (done) {
-          authdAgent.get( '/api/v1/users?firstName=John&lastName=John' ).end( (err, response) =>{
-            if(err) return done(err);
-            response.body.should.be.an( 'array' );
-            response.body.should.have.property( '[0]firstName', 'John' )
-            done();
-          })
+      describe( "?", function () {
+        it( 'takes query parameters', function ( done ) {
+          authdAgent.get( '/api/v1/users?firstName=John&lastName=John' )
+            .end( ( err, response ) => {
+              if ( err ) return done( err );
+              response.body.should.be.an( 'array' );
+              response.body.should.have.property( '[0]firstName', 'John' )
+              done();
+            } )
         } )
       } )
     } )
-    describe( '/composer', function (done) {
+    describe( '/composer', function () {;
+
       let bach = {
         firstName: "Johannes",
         lastName: "Bach"
       }
-      describe( 'POST', function (done) {
-        it( 'an admin can create a new composer', function (done) {
-          adminAgent.post( '/api/v1/composer' ).send( bach ).expect( 201 ).end( (err, response) => {
-            if(err) return done(err);
-            let postBach = bach;
-            postBach.id = response.body.id;
-            response.body.should.deep.equal( postBach );
-            done();
-          })
-        } )
-        it( 'an admin can create and associated through song/:songId/composer', function (done) {
-          adminAgent.post( '/api/v1/song/1/composer' ).send( bach ).expect( 201 ).end( (err, response) => {
-            if(err) return done(err);
-            response.body[0].songs[0].id.should.equal( 1 );
-            done();
-          })
-        } )
-      } )
-      describe( '/:composerId', function (done) {
-        describe( 'GET', function (done) {
-          it( 'returns composer with specific id', function (done) {
-            return Promise.all([
-              adminAgent.get( '/api/v1/composer/1' ).expect( 200 ).end( (err, response) =>{
-                if(err) throw err;
-                response.body.id.should.equal( 1 );
-              }),
-              guestAgent.get( '/api/v1/composer/2' ).expect( 200 ).end( (err, response) =>{
-                if(err) throw err;
-                response.body.id.should.equal( 2 );
-              }),
-              authdAgent.get( '/api/v1/composer/3' ).expect( 200 ).end( (err, response) =>{
-                if(err) throw err;
-                response.body.id.should.equal( 3 );
-              })
-
-            ]).then(done).catch(done);
-          } )
-        } )
-        describe( 'DELETE', function (done) {
-          it( 'admin can delete a composer', function (done) {
-            adminAgent.delete( '/api/v1/composer/2' ).expect(204).end( (err, response) =>{
-              if(err) return done(err);
-              return adminAgent.get( '/api/v1/composer/2' ).expect(404).end(done)
-            })
-          } )
-          it( 'non-admins cannot delete a composer', function (done) {
-            guestAgent.delete( '/api/v1/composer/1' ).expect(204).end( (err, response) =>{
-              if(err) return done(err);
-              return adminAgent.get( '/api/v1/composer/2' ).expect(200).end(done)
-            })
-            authdAgent.delete( '/api/v1/composer/3' ).expect(204).end( (err, response) =>{
-              if(err) return done(err);
-              return adminAgent.get( '/api/v1/composer/2' ).expect(200).end(done)
-            })
-          } )
-        } )
-        describe( 'PUT', function (done) {
-          it( 'admin can update a composer', function (done) {
-            adminAgent.put( '/api/v1/composer/2' ).send( bach ).expect( 201 ).end( (err, response) => {
-              if(err) return done(err);
-              let putBach = bach;
-              putBach.id = 2;
-              response.body.should.deep.equal( putBach );
+      describe( 'POST', function () {
+        it( 'an admin can create a new composer', function ( done ) {
+          adminAgent.post( '/api/v1/composer' )
+            .send( JSON.stringify( bach ) )
+            .expect( 201 )
+            .end( ( err, response ) => {
+              if ( err ) return done( err );
+              let postBach = bach;
+              postBach.id = response.body.id;
+              response.body.should.deep.equal( postBach );
               done();
-            })
-          } )
-          } )
-          it( 'non-admin cannot update a composer', function (done) {
-            Promise.all([
-              guestAgent.put( '/api/v1/composer/3' ).send( bach ).expect( 401 ).end(),
-              authdAgent.put( '/api/v1/composer/2' ).send( bach ).expect( 403 ).end()
-            ]).then(done).catch(done);
-          } )
+            } )
+        } )
+        it( 'an admin can create and associated through song/:songId/composer', function ( done ) {
+          adminAgent.post( '/api/v1/song/1/composer' )
+            .send( JSON.stringify( bach ) )
+            .expect( 201 )
+            .end( ( err, response ) => {
+              if ( err ) return done( err );
+              response.body[ 0 ].songs[ 0 ].id.should.equal( 1 );
+              done();
+            } )
         } )
       } )
-    } )
-    describe( '/composers', function (done) {
-      describe( 'GET', function (done) {
-        it( 'returns a list of composers', function (done) {
-          Promise.all([
-            adminAgent.get( '/api/v1/composers' ).expect(200).end((err, response)=>{
-              if(err) return done(err)
-              return response.body.should.be.an( 'array' );
-            }),
-            guestAgent.get( '/api/v1/composers' ).expect(200).end((err, response)=>{
-              if(err) return done(err)
-              return response.body.should.be.an( 'array' );
-            }),
-            authdAgent.get( '/api/v1/composers' ).expect(200).end((err, response)=>{
-              if(err) return done(err)
-              return response.body.should.be.an( 'array' );
-            }).then(done).catch(done)
-          ])
-        } )
-      } )
-      describe( '?', function (done) {
-        it( 'correctly handles query strings', function () {
-          adminAgent.get( '/api/v1/composers?id=1' ).expect(200).end((err, response)=>{
-            if(err) return done(err)
-            response.body.should.be.an( 'array' );
-            response.body[0].id.should.equal( 1 );
-            return true
-          })
-          guestAgent.get( "/api/v1/composers?fullName=Ludwig+Van+Beethoven" )
-        } )
-      } )
-    } )
-    describe( '/cart', function (done) {
-      let cart1 = [ {} ];
-      let cart2 = [ {} ];
-      let cart3 = [ {} ];
+      describe( '/:composerId', function () {
+        describe( 'GET', function () {
+          it( 'returns composer with specific id', function ( done ) {
+            return Promise.all( [
+                adminAgent.get( '/api/v1/composer/1' )
+                .expect( 200 )
+                .end( ( err, response ) => {
+                  if ( err ) throw err;
+                  response.body.id.should.equal( 1 );
+                } ),
+                guestAgent.get( '/api/v1/composer/2' )
+                .expect( 200 )
+                .end( ( err, response ) => {
+                  if ( err ) throw err;
+                  response.body.id.should.equal( 2 );
+                } ),
+                authdAgent.get( '/api/v1/composer/3' )
+                .expect( 200 )
+                .end( ( err, response ) => {
+                  if ( err ) throw err;
+                  response.body.id.should.equal( 3 );
+                } )
 
-
-      it( 'user can only use these routes for their own cart', function (done) {
-        authdAgent.get( '/api/v1/cart/2' )
-      } )
-      it( 'admin can use these routes for any cart', function (done) {
-        adminAgent.get( '/api/v1/cart/1' )
-        adminAgent.put( '/api/v1/cart/2' )
-          .send( cart2 )
-        adminAgent.delete( '/api/v1/cart/3' )
-      } )
-      it( 'POST /save saves the cart and returns the cart instance', function (done) {
-        authdAgent.post( '/api/v1/cart/save' )
-          .send( cart3 )
-      } )
-      it( 'PUT /:cartId updates the cart in the database', function (done) {
-        authdAgent.put( '/api/v1/cart/1' )
-          .send( cart1 )
-      } )
-      it( 'POST /add/song/:songId adds a specific song to the cart', function (done) {
-        guestAgent.post( '/api/v1/cart/add/song/5' )
-      } )
-      it( 'DELETE /remove/song/:songId removes a specific song from the cart', function (done) {
-        guestAgent.delete( '/api/v1/cart/delete/song/2' )
-      } )
-      it( 'DELETE /clear clears the current cart', function (done) {
-        authdAgent.delete( '/api/v1/cart/clear' )
-      } )
-    } )
-    describe( '/order', function (done) {
-      it( '/:orderId -- authorized user can only use these routes for their own account', function (done) {
-        authdAgent.get( '/api/v1/order/1' )
-        authdAgent.get( '/api/v1/order/3' )
-      } )
-      it( '/:orderId -- admin can use these routes for any account', function (done) {
-        adminAgent.get( '/api/v1/order/1' )
-      } )
-      describe( 'POST', function (done) {
-        it( 'creates a new order', function (done) {
-          authdAgent.post( '/api/v1/order' )
-          guestAgent.post( '/api/v1/order' )
-        } )
-        it( 'admin can create order for another user', function (done) {
-          adminAgent.post( '/api/v1/user/1/order' )
-        } )
-      } )
-      describe( '/:orderId/trackingNumber', function (done) {
-        it( 'user or admin can generate or retrieve a tracking number for an order', function (done) {
-          guestAgent.get( '/api/v1/order/3/trackingNumber' )
-          authdAgent.get( '/api/v1/order/1/trackingNumber' )
-        } )
-        it( 'user cannot retrieve tracking number associated with another user', function (done) {
-          guestAgent.get( '/api/v1/order/1/trackingNumber' )
-          authdAgent.get( '/api/v1/order/3/trackingNumber' )
-        } )
-        it( 'admin can retrieve tracking number for any user', function (done) {
-          adminAgent.get( '/api/v1/order/1/trackingNumber' )
-          adminAgent.get( '/api/v1/order/3/trackingNumber' )
-        } )
-      } )
-      describe( '/:orderId/trackingNumber/:trackingNumber', function (done) {
-        it( 'anyone can get an order with a tracking number', function (done) {
-          guestAgent.get( '/api/v1/order/trackingNumber/123456789' )
-          authdAgent.get( '/api/v1/order/trackingNumber/123456789' )
-        } )
-      } )
-      describe( '/:id', function (done) {
-        describe( 'GET', function (done) {
-          it( 'an admin can get any order', function (done) {
-            adminAgent.get( '/api/v1/order/1' )
-            adminAgent.get( '/api/v1/order/3' )
-          } )
-          it( 'an authorized user can get their own order', function (done) {
-            authdAgent.get( '/api/v1/order/1' )
-          } )
-          it( 'an authorized user cannot get another user order', function (done) {
-            authdAgent.get( '/api/v1/order/3' )
-          } )
-          it( 'a guest user cannot even see their own order history', function (done) {
-            guestAgent.get( '/api/v1/orders' )
-            guestAgent.get( '/api/v1/order/3' )
+              ] )
+              .then( done )
+              .catch( done );
           } )
         } )
-        describe( 'DELETE', function (done) {
-          it( 'an admin can delete any order', function (done) {
-              adminAgent.delete( '/api/v1/order/1' )
-            } )
-            // by enabling paranoid mode we can prevent true destruction of orders. this would be important for auditing/accounting - we don't want to delete an order if a transaction has been successful, even if it doesn't show up in the user's own order history.
-          it( 'orders are deleted VIRTUALLY but stay in the database', function (done) {
-            adminAgent.delete( '/api/v1/order/2' )
+        describe( 'DELETE', function () {
+          it( 'admin can delete a composer', function ( done ) {
+            adminAgent.delete( '/api/v1/composer/2' )
+              .expect( 204 )
+              .end( ( err, response ) => {
+                if ( err ) return done( err );
+                return adminAgent.get( '/api/v1/composer/2' )
+                  .expect( 404 )
+                  .end( done )
+              } )
           } )
-          it( 'guests cannot delete orders', function (done) {
-            guestAgent.delete( '/api/v1/order/3' )
-          } )
-          it( "authd users can VIRTUALLY delete their completed orders", function (done) {
-            authdAgent.delete( '/api/v1/order/1' )
-          } )
-          it( "authd users can truly delete their incomplete orders", function (done) {
-            authdAgent.delete( '/api/v1/order/5' )
-          } )
-        } )
-        describe( 'PUT', function (done) {
-          it( 'works', function (done) {
-            adminAgent.put( '/api/v1/order/2' )
-          } )
-        } )
-      } )
-    } )
-    describe( '/orders', function (done) {
-      describe( 'GET', function (done) {
-        it( 'returns an array of all orders', function (done) {
-          adminAgent.get( '/api/v1/orders' )
-        } )
-        it( 'sanitized of user information', function (done) {
-          guestAgent.get( '/api/v1/orders' )
-          authdAgent.get( '/api/v1/orders' )
-        } )
-        it( 'can be nested as user/:userId/orders', function (done) {
-          adminAgent.get( '/api/v1/user/2/orders' )
-        } )
-        it( "only returns a user's own orders if not admin", function (done) {
-          authdAgent.get( '/api/v1/user/1/orders' )
-          authdAgent.get( '/api/v1/user/3/orders' )
-        } )
-      } )
-      describe( '?', function (done) {
-        it( 'orders take query strings', function (done) {
-          adminAgent.get( '/api/v1/orders?userId=1' )
-        } )
-      } )
-    } )
-    describe( '/songs', function (done) {
-      describe( 'GET', function (done) {
-        it( 'retrieves a list of songs', function (done) {
-          adminAgent.get( '/api/v1/songs' )
-        } )
-        it( 'sanitized for non-admins', function (done) {
-          guestAgent.get( '/api/v1/songs' )
-          authdAgent.get( '/api/v1/songs' )
-        } )
-      } )
-      describe( '?', function (done) {
-        it( 'can take query parameters', function (done) {
-          adminAgent.get( '/api/v1/songs?fullName=Ludwig+Van+Beethoven' )
-        } )
-      } )
-    } )
-    describe( '/song', function (done) {
-      describe( 'POST', function (done) {
-        it( 'admin-only', function (done) {
-          adminAgent.post( '/api/v1/song' )
-          guestAgent.post( '/api/v1/song' )
-          authdAgent.post( '/api/v1/song' )
-        } )
-        it( 'adds a song', function (done) {
-          adminAgent.post( '/api/v1/song' )
-        } )
-      } )
-      describe( '/:id', function (done) {
-        describe( 'GET', function (done) {
-          it( 'retrieves a specific song', function (done) {
-            adminAgent.get( '/api/v1/song/1' )
-            guestAgent.get( '/api/v1/song/2' )
-            authdAgent.get( '/api/v1/song/3' )
+          it( 'non-admins cannot delete a composer', function ( done ) {
+            guestAgent.delete( '/api/v1/composer/1' )
+              .expect( 204 )
+              .end( ( err, response ) => {
+                if ( err ) return done( err );
+                return adminAgent.get( '/api/v1/composer/2' )
+                  .expect( 200 )
+                  .end( done )
+              } )
+            authdAgent.delete( '/api/v1/composer/3' )
+              .expect( 204 )
+              .end( ( err, response ) => {
+                if ( err ) return done( err );
+                return adminAgent.get( '/api/v1/composer/2' )
+                  .expect( 200 )
+                  .end( done )
+              } )
           } )
         } )
-        describe( 'DELETE', function (done) {
-          it( 'admin-only', function (done) {
-            adminAgent.delete( '/api/v1/song/1' )
-            guestAgent.delete( '/api/v1/song/2' )
-            authdAgent.delete( '/api/v1/song/3' )
-          } )
-          it( 'deletes a specific song', function (done) {
-            adminAgent.delete( '/api/v1/song/1' )
-          } )
-        } )
-        describe( 'PUT', function (done) {
-          it( 'admin-only', function (done) {
-            adminAgent.put( '/api/v1/song/1' )
-            authdAgent.put( '/api/v1/song/2' )
-            guestAgent.put( '/api/v1/song/3' )
-          } )
-          it( 'updates a specific song', function (done) {
-            adminAgent.put( '/api/v1/song/1' )
+        describe( 'PUT', function () {
+          it( 'admin can update a composer', function ( done ) {
+            adminAgent.put( '/api/v1/composer/2' )
+              .send( JSON.stringify( bach ) )
+              .expect( 200 )
+              .end( ( err, response ) => {
+                if ( err ) return done( err );
+                let putBach = bach;
+                putBach.id = 2;
+                response.body.should.deep.equal( putBach );
+                done();
+              } )
           } )
         } )
-      } )
-      describe( '/reviews', function (done) {
-        describe( 'GET', function (done) {
-          it( 'returns a list of all reviews', function (done) {
-            adminAgent.get( '/api/v1/reviews' )
-            guestAgent.get( '/api/v1/reviews' )
-            authdAgent.get( '/api/v1/reviews' )
-          } )
-          it( 'song/:songId/reviews retrieves a list of reviews for a specific song', function (done) {
-            guestAgent.get( '/api/v1/song/1/reviews' )
-          } )
-        } )
-        describe( '?', function (done) {
-          it( 'correctly interprets query parameters', function (done) {
-            guestAgent.get( '/api/v1/reviews?songTitle=circle+of+life' )
-          } )
-        } )
-      } )
-      describe( '/review', function (done) {
-        describe( 'POST', function (done) {
-          it( 'authenticated users can create for their own account', function (done) {
-            authdAgent.post( '/api/v1/review' )
-          } )
-          it( 'guest users cannot create', function (done) {
-            guestAgent.post( '/api/v1/review' )
-          } )
-          it( 'admin users can create on behalf of any user', function (done) {
-            adminAgent.post( '/api/v1/review' )
-          } )
-          it( 'creates a new review', function (done) {
-            authdAgent.post( '/api/v1/review' )
-          } )
-          it( '/song/:songId/review creates a new review for a specific song', function (done) {
-            adminAgent
-          } )
-          it( 'new reviews must be associated with a song', function (done) {
-            authdAgent.post( '/api/v1/review' )
-          } );
-        } )
-        describe( '/:reviewId', function (done) {
-          describe( 'GET', function (done) {
-            it( 'retrieves a review, for any user', function (done) {
-              adminAgent.get( '/api/v1/review/1' )
-              guestAgent.get( '/api/v1/review/2' )
-              authdAgent.get( '/api/v1/review/3' )
-            } );
-          } )
-          describe( 'DELETE', function (done) {
-            it( 'deletes a review', function (done) {
-              adminAgent.delete( '/api/v1/review/3' )
-            } )
-            it( 'an authenticated user can delete their own review', function (done) {
-              authdAgent.delete( '/api/v1/review/1' )
-
-            } )
-            it( 'an admin can delete any review', function (done) {
-              adminAgent.delete( '/api/v1/review/1' )
-            } );
-            it( 'a user cannot delete the review of another user', function (done) {
-              authdAgent.delete( '/api/v1/reviw/3' )
-            } )
-            it( 'a guest cannot delte a review', function (done) {
-              guestAgent.delete( '/api/v1/review/3' )
-            } )
-          } )
-          describe( 'PUT', function (done) {
-            it( 'updates a review', function (done) {
-              adminAgent.put( '/api/v1/review/1' )
-            } )
-            it( 'an authenticated user can update their own review', function (done) {
-              authdAgent.put( '/api/v1/review/1' )
-            } )
-            it( 'an admin can update any review', function (done) {
-              adminAgent.put( '/api/v1/review/2' )
-            } );
-            it( 'a user cannot update the review of another user', function (done) {
-              adminAgent.put( '/api/v1/review/3' )
-            } )
-          } )
-        } )
-      } )
-    } )
-    describe( '/genre', function (done) {
-      describe( 'POST', function (done) {
-        it( 'admins can create a genre', function (done) {
-          adminAgent.post( '/api/v1/genre' )
-        } )
-        it( 'admin-only', function (done) {
-          authdAgent.post( '/api/v1/genre' )
-          guestAgent.post( '/api/v1/genre' )
-        } );
-      } )
-      describe( '/:id', function (done) {
-        describe( 'GET', function (done) {
-          it( 'retrieves information about a specific genre including list of songs and composers', function (done) {
-            adminAgent.get( '/api/v1/genre/1' )
-            authdAgent.get( '/api/v1/genre/2' )
-            guestAgent.get( '/api/v1/genre/3' )
-          } )
-        } )
-        describe( 'DELETE', function (done) {
-          it( 'deletes a genre', function (done) {
-            adminAgent.delete( '/api/v1/genre/1' )
-          } )
-          it( 'admin-only', function (done) {
-            authdAgent.delete( '/api/v1/genre/2' )
-            guestAgent.delete( '/api/v1/genre/3' )
-          } );
-        } )
-        describe( 'PUT', function (done) {
-          it( 'updates a genre', function (done) {
-            adminAgent.put( '/api/v1/genre/1' )
-          } )
-          it( 'admin-only', function (done) {
-            authdAgent.put( '/api/v1/genre/2' )
-            guestAgent.put( '/api/v1/genre/3' )
-          } );
-        } )
-      } )
-    } )
-    describe( '/genres', function (done) {
-      describe( 'GET', function (done) {
-        it( 'retrieves a list of all genres, accessible by all user roles', function (done) {
-          adminAgent.get( '/api/v1/genres' )
-          authdAgent.get( '/api/v1/genres' )
-          guestAgent.get( '/api/v1/genres' )
-        } );
-      } )
-      describe( '?', function (done) {
-        it( 'supports queries', function (done) {
-          adminAgent.get( '/api/v1/genres?id=classical' )
-          adminAgent.get( '/api/v1/genres?id=Classical' )
+        it( 'non-admin cannot update a composer', function ( done ) {
+          Promise.all( [
+              guestAgent.put( '/api/v1/composer/3' )
+              .send( JSON.stringify( bach ) )
+              .expect( 401 )
+              .end(),
+              authdAgent.put( '/api/v1/composer/2' )
+              .send( JSON.stringify( bach ) )
+              .expect( 403 )
+              .end()
+            ] )
+            .then( done )
+            .catch( done );
         } )
       } )
     } )
   } )
+  describe( '/composers', function () {;
+
+    describe( 'GET', function () {
+      it( 'returns a list of composers', function ( done ) {
+        Promise.all( [
+          adminAgent.get( '/api/v1/composers' )
+          .expect( 200 )
+          .end( ( err, response ) => {
+            if ( err ) return done( err )
+            return response.body.should.be.an( 'array' );
+          } ),
+          guestAgent.get( '/api/v1/composers' )
+          .expect( 200 )
+          .end( ( err, response ) => {
+            if ( err ) return done( err )
+            return response.body.should.be.an( 'array' );
+          } ),
+          authdAgent.get( '/api/v1/composers' )
+          .expect( 200 )
+          .end( ( err, response ) => {
+            if ( err ) return done( err )
+            return response.body.should.be.an( 'array' );
+          } )
+          .then( done )
+          .catch( done )
+        ] )
+      } )
+    } )
+    describe( '?', function () {
+      it( 'correctly handles query strings', function ( done ) {
+        adminAgent.get( '/api/v1/composers?id=1' )
+          .expect( 200 )
+          .end( ( err, response ) => {
+            if ( err ) return done( err )
+            response.body.should.be.an( 'array' );
+            response.body[ 0 ].id.should.equal( 1 );
+            return true
+          } )
+        guestAgent.get( "/api/v1/composers?fullName=Ludwig+Van+Beethoven" )
+      } )
+    } )
+
+  } )
+
+  function pause(milliseconds) {
+    console.log('waiting');
+  	var dt = new Date();
+  	while ((new Date()) - dt <= milliseconds) { /* Do nothing */ }
+    console.log('done waiting');
+  }
+
+
+  describe( '/cart', function () {
+
+    let cart1 = {
+      userId: 1,
+      songs: [ {
+        id: 1,
+        quantity: 2
+      }, {
+        id: 5,
+        quantity: 1
+      } ]
+    };
+    let cart2 = {
+      userId: 2,
+      songs: [ {
+        id: 2,
+        quantity: 27
+      } ]
+    };
+    let cart3 = {
+      userId: 3,
+      songs: [ {
+        id: 3,
+        quantity: 23
+      }, {
+        id: 6,
+        quantity: 1
+      }, {
+        id: 7,
+        quantity: 1
+      } ]
+    };
+
+
+    xit( 'user can only use these routes for their own cart', function (  ) {
+      authdAgent.get( '/api/v1/cart/2' )
+        .send( cart2 )
+        .expect( 403 )
+    } )
+    it( 'admin can use these routes for any cart', function (  ) {
+      return Promise.all( [adminAgent.get( '/api/v1/cart/1' )
+        .send( cart1 )
+        .expect( 200 ),
+      adminAgent.put( '/api/v1/cart/2' )
+        .send( cart2 )
+        .expect( 200 ),
+      adminAgent.delete( '/api/v1/cart/3' )
+        .send( cart3 )
+        .expect( 204 ) ])
+    } )
+    it( 'POST /save saves the cart and returns the cart instance', function (  ) {
+      return authdAgent.post( '/api/v1/cart/save' )
+        .send( JSON.stringify( cart3 ) )
+        .expect( 201 )
+    } )
+    it( 'PUT /:cartId updates the cart in the database', function (  ) {
+      return authdAgent.put( '/api/v1/cart/1' )
+        .send( JSON.stringify( cart1 ) )
+        .expect( 200 )
+    } )
+    it( 'POST /add/song/:songId adds a specific song to the cart', function (  ) {
+      return guestAgent.get( '/api/v1/cart/add/song/5' )
+        .expect( 200 )
+    } )
+    it( 'DELETE /remove/song/:songId removes a specific song from the cart', function (  ) {
+      return guestAgent.delete( '/api/v1/cart/delete/song/2' )
+        .expect( 204 )
+    } )
+    it( 'DELETE /clear clears the current cart', function (  ) {
+      return Promise.all( [ authdAgent.get( '/api/v1/cart/add/song/1' ),
+          authdAgent.get( '/api/v1/cart/add/song/2' ),
+          authdAgent.get( '/api/v1/cart/add/song/3' ),
+          authdAgent.get( '/api/v1/cart/add/song/4' )
+        ] )
+        .then( () => authdAgent.delete( '/api/v1/cart/clear' )
+          .expect( 204 ) )
+        .then( response => response.body.songs.should.have.lengthOf( 0 ) )
+        .catch( err )
+
+    } )
+  } );
+  xdescribe( '/order', function () {
+    let authdUserOrder1, authdUserOrder2, guestUserOrder1;
+    beforeEach(function(done){
+      let authdUserOrder1 = authd.createOrder({
+        id: 1,
+        songs: [
+          { id: 1, quantity: 10},
+          { id: 3, quantity: 1 }
+        ]
+      })
+      let authdUserOrder2 = authd.createOrder({
+        id: 2,
+        songs: [
+          { id: 2, quantity: 2 },
+          { id: 5, quantity: 1 }
+        ]
+      })
+      let guestUserOrder1 = guest.createOrder({
+        id: 3,
+        songs: [
+          { id: 3, quantity: 1 }
+        ]
+      })
+      let adminCreateOrderData = {
+        id: 4,
+        songs: [
+          { id: 2, quantity: 4 },
+          { id: 10, quantity: 3 }
+        ]
+      }
+      let guestUserTrackedOrder = guest.createOrder({
+        id: 5,
+        songs: [
+          {id: 4, quantity: 2 }
+        ],
+        trackingNumber: 123456789
+      })
+    });
+
+    it( '/:orderId -- authorized user can only use these routes for their own account', function (  ) {
+      return Promise.all( [
+        authdAgent.get( '/api/v1/order/1' ).expect( 200 ),
+        authdAgent.get( '/api/v1/order/3' ).expect( 403 )
+      ])
+    } )
+    it( '/:orderId -- admin can use these routes for any account', function (  ) {
+      return Promise.all([
+        adminAgent.get( '/api/v1/order/1' ).expect( 200 ),
+        adminAgent.get( '/api/v1/order/2' ).expect( 200 ),
+        adminAgent.get( '/api/v1/order/3' ).expect( 200 ),
+      ])
+    } )
+    describe( 'POST', function () {
+      it( 'creates a new order', function ( done ) {
+        return Promise.all([
+          authdAgent.post( '/api/v1/order' ).expect( 201 ),
+          guestAgent.post( '/api/v1/order' ).expect( 201 )
+        ])
+      } )
+      it( 'admin can create order for another user', function (  ) {
+        return adminAgent.post( '/api/v1/user/1/order' ).send( adminCreateOrderData ).expect( 201 );
+      } )
+    } )
+    describe( '/:orderId/trackingNumber', function () {
+      it( 'user or admin can generate or retrieve a tracking number for an order', function (  ) {
+        return Promise.all([
+          guestAgent.get( '/api/v1/order/3/trackingNumber' ).expect( 200 ),
+          authdAgent.get( '/api/v1/order/1/trackingNumber' ).expect( 200 )
+        ])
+      } )
+      it( 'user cannot retrieve tracking number associated with another user', function (  ) {
+        return Promise.all([
+          guestAgent.get( '/api/v1/order/1/trackingNumber' ).expect( 401 ),
+          authdAgent.get( '/api/v1/order/3/trackingNumber' ).expect( 403 )
+        ])
+      } )
+      it( 'admin can retrieve tracking number for any user', function ( done ) {
+        return Promise.all([
+          adminAgent.get( '/api/v1/order/1/trackingNumber' ).expect( 200 ),
+          adminAgent.get( '/api/v1/order/3/trackingNumber' ).expect( 200 )
+        ])
+      } )
+    } )
+    describe( '/:orderId/trackingNumber/:trackingNumber', function () {
+      it( 'anyone can get an order with a tracking number', function (  ) {
+        return Promise.all([
+          guestAgent.get( '/api/v1/order/trackingNumber/123456789' ).expect( 200 ),
+          authdAgent.get( '/api/v1/order/trackingNumber/123456789' ).expect( 200 )
+        ])
+      } )
+    } )
+
+    describe( '/:id', function () {
+      describe( 'GET', function () {
+        it( 'an admin can get any order', function (  ) {
+          return Promise.all([
+            adminAgent.get( '/api/v1/order/1' ).expect( 200 ),
+            adminAgent.get( '/api/v1/order/3' ).expect( 200 )
+          ])
+        } )
+        it( 'an authorized user can get their own order', function (  ) {
+          return authdAgent.get( '/api/v1/order/1' ).expect( 200 )
+        } )
+        it( 'an authorized user cannot get another user order', function (  ) {
+          return authdAgent.get( '/api/v1/order/3' ).expect( 403 )
+        } )
+        it( 'a guest user cannot even see their own order history', function ( done ) {
+          return Promise.all([
+            guestAgent.get( '/api/v1/orders' ).expect( 401 ),
+          guestAgent.get( '/api/v1/order/3' ).expect( 401 )])
+        } )
+      } )
+      describe( 'DELETE', function () {
+        it( 'an admin can delete any order', function (  ) {
+            return adminAgent.delete( '/api/v1/order/1' ).expect( 204 )
+          } )
+          // by enabling paranoid mode we can prevent true destruction of orders. this would be important for auditing/accounting - we don't want to delete an order if a transaction has been successful, even if it doesn't show up in the user's own order history.
+        it( 'orders are deleted VIRTUALLY but stay in the database', function ( done ) {
+          adminAgent.delete( '/api/v1/order/2' ).expect( 204 )
+        } )
+        it( 'guests cannot delete orders', function ( done ) {
+          guestAgent.delete( '/api/v1/order/3' ).expect( 401 )
+        } )
+        it( "authd users can VIRTUALLY delete their completed orders", function ( done ) {
+          authdAgent.delete( '/api/v1/order/1' ).expect( 204 )
+        } )
+        it( "authd users can truly delete their incomplete orders", function ( done ) {
+          authdAgent.delete( '/api/v1/order/5' ).expect( 204 )
+        } )
+      } )
+      describe( 'PUT', function () {
+        it( 'updates an order', function ( done ) {
+          adminAgent.put( '/api/v1/order/2' ).expect( 200 )
+        } )
+      } )
+    } )
+  } );
+  xdescribe( '/orders', function () {;
+
+    describe( 'GET', function () {
+      it( 'returns an array of all orders', function ( ) {
+        adminAgent.get( '/api/v1/orders' ).expect( 200 )
+      } )
+      it( 'sanitized of user information', function ( done ) {
+        guestAgent.get( '/api/v1/orders' ).expect( 200 )
+        authdAgent.get( '/api/v1/orders' ).expect( 200 )
+      } )
+      it( 'can be nested as user/:userId/orders', function ( done ) {
+        adminAgent.get( '/api/v1/user/2/orders' ).expect( 200 )
+      } )
+      it( "only returns a user's own orders if not admin", function ( done ) {
+        authdAgent.get( '/api/v1/user/3/orders' ).expect( 403 )
+        guestAgent.get( '/api/v1/user/1/orders' ).expect( 401 )
+      } )
+    } )
+    describe( '?', function () {
+      it( 'orders take query strings', function ( done ) {
+        adminAgent.get( '/api/v1/orders?userId=1' ).expect( 200 )
+      } )
+    } )
+  } );
+  describe( '/songs', function () {;
+
+    describe( 'GET', function () {
+      it( 'retrieves a list of songs', function (  ) {
+        return adminAgent.get( '/api/v1/songs' ).expect( 200 )
+      } )
+      it( 'sanitized for non-admins', function (  ) {
+        return guestAgent.get( '/api/v1/songs' ).expect( 200 )
+      } )
+      it( 'sanitized for non-admins', function (  ) {
+        return authdAgent.get( '/api/v1/songs' ).expect( 200 )
+      } )
+    } )
+    describe( '?', function () {
+      it( 'can take query parameters', function (  ) {
+        return adminAgent.get( '/api/v1/songs?fullName=Ludwig+Van+Beethoven' ).expect( 200 )
+      } )
+    } )
+  } );
+  xdescribe( '/song', function () {;
+
+    describe( 'POST', function () {
+      it( 'admin-only', function (  ) {
+        return Promise.all([
+          adminAgent.post( '/api/v1/song' ),
+        guestAgent.post( '/api/v1/song' ).expect( 401 ),
+        authdAgent.post( '/api/v1/song' ).expect( 403 )])
+      } )
+      it( 'adds a song', function (  ) {
+        return adminAgent.post( '/api/v1/song' )
+      } )
+    } )
+    describe( '/:id', function () {
+      describe( 'GET', function () {
+        it( 'retrieves a specific song', function ( done ) {
+          return Promise.all([
+            adminAgent.get( '/api/v1/song/1' ).expect( 200 ),
+            guestAgent.get( '/api/v1/song/2' ).expect( 200 ),
+            authdAgent.get( '/api/v1/song/3' ).expect( 200 )
+          ])
+        } )
+      } )
+      describe( 'DELETE', function () {
+        it( 'admin-only', function (  ) {
+          return Promise.all([
+            adminAgent.delete( '/api/v1/song/1' ).expect( 204),
+            guestAgent.delete( '/api/v1/song/2' ).expect( 401 ),
+            authdAgent.delete( '/api/v1/song/3' ).expect( 403 )
+          ])
+        } )
+        it( 'deletes a specific song', function (  ) {
+          return adminAgent.delete( '/api/v1/song/1' ).expect( 204 );
+        } )
+      } )
+      describe( 'PUT', function () {
+        it( 'admin-only', function (  ) {
+          return Promise.all([
+            adminAgent.put( '/api/v1/song/1' ).expect( 200 ),
+            authdAgent.put( '/api/v1/song/2' ).expect( 403 ),
+            guestAgent.put( '/api/v1/song/3' ).expect( 401 )
+          ])
+        } )
+        it( 'updates a specific song', function (  ) {
+          return adminAgent.put( '/api/v1/song/1' ).expect( 200 )
+        } )
+      } )
+    } )
+    describe( '/reviews', function () {;
+
+      describe( 'GET', function () {
+        it( 'returns a list of all reviews', function (  ) {
+          return Promise.all([
+            adminAgent.get( '/api/v1/reviews' ).expect( 200 ),
+            guestAgent.get( '/api/v1/reviews' ).expect( 200 ),
+            authdAgent.get( '/api/v1/reviews' ).expect( 200 )
+          ])
+        } )
+        it( 'song/:songId/reviews retrieves a list of reviews for a specific song', function (  ) {
+          return guestAgent.get( '/api/v1/song/1/reviews' ).expect( 200 )
+        } )
+      } )
+      describe( '?', function () {
+        it( 'correctly interprets query parameters', function (  ) {
+          return guestAgent.get( '/api/v1/reviews?songTitle=circle+of+life' ).expect( 200 )
+        } )
+      } )
+    } )
+    describe( '/review', function () {;
+
+      describe( 'POST', function () {
+        let newReviewWithSongId = {
+          songId: 3,
+          description: "The Worst Ever!",
+          rating: "1"
+        }
+        it( 'authenticated users can create for their own account', function (  ) {
+          return authdAgent.post( '/api/v1/review' ).send( newReviewWithSongId ).expect( 201 );
+        } )
+        it( 'guest users cannot create', function (  ) {
+          return guestAgent.post( '/api/v1/review' ).send( newReviewWithSongId ).expect( 401 )
+        } )
+        it( 'admin users can create on behalf of any user', function (  ) {
+          newReviewWithSongId.userId = 3;
+          return adminAgent.post( '/api/v1/review' ).send( newReviewWithSongId ).expect( 201 )
+        } )
+        it( 'creates a new review', function (  ) {
+          return authdAgent.post( '/api/v1/review' ).send( newReviewWithSongId ).expect( 201 )
+        } )
+        let newReviewNoSongId = {
+          description: "The Best Ever!",
+          rating: "5"
+        }
+        it( '/song/:songId/review creates a new review for a specific song', function (  ) {
+          return authdAgent.post( '/api/v1/song/3/review' ).send(newReviewNoSongId).expect( 201 )
+        } )
+        it( 'new reviews must be associated with a song if posted to the general route', function (  ) {
+          return authdAgent.post( '/api/v1/review' ).send(newReviewNoSongId).expect( 400 )
+        } );
+      } )
+      describe( '/:reviewId', function (  ) {
+        describe( 'GET', function (  ) {
+          it( 'retrieves a review, for any user', function (  ) {
+            return Promise.all([
+              adminAgent.get( '/api/v1/review/1' ).expect( 200 ),
+              guestAgent.get( '/api/v1/review/2' ).expect( 200 ),
+              authdAgent.get( '/api/v1/review/3' ).expect( 200 )
+
+            ])
+          } );
+        } )
+        describe( 'DELETE', function (  ) {
+          it( 'deletes a review', function (  ) {
+            adminAgent.delete( '/api/v1/review/3' )
+          } )
+          it( 'an authenticated user can delete their own review', function (  ) {
+            authdAgent.delete( '/api/v1/review/1' ).expect( 204 )
+
+          } )
+          it( 'an admin can delete any review', function (  ) {
+            adminAgent.delete( '/api/v1/review/1' )
+          } );
+          it( 'a user cannot delete the review of another user', function (  ) {
+            authdAgent.delete( '/api/v1/reviw/3' ).expect( 403 );
+          } )
+          it( 'a guest cannot delte a review', function (  ) {
+            guestAgent.delete( '/api/v1/review/3' ).expect( 401 )
+          } )
+        } )
+        describe( 'PUT', function (  ) {
+          it( 'updates a review', function (  ) {
+            adminAgent.put( '/api/v1/review/1' ).expect( 200 )
+          } )
+          it( 'an authenticated user can update their own review', function (  ) {
+            authdAgent.put( '/api/v1/review/1' ).expect( 200 )
+          } )
+          it( 'an admin can update any review', function (  ) {
+            adminAgent.put( '/api/v1/review/2' ).expect( 200 )
+          } );
+          it( 'a user cannot update the review of another user', function (  ) {
+            adminAgent.put( '/api/v1/review/3' )
+          } )
+        } )
+      } )
+    } )
+  } );
+  xdescribe( '/genre', function (  ) {;
+
+    describe( 'POST', function (  ) {
+      it( 'admins can create a genre', function (  ) {
+        adminAgent.post( '/api/v1/genre' )
+      } )
+      it( 'admin-only', function (  ) {
+        authdAgent.post( '/api/v1/genre' ).expect( 403 );
+        guestAgent.post( '/api/v1/genre' ).expect( 401 )
+      } );
+    } )
+    describe( '/:id', function (  ) {
+      describe( 'GET', function (  ) {
+        it( 'retrieves information about a specific genre including list of songs and composers', function (  ) {
+          adminAgent.get( '/api/v1/genre/1' ).expect( 200 )
+          authdAgent.get( '/api/v1/genre/2' ).expect( 200 )
+          guestAgent.get( '/api/v1/genre/3' ).expect( 200 )
+        } )
+      } )
+      describe( 'DELETE', function (  ) {
+        it( 'deletes a genre', function (  ) {
+          adminAgent.delete( '/api/v1/genre/1' )
+        } )
+        it( 'admin-only', function (  ) {
+          authdAgent.delete( '/api/v1/genre/2' ).expect( 403 );
+          guestAgent.delete( '/api/v1/genre/3' ).expect( 401 )
+        } );
+      } )
+      describe( 'PUT', function (  ) {
+        it( 'updates a genre', function (  ) {
+          adminAgent.put( '/api/v1/genre/1' ).expect( 200 )
+        } )
+        it( 'admin-only', function (  ) {
+          authdAgent.put( '/api/v1/genre/2' ).expect( 403 );
+          guestAgent.put( '/api/v1/genre/3' ).expect( 401 )
+        } );
+      } )
+    } )
+  } );
+  xdescribe( '/genres', function (  ) {;
+
+    describe( 'GET', function (  ) {
+      it( 'retrieves a list of all genres, accessible by all user roles', function (  ) {
+        return Promise.all([
+          adminAgent.get( '/api/v1/genres' ).expect( 200 ),
+          authdAgent.get( '/api/v1/genres' ).expect( 200 ),
+          guestAgent.get( '/api/v1/genres' ).expect( 200 )
+        ])
+      } );
+    } )
+    describe( '?', function (  ) {
+      it( 'supports queries', function (  ) {
+        return Promise.all([
+          adminAgent.get( '/api/v1/genres?id=classical' ).expect( 200 ),
+          adminAgent.get( '/api/v1/genres?id=Classical' ).expect( 200 )
+
+        ])
+      } )
+    } )
+  } )
+} )
