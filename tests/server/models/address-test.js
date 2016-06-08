@@ -97,8 +97,6 @@ describe('Address Model', function () {
                     expect(err.message).to.contain('len failed');
                   });
             });
-
-
         });
 
        

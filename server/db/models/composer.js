@@ -2,12 +2,11 @@
 
 
 var Sequelize = require('sequelize');
-var database = require('../_db');
-var Song = require('./song')(database);
-
+var Song;
 
 module.exports = function (db) {
-
+    require('./song')(db);
+    Song = db.model('song');
     db.define('composer', { 
         firstName: {
             type: Sequelize.STRING,
