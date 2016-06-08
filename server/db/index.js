@@ -1,25 +1,30 @@
 'use strict';
 
 var db = require('./_db');
-var User = require('./models/user')(db);
-var Song = require('./models/song')(db);
-var Composer = require('./models/composer')(db);
-var Genre = require('./models/genre')(db);
-var Address = require('./models/address')(db);
-var Review = require('./models/review')(db);
-var Order = require('./models/order')(db);
-var OrderSong = require('./models/orderSong')(db);
-var Photo = require('./models/photo')(db);
+module.exports = db;
 
-Song = db.model('song');
-User = db.model('user');
-Composer = db.model('composer');
-Genre = db.model('genre');
-Address = db.model('address');
-Review = db.model('review');
-Order = db.model('order');
-OrderSong = db.model('song_order');
-Photo = db.model('photo');
+require('./models/user')(db);
+require('./models/song')(db);
+require('./models/composer')(db);
+require('./models/genre')(db);
+require('./models/address')(db);
+require('./models/review')(db);
+require('./models/order')(db);
+require('./models/orderSong')(db);
+require('./models/photo')(db);
+
+var User = db.model('user');
+var Song = db.model('song');
+var Composer = db.model('composer');
+var Genre = db.model('genre');
+var Address = db.model('address');
+var Review = db.model('review');
+var Order = db.model('order');
+var Photo = db.model('photo');
+
+User.hasMany(Address);
+User.hasMany(Review);
+
 
 Song.belongsTo(Composer);
 Song.belongsTo(Genre);
@@ -29,13 +34,11 @@ Order.belongsToMany(Song, {through: 'song_order'});
 Review.belongsTo(Song);
 Review.belongsTo(User);
 
-User.hasMany(Address);
-User.hasMany(Review);
 
 Song.belongsTo(Photo);
 User.belongsTo(Photo);
 
 Order.belongsTo(Address); // are we connecting the address to the order, user or both?
 
-module.exports = db;
+
 
