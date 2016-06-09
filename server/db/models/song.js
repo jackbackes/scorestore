@@ -6,11 +6,13 @@ var database = require('../_db');
 var Genre = database.model('genre');
 
 module.exports = function (db) {
-    
-     db.define('song', {
+   db.define('song', {
         title: {
             type: Sequelize.STRING,
             allowNull: false
+        },
+        subtitle: {
+          type: Sequelize.STRING
         },
         description: {
             type: Sequelize.TEXT,
@@ -52,7 +54,7 @@ module.exports = function (db) {
             type: Sequelize.STRING
         },
         publicDomainStatus: {
-            type: Sequelize.ENUM('public', 'private') //placeholder for license information to include later 
+            type: Sequelize.ENUM('public', 'private') //placeholder for license information to include later
         }
     }, {
         instanceMethods: {

@@ -22,23 +22,30 @@ var Review = db.model('review');
 var Order = db.model('order');
 var Photo = db.model('photo');
 
-User.hasMany(Address);
-User.hasMany(Review);
+
 
 
 Song.belongsTo(Composer);
 Song.belongsTo(Genre);
-Song.belongsToMany(Order, {through: 'song_order'});
-Order.belongsToMany(Song, {through: 'song_order'});
+Song.belongsToMany(Order, {through: 'song_order'}); //Seqelize does not support "hasMany" for n:m associations.
 
+console.log('order associations')
+Order.hasOne(Address);
+Order.belongsTo(User);
+Order.belongsToMany(Song, {through: 'song_order'}); //Seqelize does not support "hasMany" for n:m associations.
 Review.belongsTo(Song);
 Review.belongsTo(User);
 
+console.log('user associations')
+User.hasMany(Address);
+User.hasMany(Review);
+User.hasMany(Order);
 
+console.log('review associations')
+Review.belongsTo(Song);
+Review.belongsTo(User);
 Song.belongsTo(Photo);
 User.belongsTo(Photo);
 
-Order.belongsTo(Address); // are we connecting the address to the order, user or both?
 
-
-
+module.exports = db;
