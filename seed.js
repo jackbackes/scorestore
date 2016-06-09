@@ -28,8 +28,11 @@ const Song = db.model('song');
 const Composer = db.model('composer');
 const Genre = db.model('genre');
 const SongOrder = db.model('song_order');
+const Photo = db.model('photo')
 // const Promise = require('sequelize').Promise;
 const Promise = require('bluebird');
+
+const seedInfo = require('./ScoreSheetInfo');
 
 var seedUsers = function () {
 
@@ -72,40 +75,18 @@ var seedUsers = function () {
 };
 
 let seedSongs = function(){
-  let songs = [
-    {
-      title: "Symphony No. 5 in C Minor",
-      subtitle: "First Movement",
-      description: "Adapted By Arrangement from Ernst Pauer, 1826-1905",
-      yearComposed: 1823,
-      fileName: "Beethoven_Symphony_No._5_1st_movement_Piano_solo.pdf",
-      price: 10.00,
-      inventoryQuantity: 10,
-      instrumentTags: ["piano"],
-      sourceURL: "???",
-      publicDomainStatus: "public"
-    }
-  ]
-  let creatingSongs = songs.map(function (songObj) {
+  return seedInfo.songs.map(function (songObj) {
       return Song.create(songObj);
   });
 
-  return Promise.all(creatingSongs);
 };
 
-let seedComposers = function(resolvedSeedSongs){
+let seedComposers = function(){
   //populate this object with composer data. set an object title so that it can be used in the "setComposer" command below.
-  let composers = {
-    beethoven: {
-      firstName: "Ludwig",
-      lastName: "Van Beethoven"
-    }
-  }
 
-  // set composer for each song.
-  return Promise.all(resolvedSeedSongs).spread( (symphonyNo5) => Promise.all([
-    symphonyNo5.createComposer(composers.beethoven)
-  ]))
+  return seedInfo.composers.map(function (composerObj) {
+      return Composer.create(composerObj);
+  });
 }
 
 // let seedOrders = function(resolvedSeedUsers, resolvedSeed){
@@ -160,35 +141,23 @@ let seedComposers = function(resolvedSeedSongs){
 //   ])
 // };
 
-let seedGenres = function (resolvedSeedSongs) {
-  let genres = {genreName: 'jazz'};
+let seedGenres = function(){
+  return seedInfo.genres.map(function (genreObj) {
+      return Genre.create(genreObj);
+  });
 
-  return Promise.all(resolvedSeedSongs).spread( (symphonyNo5) => Promise.all([
-    symphonyNo5.createGenre(genres)
-  ]))
-}
+};
 
-let seedPhotos = function (resolvedSeedSongs) {
-  let photos = {
-    isLocal: true,
-    localFileName: 'image.jpg'
-  };
+let seedPhotos = function(){
+  return seedInfo.photos.map(function (photoObj) {
+      return Photo.create(photoObj);
+  });
 
-  return Promise.all(resolvedSeedSongs).spread( (symphonyNo5) => Promise.all([
-    symphonyNo5.createPhoto(photos)
-  ]));
-}
+};
 
 db.sync({ force: true })
     .then(function () {
-        return Promise.all([seedUsers(), seedSongs()])
-                      .spread( (resolvedSeedUsers, resolvedSeedSongs) => Promise.all(
-                        seedComposers(resolvedSeedSongs),
-                        // seedOrders(resolvedSeedUsers),
-                        // seedReviews(resolvedSeedUsers),
-                        seedGenres(resolvedSeedSongs),
-                        seedPhotos(resolvedSeedSongs)
-                      ));
+        return Promise.all([seedUsers(), seedComposers(), seedGenres(), seedPhotos(), seedSongs()])
     })
     .then(function () {
         console.log(chalk.green('Seed successful!'));
