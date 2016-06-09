@@ -17,10 +17,17 @@ module.exports = function (db) {
           get: function() {
             return this.firstName + ' ' + this.lastName;
           }
-        }
+        },
+        isGuest: {
+          type: Sequelize.BOOLEAN
+        },
         email: {
             type: Sequelize.STRING,
-            allowNull: false
+            unique: true,
+            validate: {
+              isEmail: true
+            },
+            allowNull: false,
         },
         password: {
             type: Sequelize.STRING
