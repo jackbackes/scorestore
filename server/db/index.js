@@ -4,9 +4,9 @@ var db = require('./_db');
 module.exports = db;
 
 require('./models/user')(db);
+require('./models/genre')(db);
 require('./models/song')(db);
 require('./models/composer')(db);
-require('./models/genre')(db);
 require('./models/address')(db);
 require('./models/review')(db);
 require('./models/order')(db);
@@ -14,9 +14,9 @@ require('./models/orderSong')(db);
 require('./models/photo')(db);
 
 var User = db.model('user');
+var Genre = db.model('genre');
 var Song = db.model('song');
 var Composer = db.model('composer');
-var Genre = db.model('genre');
 var Address = db.model('address');
 var Review = db.model('review');
 var Order = db.model('order');
