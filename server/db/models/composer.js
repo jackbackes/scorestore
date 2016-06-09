@@ -4,6 +4,7 @@
 var Sequelize = require('sequelize');
 var database = require('../_db');
 var Song = database.model('song');
+var Photo = database.model('photo');
 
 module.exports = function (db) {
     db.define('composer', { 
@@ -61,7 +62,34 @@ module.exports = function (db) {
                   }
                 });
               });    
+            },
+          findSimilarSongs: function () {
+                var that = this;
+                return Song.findAll({
+                  where: {
+                    composerId: this.id
+                  }
+                })
+                .then(function(songs) {
+                  return Promise.all(songs.map(function(a){
+                    return a.genreId;
+                  }));
+                })
+                .then(function(genres) {
+                  return Song.findAll({
+                    include: [Photo],
+                    where: {
+                      genreId: {
+                        $in: genres
+                      },
+                      composerId: {
+                        $ne: that.id
+                      }
+                    }
+                  });
+                })
             }
+            
         },
   });
 };
