@@ -2,14 +2,13 @@
 
 
 var Sequelize = require('sequelize');
+var database = require('../_db');
+var Genre = database.model('genre');
 
 module.exports = function (db) {
 
-<<<<<<< HEAD
-     return db.define('song', {
-=======
      db.define('song', {
->>>>>>> models
+
         title: {
             type: Sequelize.STRING,
             allowNull: false
@@ -61,29 +60,47 @@ module.exports = function (db) {
         }
     }, {
         instanceMethods: {
-            findSimilar: function () {
-              return this.Model.findAll({
-                where: {
-                  id: {
-                    $ne: this.id
-                  },
-                  instrumentTags: {
-                    $overlap: this.instrumentTags
-                  }
+          findSimilarByInstruments: function () {
+            return this.Model.findAll({
+              where: {
+                id: {
+                  $ne: this.id
+                },
+                instrumentTags: {
+                  $overlap: this.instrumentTags
                 }
-              });
+              }
+            });
+          },
+          findSimilarByGenre: function () {
+            return this.Model.findAll({
+              where: {
+                id: {
+                  $ne: this.id
+                },
+                genreId: this.genreId
+              }
+            });
           }
         },
         classMethods: {
-            findByTag: function (tag) {
-              return this.findAll({
-                where: {
-                  instrumentTags: {
-                    $contains: [tag]
-                  }
+          findByInstrumentTag: function (tag) {
+            return this.findAll({
+              where: {
+                instrumentTags: {
+                  $contains: [tag]
                 }
-              });
-            }
+              }
+            });
+          },
+          findByGenre: function (genre) {
+            return this.findAll({
+              include: [Genre],
+              where: {
+                genreName: genre
+              }
+            });
+          }
         },
     });
 };
