@@ -17,10 +17,10 @@
         <ul>
             <div ng-show="!isLoggedIn()" ng-repeat="button in loggedOutButtons">
                 <button ui-sref="{{button.state}}" class="btn login-button">{{button.label}}</button>
-            <div>
+            </div>
             <div ng-show="isLoggedIn()" ng-repeat="button in loggedInButtons">
                 <button ui-sref="{{button.state}}" class="btn login-button">{{button.label}}</button>
-            <div>
+            </div>
         </ul>
         <div ng-show="user" class="welcome">
             <span>Welcome, {{ user.email }}!</span>
