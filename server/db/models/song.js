@@ -6,7 +6,7 @@ var database = require('../_db');
 var Genre = database.model('genre');
 
 module.exports = function (db) {
-   db.define('song', {
+     db.define('song', {
         title: {
             type: Sequelize.STRING,
             allowNull: false
