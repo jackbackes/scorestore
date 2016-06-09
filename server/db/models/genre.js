@@ -11,6 +11,4 @@ module.exports = function (db) {
             allowNull: false
         }
     });
-
-    return db.model('genre');
 };

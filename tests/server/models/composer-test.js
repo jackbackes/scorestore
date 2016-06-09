@@ -7,77 +7,15 @@ process.env.NODE_ENV = 'testing';
 var Sequelize = require('sequelize');
 var Promise = require('sequelize').Promise;
 var db = require('../../../server/db');
-// var dbURI = 'postgres://localhost:5432/testingfsg';
-// var db = new Sequelize(dbURI, {
-//     logging: false
-// });
-
-// require('../../../server/db/models/song')(db);
-// // require('../../../server/db/models/order')(db);
-// // require('../../../server/db/models/orderSong')(db);
-// require('../../../server/db/models/genre')(db);
-// // // require('../../../server/db/models/review')(db);
-// require('../../../server/db/models/composer')(db);
-// // require('../../../server/db/models/address')(db);
-// // require('../../../server/db/models/photo')(db);
-// // require('../../../server/db/models/user')(db);
 
 var Song = db.model('song');
-console.log('%%%%%%%%%%%%%%%%%%', Song.associations);
-// // var Order = db.model('order');
-// // var orderSong = db.model('song_order');
 var Genre = db.model('genre');
-// // var Review = db.model('review');
 var Composer = db.model('composer');
-// // var Address = db.model('address');
-// // var Photo = db.model('photo');
-// // var User = db.model('user');
 
-// Song.belongsTo(Composer);
-// Song.belongsTo(Genre);
-// // Song.belongsToMany(Order, {through: 'song_order'});
-// // Order.belongsToMany(Song, {through: 'song_order'});
-
-
-// // Review.belongsTo(Song);
-// // Review.belongsTo(User);
-
-// // User.hasMany(Address);
-// // User.hasMany(Review);
-
-// // Song.belongsTo(Photo);
-// // User.belongsTo(Photo);
 
 describe('Composer Model', function () {
 
-    // var createSong,
-    // createOrder;
-    // createComposer,
-    // createGenre,
-    // createUser,
-    // createReview,
-    // createAddress,
-    // createPhoto;
-
     beforeEach('Sync DB', function () {
-    //     // createGenre = function (genre) {
-    //     //     return Genre.create({genreName: genre});
-    //     // };
-    //     // createAddress = function () {
-    //     //     return Address.create({ firstName: 'John', lastName: 'Smith', address: '1 Main Street', city: 'New York', State: 'NY', zipCode: '10001'});
-    //     // };
-    //     // createComposer = function () {
-    //     //     return Composer.create({ firstName: 'Jim', lastName: 'Jones'});
-    //     // };
-    //     // createReview = function () {
-    //     //     return Review.create({rating: 5, description: 'Great song'});
-    //     // };
-    //     // createUser = function () {
-    //     //     return User.create({ firstName: "Barack", lastName: 'Obama', email: 'obama@gmail.com'})
-    //     // };
-    //     // createPhoto = function () {
-    //     //     return Photo.create({ isLocal: true});
-    //     // };
        return db.sync({ force: true });
     });
 

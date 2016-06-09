@@ -2,11 +2,11 @@
 
 
 var Sequelize = require('sequelize');
-var Genre;
+var database = require('../_db');
+var Genre = database.model('genre');
 
 module.exports = function (db) {
-    require('./genre')(db);
-    Genre = db.model('genre');
+    
      db.define('song', {
         title: {
             type: Sequelize.STRING,
@@ -99,5 +99,4 @@ module.exports = function (db) {
           }
         },
     });
-    return db.model('song');
 };

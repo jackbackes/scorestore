@@ -15,5 +15,4 @@ module.exports = function (db) {
         type: Sequelize.STRING,
       },
     });
-    return db.model('photo');
   };

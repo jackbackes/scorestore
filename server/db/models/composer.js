@@ -29,7 +29,6 @@ module.exports = function (db) {
                 where: {
                   composerId: this.id
                 }
-                // group: ['genreId']
               })
               .then(function(songs) {
                 return Promise.all(songs.map(function(a){
@@ -65,5 +64,4 @@ module.exports = function (db) {
             }
         },
     });
-    return db.model('composer');
 };

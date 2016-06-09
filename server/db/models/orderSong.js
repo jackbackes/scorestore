@@ -11,5 +11,4 @@ module.exports = function (db) {
         defaultValue: 1
       }
     });
-    return db.model('song_order');
   };

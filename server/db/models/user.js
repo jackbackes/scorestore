@@ -77,6 +77,4 @@ module.exports = function (db) {
         }
     });
 
-    return db.model('user');
-
 };

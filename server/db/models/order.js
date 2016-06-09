@@ -23,5 +23,4 @@ module.exports = function (db) {
         type: Sequelize.DECIMAL
       }
     });
-    return db.model('order');
   };
