@@ -9,6 +9,8 @@ var Photo = db.model('photo');
 
 router.use('/members', require('./members'));
 
+router.use('/v1/songs', require('./songs'));
+
 // Make sure this is after all of
 // the registered routes!
 router.get('/v1/song/:songId', function(req, res, next){

@@ -101,6 +101,6 @@ module.exports = function (db) {
               }
             });
           }
-        },
+        }
     });
 };
