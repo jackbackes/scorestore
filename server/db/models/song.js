@@ -1,11 +1,15 @@
 'use strict';
 
-var _ = require('lodash');
+
 var Sequelize = require('sequelize');
 
 module.exports = function (db) {
 
+<<<<<<< HEAD
      return db.define('song', {
+=======
+     db.define('song', {
+>>>>>>> models
         title: {
             type: Sequelize.STRING,
             allowNull: false
@@ -31,11 +35,6 @@ module.exports = function (db) {
         inventoryQuantity: {
             type: Sequelize.INTEGER,
             allowNull: false
-        },
-        imageURL: {
-            type: Sequelize.STRING,
-            allowNull: false,
-            defaultValue: './images/default-image.jpg'
         },
         instrumentTags: {
             type: Sequelize.ARRAY(Sequelize.STRING),

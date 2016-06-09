@@ -1,6 +1,6 @@
 'use strict';
 
-var _ = require('lodash');
+
 var Sequelize = require('sequelize');
 
 module.exports = function (db) {
@@ -20,5 +20,10 @@ module.exports = function (db) {
           len: [5]
         }
       }
+<<<<<<< HEAD
     })
   }
+=======
+    });
+};
+>>>>>>> models
