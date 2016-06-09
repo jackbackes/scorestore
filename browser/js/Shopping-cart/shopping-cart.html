@@ -1,0 +1,36 @@
+<section id="shopping-cart">
+    <div class="empty-cart text-center" ng-show="isCartEmpty()">
+        <header>
+        	<h3>Your shopping cart is empty</h3>
+        	<h4>Add some music!</h4>
+        </header>
+        <ul class="list-group">
+          <li><a ui-sref='home'>Browse all of our songs</a>
+          <li><a ui-sref='composers'>Find songs by your favorite composers</a>
+        </ul>
+    </div>
+
+    <div ng-show="!isCartEmpty()" class='cart-container'>
+    	<header>
+    		<button ui-sref="home" class="btn btn-info">Return To Shopping</button>
+    		<h4>{{orders.length}} items are in your shopping cart</h4>
+    	</header>
+      <table class="table">
+      	<tr ng-repeat="order in orders">
+        		<td class="col-md-10 col-sm-10 col-xs-10">
+    				<div class="order-info">
+    					<img class="order-image" src="{{order.song.image}}" />
+    					<div class="order-details">
+    						<p>Song: {{order.song.title}} by {{order.composer.fullName}}</p>
+    						<p>Quantity: {{quantity}}</p>
+    						<a ng-click="removeFromCart()">Remove</a>
+    					</div>
+    				</div>
+        		</td>
+        		<td class="col-md-2 col-sm-2 col-xs-2">
+        			<p>${{order.total}}</p>
+        		</td>
+        	</tr>
+      </table>
+    </div>
+</section>
