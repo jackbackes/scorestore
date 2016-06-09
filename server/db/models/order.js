@@ -1,11 +1,11 @@
 'use strict';
 
-var _ = require('lodash');
+
 var Sequelize = require('sequelize');
 
 module.exports = function (db) {
 
-    db.define('order', {
+    return db.define('order', {
       shipped: {
         type: Sequelize.BOOLEAN,
         defaultValue: false
@@ -22,5 +22,5 @@ module.exports = function (db) {
       total: {
         type: Sequelize.DECIMAL
       }
-    })
-  }
+    });
+  };

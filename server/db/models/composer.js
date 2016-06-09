@@ -2,11 +2,12 @@
 
 
 var Sequelize = require('sequelize');
-// var Genre = require('./genre')(database);
+var database = require('../_db');
+var Song = database.model('song');
+
 
 module.exports = function (db) {
-
-    db.define('composer', {
+    db.define('composer', { 
         firstName: {
             type: Sequelize.STRING,
             allowNull: false
@@ -24,20 +25,44 @@ module.exports = function (db) {
     }, {
         instanceMethods: {
             findSimilar: function () {
-              return this.Model.findAll({
-                include: [{
-                  model: db.model('genre'),
-                  through: {
-                    where: {
-                      genreId: this.genreId,
-                      composerId: {
-                        $ne: this.id
-                      }
+              var that = this;
+              return Song.findAll({
+                where: {
+                  composerId: this.id
+                }
+              })
+              .then(function(songs) {
+                return Promise.all(songs.map(function(a){
+                  return a.genreId;
+                }));
+              })
+              .then(function(genres) {
+                return Song.findAll({
+                  where: {
+                    genreId: {
+                      $in: genres
+                    },
+                    composerId: {
+                      $ne: that.id
                     }
                   }
-                }]
-            });
+                });
+              })
+              .then(function (songs) {
+                return Promise.all(songs.map(function(a){
+                  return a.composerId;
+                }));
+              })
+              .then(function(composers) {
+                return that.Model.findAll({
+                  where: {
+                    id: {
+                      $in: composers
+                    }
+                  }
+                });
+              });    
+            }
         },
-    }
   });
 };
