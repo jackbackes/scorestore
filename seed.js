@@ -17,22 +17,50 @@ name in the environment files.
 
 */
 
-var chalk = require('chalk');
-var db = require('./server/db');
-var User = db.model('user');
-var Promise = require('sequelize').Promise;
+'use strict'
+
+const chalk = require('chalk');
+const db = require('./server/db');
+const User = db.model('user');
+const Order = db.model('order');
+const Review = db.model('review');
+const Song = db.model('song');
+const Composer = db.model('composer');
+const Genre = db.model('genre');
+const SongOrder = db.model('song_order');
+// const Promise = require('sequelize').Promise;
+const Promise = require('bluebird');
 
 var seedUsers = function () {
 
     var users = [
         {
+            firstName: 'Omri',
+            lastName: 'Bernstein',
+            isGuest: false,
             email: 'testing@fsa.com',
-            password: 'password'
+            password: 'password',
+            twitter_id: "123",
+            facebook_id: "123",
+            google_id: "123",
+            isAdmin: false
         },
         {
+            firstName: 'Barack',
+            lastName: 'Obama',
+            isGuest: false,
             email: 'obama@gmail.com',
-            password: 'potus'
+            password: 'potus',
+            isAdmin: 'true',
+            twitter_id: "123",
+            facebook_id: "123",
+            google_id: "123",
+            isAdmin: true
+        },{
+            email: "guest@mcguesterson.com",
+            isGuest: true
         }
+
     ];
 
     var creatingUsers = users.map(function (userObj) {
@@ -43,9 +71,124 @@ var seedUsers = function () {
 
 };
 
+let seedSongs = function(){
+  let songs = [
+    {
+      title: "Symphony No. 5 in C Minor",
+      subtitle: "First Movement",
+      description: "Adapted By Arrangement from Ernst Pauer, 1826-1905",
+      yearComposed: 1823,
+      fileName: "Beethoven_Symphony_No._5_1st_movement_Piano_solo.pdf",
+      price: 10.00,
+      inventoryQuantity: 10,
+      instrumentTags: ["piano"],
+      sourceURL: "???",
+      publicDomainStatus: "public"
+    }
+  ]
+  let creatingSongs = songs.map(function (songObj) {
+      return Song.create(songObj);
+  });
+
+  return Promise.all(creatingSongs);
+};
+
+let seedComposers = function(resolvedSeedSongs){
+  //populate this object with composer data. set an object title so that it can be used in the "setComposer" command below.
+  let composers = {
+    beethoven: {
+      firstName: "Ludwig",
+      lastName: "Van Beethoven"
+    }
+  }
+
+  // set composer for each song.
+  return Promise.all(resolvedSeedSongs).spread( (symphonyNo5) => Promise.all([
+    symphonyNo5.createComposer(composers.beethoven)
+  ]))
+}
+
+// let seedOrders = function(resolvedSeedUsers, resolvedSeed){
+//   let orders = [
+//     {
+//       songs: [
+//         { songId: 1, quantity: 10 },
+//         { songId: 2, quantity: 1 },
+//         { songId: 3, quantity: 4 }
+//       ],
+//       userId: 1,
+//       shippingAddress: {
+//         firstName: "Jimmy",
+//         lastName: "Neutron",
+//         address: "123 Mars Avenue",
+//         city: "MoonBase",
+//         state: "TX",
+//         zipCode: 75252
+//       }
+//     }]
+//   let testingOrder = orders[0];
+//   return Promise.all(resolvedSeedUsers).spread( (testing, obama) => [
+//     testing.createOrder( {
+//       include: [
+//         //include the correct user
+//         {model: User, where: {id: testingOrder.userId}},
+//         //include the songs into the order
+//       ]
+//       //add the shipping address
+//     } ).then(order => {
+//       order.createAddress( testingOrder.shippingAddress )
+//       return Promise.all(testingOrder.songs.map(function(song) {
+//         console.log(song)
+//       }))
+
+//       })
+//   ] )
+// };
+
+// let seedReviews = function(resolvedSeedUsers){
+//   let reviews = [
+//     { userId: 1, songId: 1, rating: 5, description: "I loved it!"},
+//     { userId: 2, songId: 2, rating: 0, description: "I hated it!"},
+//     { userId: 1, songId: 2, rating: 5, description: "I don't understand the bad review. I loved it!"}
+//   ]
+//   let testingReview = reviews[0];
+//   return Promise.all(resolvedSeedUsers).spread( (testing, obama ) => [
+//     testing.createReview( {
+//       rating: testingReview.rating,
+//       description: testingReview.description
+//     } )
+//   ])
+// };
+
+let seedGenres = function (resolvedSeedSongs) {
+  let genres = {genreName: 'jazz'};
+
+  return Promise.all(resolvedSeedSongs).spread( (symphonyNo5) => Promise.all([
+    symphonyNo5.createGenre(genres)
+  ]))
+}
+
+let seedPhotos = function (resolvedSeedSongs) {
+  let photos = {
+    isLocal: true,
+    localFileName: 'image.jpg'
+  };
+
+  return Promise.all(resolvedSeedSongs).spread( (symphonyNo5) => Promise.all([
+    symphonyNo5.createPhoto(photos)
+  ]));
+}
+
 db.sync({ force: true })
     .then(function () {
-        return seedUsers();
+        return Promise.all([seedUsers(), seedSongs()])
+                      .spread( (resolvedSeedUsers, resolvedSeedSongs) => Promise.all(
+                        seedComposers(resolvedSeedSongs),
+                        // seedOrders(resolvedSeedUsers),
+                        // seedReviews(resolvedSeedUsers),
+                        seedGenres(resolvedSeedSongs),
+                        seedPhotos(resolvedSeedSongs)
+                      ));
     })
     .then(function () {
         console.log(chalk.green('Seed successful!'));
