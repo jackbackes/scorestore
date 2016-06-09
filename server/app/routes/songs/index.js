@@ -80,4 +80,12 @@ router.put('/:id', function (req, res, next) {
   }
 });
 
+router.get('/:id/similarInstruments', function(req, res, next){
+  req.song.findSimilarByInstruments()
+  .then(function(similarSongs){
+    res.send(similarSongs)
+  })
+  .catch(next);
+})
+
 module.exports = router;
