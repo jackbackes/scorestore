@@ -5,7 +5,6 @@ var Sequelize = require('sequelize');
 var database = require('../_db');
 var Song = database.model('song');
 
-
 module.exports = function (db) {
     db.define('composer', { 
         firstName: {

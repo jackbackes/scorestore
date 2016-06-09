@@ -14,14 +14,13 @@ require('./models/orderSong')(db);
 require('./models/photo')(db);
 
 var User = db.model('user');
+var Genre = db.model('genre');
 var Song = db.model('song');
 var Composer = db.model('composer');
-var Genre = db.model('genre');
 var Address = db.model('address');
 var Review = db.model('review');
 var Order = db.model('order');
 var Photo = db.model('photo');
-
 
 Song.belongsTo(Composer);
 Song.belongsTo(Genre);
@@ -41,7 +40,5 @@ Review.belongsTo(Song);
 Review.belongsTo(User);
 Song.belongsTo(Photo);
 User.belongsTo(Photo);
-
-
 
 module.exports = db;

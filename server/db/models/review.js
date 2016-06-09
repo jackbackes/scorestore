@@ -5,7 +5,7 @@ var Sequelize = require('sequelize');
 
 module.exports = function (db) {
 
-    return db.define('review', {
+    db.define('review', {
       rating: {
         type: Sequelize.INTEGER,
         allowNull: false, //notnull has been deprecated.
