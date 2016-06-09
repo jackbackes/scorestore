@@ -17,10 +17,9 @@ var supertest = require( 'supertest' );
 var supertestAsPromised = require( 'supertest-as-promised' )
 
 var Sequelize = require( 'sequelize' );
-var dbURI = 'postgres://localhost:5432/testing-fsg';
-var db = new Sequelize( dbURI, {
-  logging: false
-} );
+process.env.NODE_ENV = 'testing';
+var db = require('../../../server/db');
+
 require( '../../../server/db/models/user' )( db );
 require( '../../../server/db/models/song' )( db );
 require( '../../../server/db/models/composer' )( db );
