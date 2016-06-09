@@ -3,7 +3,7 @@
 
 var Sequelize = require('sequelize');
 var database = require('../_db');
-var Genre = require('./genre')(database);
+var Song = database.model('song');
 
 
 module.exports = function (db) {
