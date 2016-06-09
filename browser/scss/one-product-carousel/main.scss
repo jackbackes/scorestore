@@ -1,0 +1,21 @@
+  .carousel {
+    float: center;
+    width: 100%;
+    overflow: hidden;
+    margin: 0 auto;
+    .carousel-inner {
+      height: 250px !important;
+    }
+    .carousel-control {
+      background: none;
+    }
+    .carousel-indicators {
+      display: none;
+    }
+    img {
+      max-width: 200%;
+      max-height: 500px;
+      display: block;
+      margin: 0 auto;
+    }
+  }
