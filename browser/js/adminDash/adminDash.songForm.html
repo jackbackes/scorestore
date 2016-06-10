@@ -1,4 +1,7 @@
 <form class="admin-edit-form" ng-submit="updateOrCreate(song)">
+  <label ng-hide="newSong">ID</label>
+  <input ng-hide="newSong" type="text" ng-model="song.id" ng-disabled="true">
+  <h3 ng-show="newSong">Create a New Song</h3>
   <label>Title</label>
   <input type="text" ng-model="song.title">
   <label>Subtitle</label>
@@ -20,5 +23,5 @@
   <label>Public Domain Status</label>
   <input type="text" ng-model="song.publicDomainStatus">
   <button type="submit">Save</button>
-  <button>Cancel</button>
+  <button ui-sref="adminDash.songs">Cancel</button>
 </form>

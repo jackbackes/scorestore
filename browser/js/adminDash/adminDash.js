@@ -11,7 +11,7 @@ app.config(function ($stateProvider) {
   })
 
   .state('songForm', {
-    url: '/songForm',
+    url: '/songForm/:id',
     templateUrl: 'js/adminDash/adminDash.songForm.html',
     controller: 'songFormCtrl'
   });
