@@ -4,6 +4,7 @@
 var Sequelize = require('sequelize');
 var database = require('../_db');
 var Genre = database.model('genre');
+var Photo = database.model('photo');
 
 module.exports = function (db) {
      db.define('song', {
@@ -60,6 +61,7 @@ module.exports = function (db) {
         instanceMethods: {
           findSimilarByInstruments: function () {
             return this.Model.findAll({
+              include: [Photo],
               where: {
                 id: {
                   $ne: this.id
@@ -99,6 +101,6 @@ module.exports = function (db) {
               }
             });
           }
-        },
+        }
     });
 };
