@@ -1,58 +1,8 @@
-<section id="shopping-cart">
-    <div class="empty-cart text-center" ng-show="!cart.length">
-        <header>
-        	<h3>Your shopping cart is empty</h3>
-        	<h4>Add some music!</h4>
-        </header>
-        <ul class="list-group">
-          <li><a ui-sref='home'>Browse all of our songs</a>
-          <li><a ui-sref='composers'>Find songs by your favorite composers</a>
-        </ul>
+<shopping-cart the-cart="cart"></shopping-cart>
+<div class="row">
+    <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10" >
     </div>
-
-    <div ng-show="cart.length" class='cart-container'>
-    	<header>
-    		<button ui-sref="home" class="btn btn-info">Return To Shopping</button>
-    		<h4>{{cart.length}} items are in your shopping cart</h4>
-    	</header>
-      <table class="table">
-      	<tr ng-repeat="item in cart">
-    		<td class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
-				<div class="order-info">
-					<a ui-sref="oneSong ({songId:item.song.id})"><img class="order-image" src="{{item.song.photo.externalUrl}}" height="100" width="100" /></a>
-					<div class="order-details">
-						<p>Song: {{item.song.title}} by {{item.song.composer.fullName}}</p>
-						<p ng-show="!editing">Quantity: {{item.quantity}} 
-                            <button ng-click="editing = true" class="btn btn-raised btn-primary">Edit Quantity</button>
-                        </p>
-                        <p ng-show="editing">
-                            <select class="selectpicker" name="quantity" ng-init="quantityToAdd = inventory[0]" ng-options="number for number in inventory" ng-model="quantityToAdd" required>
-                            </select>
-                            <button ng-click="editing = false; updateCart(item.song, quantityToAdd)" class="btn btn-raised btn-primary">Confirm</button>
-                        </p>
-						<a ng-click="removeFromCart(item)" id="remove">Remove from Cart</a>
-					</div>
-				</div>
-    		</td>
-    		<td class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
-    			<p>{{item.song.price * item.quantity | currency}}</p>
-    		</td>
-    	</tr>
-        <tr>
-            <td class="col-lg-10 col-md-10 col-sm-10 col-xs-10" >
-                <p id="total">Total:  </p>
-            </td>
-            <td class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
-                <p>{{getCartTotal() | currency}}</p>
-            </td>
-        </tr>
-      </table>
-       <div class="row">
-            <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10" >
-            </div>
-            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
-                  <button ui-sref="checkout" class="btn btn-success">Checkout</button>
-            </div>
-        </div>
+    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+          <button ui-sref="checkout" class="btn btn-success">Checkout</button>
     </div>
-</section>
+</div>
