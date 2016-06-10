@@ -14,13 +14,22 @@
             <div class="product-info">
               <a ui-sref="oneSong ({songId:song.id})"><h4>{{ song.title }}</h4></a>
               <a ui-sref="<<<<home | composer>>>>>"><h5>{{ song.composer.fullName }}</h5></a>
-              <h6>{{ song.price }}</h6>
+              <h6>{{ song.price | currency }}</h6>
               <a ui-sref="cart" ng-click="addToCart(song)" class="btn btn-raised btn-primary">Add to Cart</a>
             </div>
           </div>
         </div>
       </div>
     </div>
+
+
+
+
+
+
+
+
+
 
 
 
