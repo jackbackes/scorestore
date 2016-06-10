@@ -2,10 +2,23 @@ app.config(function ($stateProvider) {
     $stateProvider.state('home', {
         url: '/',
         templateUrl: 'js/home/home.html',
-        controller: 'homeCtrl'
+        controller: 'homeCtrl',
+        resolve:{
+        	allSongs:function(SongsFactory){
+        		return SongsFactory.getSongs()
+        	}
+        }
     });
 });
 
-app.controller('homeCtrl', function ($scope) {
-  $scope.images = [1,2,3,4,5,6,7,8,9];
+app.controller('homeCtrl', function ($scope, allSongs, CartFactory) {
+  $scope.songs = allSongs
+
+  $scope.addToCart = function(song) {
+        CartFactory.addToCart(song, 1)
+        .then(function(response) {
+            $scope.cart = response;
+        });
+    };
+
 });
