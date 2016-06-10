@@ -4,6 +4,7 @@
 var Sequelize = require('sequelize');
 var database = require('../_db');
 var Genre = database.model('genre');
+// var Composer = database.model('composer');
 
 module.exports = function (db) {
      db.define('song', {
@@ -99,6 +100,6 @@ module.exports = function (db) {
               }
             });
           }
-        },
+        }
     });
 };

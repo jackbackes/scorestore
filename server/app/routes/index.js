@@ -4,6 +4,8 @@ module.exports = router;
 
 router.use('/members', require('./members'));
 
+router.use('/v1/songs', require('./songs'));
+
 // Make sure this is after all of
 // the registered routes!
 router.use(function (req, res) {
