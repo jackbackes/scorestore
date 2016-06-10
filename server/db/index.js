@@ -5,22 +5,22 @@ module.exports = db;
 
 require('./models/user')(db);
 require('./models/genre')(db);
+require('./models/photo')(db);
 require('./models/song')(db);
 require('./models/composer')(db);
 require('./models/address')(db);
 require('./models/review')(db);
 require('./models/order')(db);
 require('./models/orderSong')(db);
-require('./models/photo')(db);
 
 var User = db.model('user');
 var Genre = db.model('genre');
+var Photo = db.model('photo');
 var Song = db.model('song');
 var Composer = db.model('composer');
 var Address = db.model('address');
 var Review = db.model('review');
 var Order = db.model('order');
-var Photo = db.model('photo');
 
 Song.belongsTo(Composer);
 Song.belongsTo(Genre);
