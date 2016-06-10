@@ -17,20 +17,35 @@
     	</header>
       <table class="table">
       	<tr ng-repeat="item in cart">
-        		<td class="col-md-10 col-sm-10 col-xs-10">
-    				<div class="order-info">
-    					<img class="order-image" src="{{item.song.photo.externalUrl}}" />
-    					<div class="order-details">
-    						<p>Song: {{item.song.title}} by {{item.song.composer.fullName}}</p>
-    						<p>Quantity: {{item.quantity}}</p>
-    						<a ng-click="removeFromCart(item)">Remove</a>
-    					</div>
-    				</div>
-        		</td>
-        		<td class="col-md-2 col-sm-2 col-xs-2">
-        			<p>${{item.song.price * item.quantity}}</p>
-        		</td>
-        	</tr>
+    		<td class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
+				<div class="order-info">
+					<img class="order-image" src="{{item.song.photo.externalUrl}}" height="100" width="100" />
+					<div class="order-details">
+						<p>Song: {{item.song.title}} by {{item.song.composer.fullName}}</p>
+						<p>Quantity: {{item.quantity}}</p>
+						<a ng-click="removeFromCart(item)" id="remove">Remove from Cart</a>
+					</div>
+				</div>
+    		</td>
+    		<td class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+    			<p>${{item.song.price * item.quantity}}</p>
+    		</td>
+    	</tr>
+        <tr>
+            <td class="col-lg-10 col-md-10 col-sm-10 col-xs-10" >
+                <p id="total">Total:  </p>
+            </td>
+            <td class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                <p>${{getCartTotal()}}</p>
+            </td>
+        </tr>
       </table>
+       <div class="row">
+            <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10" >
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                  <button ui-sref="checkout" class="btn btn-success">Checkout</button>
+            </div>
+        </div>
     </div>
 </section>

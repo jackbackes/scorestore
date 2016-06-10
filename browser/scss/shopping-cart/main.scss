@@ -36,7 +36,7 @@
 	margin-bottom: 20px;
 }
 .table {
-	border: 1px solid black;
+	
 
 	tbody > tr > td {
 		border: 1px solid black;
@@ -49,6 +49,16 @@
 
 	.order-image {
 		float:left;
+	}
+
+	#total {
+		float:right;
+		margin-right: 20px;
+	}
+
+	#remove:hover {
+		color: #C9302C;
+		text-decoration: none;
 	}
 }
 

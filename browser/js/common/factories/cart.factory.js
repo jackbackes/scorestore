@@ -19,11 +19,17 @@ app.factory('CartFactory', function($http){
 		},
 
 		removeFromCart: function(item) {
-			console.log(item);
 			return $http.delete('/api/v1/cart/' + item.song.id)
 			.then(function(response) {
 				angular.copy(response.data, cachedCartItems);
 			})
+		},
+
+		getCartTotal: function() {
+			if (!cachedCartItems.length) return null;
+			else if (cachedCartItems.length === 1) return cachedCartItems[0].song.price * cachedCartItems[0].quantity;
+			else return cachedCartItems.reduce( (a,b) => (a.song.price * a.quantity) + (b.song.price * b.quantity));
+
 		}
 	};
 

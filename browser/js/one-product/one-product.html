@@ -1,104 +1,113 @@
 <section id="one-product">
 	<div class="container">
-			<div class="row">
-				<div class="medium-4 large-4 columns">
-					<img class="thumbnail" height="400" width="400" ng-src="{{ song.photo.externalUrl }}">
+		<div class="row">
+			<div class="medium-4 large-4 columns">
+				<img class="thumbnail" height="400" width="400" ng-src="{{ song.photo.externalUrl }}">
+			</div>
+			<div class="medium-8 large-8 columns">
+				<h3>{{ song.title }}</h3>
+				<p>{{ song.description }}</p>
+				<div class="row">
+					<div class="medium-6 large-6 columns">	
+						<p>Composer: <a ui-sref="oneComposser({composerId: song.composer.id})">{{ song.composer.fullName }}</a></p>
+						<p>Genre: <a ui-sref="Genre({genreId: song.genre.id})"> {{ song.genre.genreName }}</a></p>
+						<p>Year: {{ song.yearComposed }}</p>
+						<p>Instruments: {{ song.instrumentTags.join(', ') }}</p>
+						<p>Price: ${{ song.price }}</p>
+					</div>
+					<div class="medium-6 large-6 columns text-center">
+						<h5>View Sheet Music</h5>
+						<button id="popup" ui-sref=""><img src="https://lh3.googleusercontent.com/-KGMzjcgQK-s/UFR1MVeFlaI/AAAAAAAAALI/4VEC91JC9d8/s476/god-clef-free-hymn-sheet-music-button-styled.png" height="100" width="100" /></button>
+					</div>
 				</div>
-				<div class="medium-8 large-8 columns">
-					<h3>{{ song.title }}</h3>
-					<p>{{ song.description }}</p>
-					<p>Composer: <a ui-sref="oneComposser({composerId: song.composer.id})">{{ song.composer.fullName }}</p></a>
-					<p>Genre: <a ui-sref="Genre({genreId: song.genre.id})"> {{ song.genre.genreName }}</p></a>
-					<p>Year: {{ song.yearComposed }}</p>
-					<p>Instruments: {{ song.instrumentTags.join(', ') }}</p>
-					<p>Price: ${{ song.price }}</p>
-					
-					<label>Type of Paper
-						<select>
-							<option value="husker">Vellum Bristol</option>
-							<option value="starbuck">Laser Bond</option>
-							<option value="hotdog">Carbonless CB</option>
-							<option value="apollo">Offset</option>
-						</select>
+				
+				<label>Type of Paper
+					<select>
+						<option value="husker">Vellum Bristol</option>
+						<option value="starbuck">Laser Bond</option>
+						<option value="hotdog">Carbonless CB</option>
+						<option value="apollo">Offset</option>
+					</select>
+				</label>
+
+				<div class="row">
+					<div class="small-2 columns">
+						<label for="middle-label" class="middle quantity">Quantity:</label>
+					</div>
+					<div class="small-3 columns">
+						<!-- <input type="number" placeholder="Quantity" id="middle-label" ng-model="quantity"> -->
+						<select class="selectpicker" name="quantity" ng-options="number for number in inventory" ng-model="quantityToAdd" required></select>
+					</div>
+					<div class="small-7 columns">
+						<a ui-sref="cart" ng-click="addToCart(song, quantityToAdd)" class="button large expanded">Add to Cart</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<hr>
+		<div class="row">
+			<!-- <div class="col-lg-1"></div> -->
+			<div class="col-lg-5 col-md-5">
+				<div class="col-lg-3 col-md-3"></div><div class="col-lg-5 col-md-5 text-center"><h4>Songs By Similar Composers</h4></div><div class="col-lg-4 col-md-4"></div>
+				<carousel interval="2000">
+					<slide ng-repeat="song in similarSongsByComposer">
+						<a ui-sref="oneSong({songId:song.id})"><img height="400" ng-src="{{ song.photo.externalUrl }}" /></a>
+					</slide>
+				</carousel>
+			</div>
+			<div class="col-lg-2 col-md-2"></div>
+			<div class="col-lg-5 col-md-5">
+				<div class="col-lg-3 col-md-3"></div><div class="col-lg-5 col-md-5 text-center"><h4>Songs With Similar Instruments</h4></div><div class="col-lg-4 col-md-4"></div>
+				<carousel interval="2000">
+					<slide ng-repeat="song in similarSongsByInstrument">
+						<a ui-sref="oneSong({songId:song.id})"><img height="400" ng-src="{{ song.photo.externalUrl }}"/></a>
+					</slide>
+				</carousel>
+			</div>
+			<!-- <div class="col-lg-1"></div> -->
+		</div>
+		<hr>
+
+		<div class="column row">
+			<div class="tabs-content" data-tabs-content="example-tabs">
+				<div class="tabs-panel is-active" id="panel1">
+					<h4>Reviews</h4>
+					<hr>
+					<div class="media-object stack-for-small">
+						<div class="media-object-section">
+							<img class="thumbnail" src="https://static4.fjcdn.com/thumbnails/comments/Gt+go+to+von+s+grocery+store+in+california+_c3626eed81d486427c3fc01db7bccd9a.gif">
+						</div>
+						<div class="media-object-section">
+							<h5>Mike Stevenson</h5>
+							<span ng-repeat="star in stars" class="glyphicon glyphicon-star"></span><span ng-repeat="emptyStar in emptyStars" class='glyphicon glyphicon-star-empty'></span>
+							<p>I'm going to improvise. Listen, there's something you should know about me... about inception. An idea is like a virus, resilient, highly contagious. The smallest seed of an idea can grow. It can grow to define or destroy you.</p>
+						</div>
+					</div>
+					<div class="media-object stack-for-small">
+						<div class="media-object-section">
+							<img class="thumbnail" src="http://www.joblo.com/newsimages1/bm-9313.jpg">
+						</div>
+						<div class="media-object-section">
+							<h5>Mike Stevenson</h5>
+							<p>I'm going to improvise. Listen, there's something you should know about me... about inception. An idea is like a virus, resilient, highly contagious. The smallest seed of an idea can grow. It can grow to define or destroy you</p>
+						</div>
+					</div>
+					<div class="media-object stack-for-small">
+						<div class="media-object-section">
+							<img class="thumbnail" src="http://www.joblo.com/newsimages1/bill-murray-comic-con200.jpg">
+						</div>
+						<div class="media-object-section">
+							<h5>Mike Stevenson</h5>
+							<p>I'm going to improvise. Listen, there's something you should know about me... about inception. An idea is like a virus, resilient, highly contagious. The smallest seed of an idea can grow. It can grow to define or destroy you</p>
+						</div>
+					</div>
+					<label>
+						My Review
+						<textarea ng-model="review" placeholder="None"></textarea>
 					</label>
-
-					<div class="row">
-						<div class="small-2 columns">
-							<label for="middle-label" class="middle quantity">Quantity:</label>
-						</div>
-						<div class="small-3 columns">
-							<input type="number" placeholder="Quantity" id="middle-label" ng-model="quantity">
-						</div>
-						<div class="small-7 columns">
-							<a ui-sref="cart" ng-click="addToCart(song, quantity)" class="button large expanded">Add to Cart</a>
-						</div>
-					</div>
+					<button ng-click="submitReview()" class="button">Submit Review</button>
 				</div>
 			</div>
-			<hr>
-			<div class="row">
-				<!-- <div class="col-lg-1"></div> -->
-				<div class="col-lg-5 col-md-5">
-					<div class="col-lg-3 col-md-3"></div><div class="col-lg-5 col-md-5 text-center"><h4>Songs By Similar Composers</h4></div><div class="col-lg-4 col-md-4"></div>
-					<carousel interval="2000">
-						<slide ng-repeat="song in similarSongsByComposer">
-							<a ui-sref="oneSong({songId:song.id})"><img height="400" ng-src="{{ song.photo.externalUrl }}" /></a>
-						</slide>
-					</carousel>
-				</div>
-				<div class="col-lg-2 col-md-2"></div>
-				<div class="col-lg-5 col-md-5">
-					<div class="col-lg-3 col-md-3"></div><div class="col-lg-5 col-md-5 text-center"><h4>Songs With Similar Instruments</h4></div><div class="col-lg-4 col-md-4"></div>
-					<carousel interval="2000">
-						<slide ng-repeat="song in similarSongsByInstrument">
-							<a ui-sref="oneSong({songId:song.id})"><img height="400" ng-src="{{ song.photo.externalUrl }}"/></a>
-						</slide>
-					</carousel>
-				</div>
-				<!-- <div class="col-lg-1"></div> -->
-			</div>
-			<hr>
-
-			<div class="column row">
-				<div class="tabs-content" data-tabs-content="example-tabs">
-					<div class="tabs-panel is-active" id="panel1">
-						<h4>Reviews</h4>
-						<hr>
-						<div class="media-object stack-for-small">
-							<div class="media-object-section">
-								<img class="thumbnail" src="https://static4.fjcdn.com/thumbnails/comments/Gt+go+to+von+s+grocery+store+in+california+_c3626eed81d486427c3fc01db7bccd9a.gif">
-							</div>
-							<div class="media-object-section">
-								<h5>Mike Stevenson</h5>
-								<span ng-repeat="star in stars" class="glyphicon glyphicon-star"></span><span ng-repeat="emptyStar in emptyStars" class='glyphicon glyphicon-star-empty'></span>
-								<p>I'm going to improvise. Listen, there's something you should know about me... about inception. An idea is like a virus, resilient, highly contagious. The smallest seed of an idea can grow. It can grow to define or destroy you.</p>
-							</div>
-						</div>
-						<div class="media-object stack-for-small">
-							<div class="media-object-section">
-								<img class="thumbnail" src="http://www.joblo.com/newsimages1/bm-9313.jpg">
-							</div>
-							<div class="media-object-section">
-								<h5>Mike Stevenson</h5>
-								<p>I'm going to improvise. Listen, there's something you should know about me... about inception. An idea is like a virus, resilient, highly contagious. The smallest seed of an idea can grow. It can grow to define or destroy you</p>
-							</div>
-						</div>
-						<div class="media-object stack-for-small">
-							<div class="media-object-section">
-								<img class="thumbnail" src="http://www.joblo.com/newsimages1/bill-murray-comic-con200.jpg">
-							</div>
-							<div class="media-object-section">
-								<h5>Mike Stevenson</h5>
-								<p>I'm going to improvise. Listen, there's something you should know about me... about inception. An idea is like a virus, resilient, highly contagious. The smallest seed of an idea can grow. It can grow to define or destroy you</p>
-							</div>
-						</div>
-						<label>
-							My Review
-							<textarea ng-model="review" placeholder="None"></textarea>
-						</label>
-						<button ng-click="submitReview()" class="button">Submit Review</button>
-					</div>
-				</div>
-			</div>
+		</div>
 	</div>
 </section>

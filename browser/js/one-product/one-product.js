@@ -17,6 +17,11 @@ app.config(function ($stateProvider) {
 app.controller('oneSongController', function($scope, oneSong, similarSongsByInstrument, OneSongFactory, ComposerFactory, CartFactory){
     $scope.song = oneSong;
     $scope.similarSongsByInstrument = similarSongsByInstrument;
+    $scope.inventory = [];
+   
+        for (var i = 1; i <= $scope.song.inventoryQuantity; i++) {
+         $scope.inventory.push(i);
+    }
 
     $scope.stars = [1, 2, 3];
     $scope.emptyStars = [4, 5];
