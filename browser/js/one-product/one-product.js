@@ -1,6 +1,6 @@
 app.config(function ($stateProvider) {
     $stateProvider.state('oneSong', {
-        url: '/song/:songId',
+        url: '/songs/:songId',
         controller: 'oneSongController',
         templateUrl: 'js/one-product/one-product.html',
         resolve:{
