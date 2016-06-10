@@ -1,0 +1,10 @@
+<ul>
+  <span ng-repeat="song in songs">
+    <h3>{{song.title}}</h3>
+    <button ui-sref="songForm">Edit</button>
+    <button ng-click="deleteSong(song.id)">Delete</button>
+  </span>
+  <span>
+    <button id="add-song" ui-sref="songForm">Add Song</button>
+  </span>
+</ul>

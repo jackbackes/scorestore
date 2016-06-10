@@ -1,4 +1,22 @@
 <section id="home">
-    <fullstack-logo></fullstack-logo>
-    <rando-greeting></rando-greeting>
+    <div id="welcome-banner">
+      <p>Welcome to Scorestore! Buy some music!</p>
+      <div id="welcome-image"></div>
+    </div>
+
+    <div class="container-fluid">
+      <div class="col-lg-4 col-md-6 col-xs-12 products" ng-repeat="image in images">
+        <a ui-sref="<<<<song({songId: song.id})>>>>>"><img src="https://jlau-bucket-1.s3.amazonaws.com/uploads/topic/image/42/fullstack.png" class="sheet-music-thumbnail"></a>
+        <div class="product-info">
+          <a ui-sref="<<<<song({songId: song.id})>>>>>"><h2>[Title]</h2></a>
+          <a ui-sref="<<<<home | composer>>>>>"><h3>[Composer]</h3></a>
+          <h3>[$Price]</h3>
+          <button>Add to Cart</button>
+        </div>
+      </div>
+    </div>
+
+
+
+
 </section>

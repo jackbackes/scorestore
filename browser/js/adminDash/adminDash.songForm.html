@@ -1,0 +1,24 @@
+<form class="admin-edit-form" ng-submit="updateOrCreate(song)">
+  <label>Title</label>
+  <input type="text" ng-model="song.title">
+  <label>Subtitle</label>
+  <input type="text" ng-model="song.subtitle">
+  <label>Description</label>
+  <input type="text" ng-model="song.description">
+  <label>Year Composed</label>
+  <input type="text" ng-model="song.year">
+  <label>File Name</label>
+  <input type="text" ng-model="song.fileName">
+  <label>Price</label>
+  <input type="text" ng-model="song.price">
+  <label>Inventory Quantity</label>
+  <input type="text" ng-model="song.inventoryQuantity">
+  <label>Instruments</label>
+  <input type="text" ng-model="song.instrumentTags">
+  <label>Source URL</label>
+  <input type="text" ng-model="song.sourceURL">
+  <label>Public Domain Status</label>
+  <input type="text" ng-model="song.publicDomainStatus">
+  <button type="submit">Save</button>
+  <button>Cancel</button>
+</form>

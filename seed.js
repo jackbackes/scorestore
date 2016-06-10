@@ -17,6 +17,8 @@ name in the environment files.
 
 */
 
+'use strict'
+
 const chalk = require('chalk');
 const db = require('./server/db');
 const User = db.model('user');
@@ -26,8 +28,11 @@ const Song = db.model('song');
 const Composer = db.model('composer');
 const Genre = db.model('genre');
 const SongOrder = db.model('song_order');
+const Photo = db.model('photo')
 // const Promise = require('sequelize').Promise;
 const Promise = require('bluebird');
+
+const seedInfo = require('./ScoreSheetInfo');
 
 var seedUsers = function () {
 
@@ -70,100 +75,89 @@ var seedUsers = function () {
 };
 
 let seedSongs = function(){
-  let songs = [
-    {
-      title: "Symphony No. 5 in C Minor",
-      subtitle: "First Movement",
-      description: "Adapted By Arrangement from Ernst Pauer, 1826-1905",
-      yearComposed: 1823,
-      fileName: "Beethoven_Symphony_No._5_1st_movement_Piano_solo.pdf",
-      price: 10.00,
-      inventoryQuantity: 10,
-      imageURL: "???",
-      instrumentTags: ["piano"],
-      sourceURL: "???",
-      publicDomainStatus: "public"
-    }
-  ]
-  let creatingSongs = songs.map(function (songObj) {
+  return seedInfo.songs.map(function (songObj) {
       return Song.create(songObj);
   });
 
-  return Promise.all(creatingSongs);
 };
 
-let seedComposers = function(resolvedSeedSongs){
+let seedComposers = function(){
   //populate this object with composer data. set an object title so that it can be used in the "setComposer" command below.
-  let composers = {
-    beethoven: {
-      firstName: "Ludwig",
-      lastName: "Van Beethoven"
-    }
-  }
 
-  // set composer for each song.
-  return Promise.all(resolvedSeedSongs).spread( (symphonyNo5) => Promise.all([
-    symphonyNo5.createComposer(composers.beethoven)
-  ]))
+  return seedInfo.composers.map(function (composerObj) {
+      return Composer.create(composerObj);
+  });
 }
 
-let seedOrders = function(resolvedSeedUsers){
-  let orders = [
-    {
-      songs: [
-        { songId: 1, quantity: 10 },
-        { songId: 2, quantity: 1 },
-        { songId: 3, quantity: 4 }
-      ],
-      userId: 1,
-      shippingAddress: {
-        firstName: "Jimmy",
-        lastName: "Neutron",
-        address: "123 Mars Avenue",
-        city: "MoonBase",
-        state: "TX",
-        zipCode: 75252
-      }
-    }]
-  let testingOrder = orders[0];
-  return Promise.all(resolvedSeedUsers).spread( (testing, obama) => [
-    testing.createOrder( {
-      Song: testingOrder.songs
-    }, {
-      include: [
-        //include the correct user
-        {model: User, where: {id: testingOrder.userId}},
-        //include the songs into the order
-        Song
-      ]
-      //add the shipping address
-    } ).then(order => order.createAddress( testingOrder.shippingAddress ) )
-  ] )
+// let seedOrders = function(resolvedSeedUsers, resolvedSeed){
+//   let orders = [
+//     {
+//       songs: [
+//         { songId: 1, quantity: 10 },
+//         { songId: 2, quantity: 1 },
+//         { songId: 3, quantity: 4 }
+//       ],
+//       userId: 1,
+//       shippingAddress: {
+//         firstName: "Jimmy",
+//         lastName: "Neutron",
+//         address: "123 Mars Avenue",
+//         city: "MoonBase",
+//         state: "TX",
+//         zipCode: 75252
+//       }
+//     }]
+//   let testingOrder = orders[0];
+//   return Promise.all(resolvedSeedUsers).spread( (testing, obama) => [
+//     testing.createOrder( {
+//       include: [
+//         //include the correct user
+//         {model: User, where: {id: testingOrder.userId}},
+//         //include the songs into the order
+//       ]
+//       //add the shipping address
+//     } ).then(order => {
+//       order.createAddress( testingOrder.shippingAddress )
+//       return Promise.all(testingOrder.songs.map(function(song) {
+//         console.log(song)
+//       }))
+
+//       })
+//   ] )
+// };
+
+// let seedReviews = function(resolvedSeedUsers){
+//   let reviews = [
+//     { userId: 1, songId: 1, rating: 5, description: "I loved it!"},
+//     { userId: 2, songId: 2, rating: 0, description: "I hated it!"},
+//     { userId: 1, songId: 2, rating: 5, description: "I don't understand the bad review. I loved it!"}
+//   ]
+//   let testingReview = reviews[0];
+//   return Promise.all(resolvedSeedUsers).spread( (testing, obama ) => [
+//     testing.createReview( {
+//       rating: testingReview.rating,
+//       description: testingReview.description
+//     } )
+//   ])
+// };
+
+let seedGenres = function(){
+  return seedInfo.genres.map(function (genreObj) {
+      return Genre.create(genreObj);
+  });
+
 };
 
-let seedReviews = function(resolvedSeedUsers){
-  let reviews = [
-    { userId: 1, songId: 1, rating: 5, description: "I loved it!"},
-    { userId: 2, songId: 2, rating: 0, description: "I hated it!"},
-    { userId: 1, songId: 2, rating: 5, description: "I don't understand the bad review. I loved it!"}
-  ]
-  let testingReview = reviews[0];
-  return Promise.all(resolvedSeedUsers).spread( (testing, obama ) => [
-    testing.createReview( {
-      rating: testingReview.rating,
-      description: testingReview.description
-    } )
-  ])
+let seedPhotos = function(){
+  return seedInfo.photos.map(function (photoObj) {
+      return Photo.create(photoObj);
+  });
+
 };
 
 db.sync({ force: true })
     .then(function () {
-        return Promise.all([seedUsers(), seedSongs()])
-                      .spread( (resolvedSeedUsers, resolvedSeedSongs) => Promise.all(
-                        seedComposers(resolvedSeedSongs),
-                        seedOrders(resolvedSeedUsers),
-                        seedReviews(resolvedSeedUsers)
-                      ));
+        return Promise.all([seedUsers(), seedComposers(), seedGenres(), seedPhotos(), seedSongs()])
     })
     .then(function () {
         console.log(chalk.green('Seed successful!'));

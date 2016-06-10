@@ -1,9 +1,17 @@
 navbar {
 
+  z-index: 9999;
+
+  nav {
+    background-color: white;
+    padding-bottom: 20px;
+  }
+
   display: block;
-  background: white;
   border-bottom: 1px solid black;
   box-shadow: 1px 1px 14px -3px black;
+  width: 100%;
+  position: fixed;
 
   .container {
     width: 91%;
@@ -20,6 +28,13 @@ navbar {
   a {
     color: black;
     font-size: 16px;
+  }
+
+  #search-bar {
+    margin-top: 10px;
+    margin-left: 50px;
+    width: 500px;
+    float: left;
   }
 
   .nav > li > a {
@@ -40,9 +55,17 @@ navbar {
   .login-button {
     float: right;
     border: 1px solid black;
-    margin-top: 10px;
+    margin-top: 11px;
+    margin-right: 20px;
     background: none;
     outline: none !important;
+  }
+
+  .glyphicon-shopping-cart {
+    float: right;
+    margin-top: 10px;
+    background: none;
+    border: 1px solid black;
   }
 
   .welcome {

@@ -1,11 +1,10 @@
 'use strict';
 
-var _ = require('lodash');
 var Sequelize = require('sequelize');
 
 module.exports = function (db) {
 
-    db.define('address', {
+    return db.define('address', {
       firstName: {
         type: Sequelize.STRING,
         allowNull: false
@@ -35,5 +34,5 @@ module.exports = function (db) {
         }
       }
 
-    })
-  }
+    });
+};
