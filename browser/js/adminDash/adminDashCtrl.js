@@ -21,9 +21,12 @@ app.controller('adminDashCtrl', function ($scope, SongsFactory) {
 
 });
 
-app.controller('songFormCtrl', function ($scope, OneSongFactory, SongsFactory, $stateParams) {
+app.controller('songFormCtrl', function ($scope, OneSongFactory, SongsFactory, $stateParams, $state) {
   $scope.updateOrCreate = function (song) {
-    SongsFactory.createOrUpdateSong(song);
+    SongsFactory.createOrUpdateSong(song)
+    .then(function () {
+      $state.go('adminDash.songs');
+    });
   };
   
   if ($stateParams.id) {

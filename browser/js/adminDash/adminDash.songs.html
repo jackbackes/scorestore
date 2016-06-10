@@ -1,6 +1,6 @@
 <ul>
   <span ng-repeat="song in songs">
-    <h3>{{song.title}}</h3>
+    <h3><a ng-href="/songs/{{song.id}}">{{song.title}}</a></h3>
     <button ui-sref="songForm({id: song.id})">Edit</button>
     <button ng-click="deleteSong(song.id)">Delete</button>
   </span>
