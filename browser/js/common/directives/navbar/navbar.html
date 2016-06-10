@@ -15,6 +15,9 @@
             </li>
         </ul>
         <ul>
+            <div>
+                <button ui-sref="adminDash" class="btn login-button">Admin Only!</button>
+            </div>
             <div ng-show="!isLoggedIn()" ng-repeat="button in loggedOutButtons">
                 <button ui-sref="{{button.state}}" class="btn login-button">{{button.label}}</button>
             </div>
