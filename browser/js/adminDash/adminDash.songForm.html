@@ -1,4 +1,7 @@
 <form class="admin-edit-form" ng-submit="updateOrCreate(song)">
+  <label ng-hide="newSong">ID</label>
+  <input ng-hide="newSong" type="text" ng-model="song.id" ng-disabled="true">
+  <h3 ng-show="newSong">Create a New Song</h3>
   <label>Title</label>
   <input type="text" ng-model="song.title">
   <label>Subtitle</label>

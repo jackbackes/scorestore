@@ -8,15 +8,16 @@ app.factory('SongsFactory', function ($http) {
     },
 
     createOrUpdateSong: function (song) {
-      return $http.get('api/v1/songs?title=' + song.title)
-        .then(function (response) {
-          let songs = response.data;
-          if (songs.length) {
-            return $http.put('api/v1/songs/' + songs[0].id, song);
-          } else {
-            return $http.post('api/v1/songs', song);
-          }
-        });
+      if(song.id) {
+        return $http.get('api/v1/songs/' + song.id)
+          .then(function (response) {
+            let foundSong = response.data;
+              return $http.put('api/v1/songs/' + foundSong.id, song);
+          });
+        } else {
+          delete song.id;
+          return $http.post('api/v1/songs/', song);
+        }
     },
 
     deleteSong: function (id) {

@@ -21,8 +21,17 @@ app.controller('adminDashCtrl', function ($scope, SongsFactory) {
 
 });
 
-app.controller('songFormCtrl', function ($scope, SongsFactory) {
+app.controller('songFormCtrl', function ($scope, OneSongFactory, SongsFactory, $stateParams) {
   $scope.updateOrCreate = function (song) {
     SongsFactory.createOrUpdateSong(song);
   };
+  
+  if ($stateParams.id) {
+    OneSongFactory.fetchSong($stateParams.id)
+    .then(function (song) {
+      $scope.song = song;
+    });
+  } else {
+    $scope.newSong = true;
+  }
 });
