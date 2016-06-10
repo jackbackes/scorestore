@@ -5,13 +5,13 @@ app.factory('OneSongFactory', function($http){
 	obj = {
 
 		fetchSong: function(id){
-			return $http.get('/api/v1/song/' + id)
+			return $http.get('/api/v1/songs/' + id)
 			.then(function(song){
 				return song.data;
 			})
 		},
 		fetchBySimilarInstruments: function(id){
-			return $http.get('/api/v1/song/' + id + '/similarInstruments')
+			return $http.get('/api/v1/songs/' + id + '/similarInstruments')
 			.then(function(similarSongs){
 				console.log(similarSongs);
 				return similarSongs.data

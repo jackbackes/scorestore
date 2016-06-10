@@ -2,14 +2,14 @@
 var router = require('express').Router();
 module.exports = router;
 var db = require('../../db');
-var Song = db.model('song');
 var Composer = db.model('composer');
-var Genre = db.model('genre');
-var Photo = db.model('photo');
+
 
 router.use('/members', require('./members'));
 
 router.use('/v1/songs', require('./songs'));
+
+router.use('/v1/cart', require('./cart'));
 
 // Make sure this is after all of
 // the registered routes!

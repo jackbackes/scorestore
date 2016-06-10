@@ -1,5 +1,5 @@
 <section id="shopping-cart">
-    <div class="empty-cart text-center" ng-show="isCartEmpty()">
+    <div class="empty-cart text-center" ng-show="!cart.length">
         <header>
         	<h3>Your shopping cart is empty</h3>
         	<h4>Add some music!</h4>
@@ -10,25 +10,25 @@
         </ul>
     </div>
 
-    <div ng-show="!isCartEmpty()" class='cart-container'>
+    <div ng-show="cart.length" class='cart-container'>
     	<header>
     		<button ui-sref="home" class="btn btn-info">Return To Shopping</button>
-    		<h4>{{orders.length}} items are in your shopping cart</h4>
+    		<h4>{{cart.length}} items are in your shopping cart</h4>
     	</header>
       <table class="table">
-      	<tr ng-repeat="order in orders">
+      	<tr ng-repeat="item in cart">
         		<td class="col-md-10 col-sm-10 col-xs-10">
     				<div class="order-info">
-    					<img class="order-image" src="{{order.song.image}}" />
+    					<img class="order-image" src="{{item.song.photo.externalUrl}}" />
     					<div class="order-details">
-    						<p>Song: {{order.song.title}} by {{order.composer.fullName}}</p>
-    						<p>Quantity: {{quantity}}</p>
-    						<a ng-click="removeFromCart()">Remove</a>
+    						<p>Song: {{item.song.title}} by {{item.song.composer.fullName}}</p>
+    						<p>Quantity: {{item.quantity}}</p>
+    						<a ng-click="removeFromCart(item)">Remove</a>
     					</div>
     				</div>
         		</td>
         		<td class="col-md-2 col-sm-2 col-xs-2">
-        			<p>${{order.total}}</p>
+        			<p>${{item.song.price * item.quantity}}</p>
         		</td>
         	</tr>
       </table>

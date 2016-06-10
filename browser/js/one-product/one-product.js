@@ -5,21 +5,33 @@ app.config(function ($stateProvider) {
         templateUrl: 'js/one-product/one-product.html',
         resolve:{
             oneSong: function(OneSongFactory, $stateParams){
-                return OneSongFactory.fetchSong($stateParams.songId)
+                return OneSongFactory.fetchSong($stateParams.songId);
+            },
+            similarSongsByInstrument: function(OneSongFactory, $stateParams) {
+                return OneSongFactory.fetchBySimilarInstruments($stateParams.songId);
             }
         }
     });
 });
 
-app.controller('oneSongController', function($scope, oneSong, OneSongFactory, ComposerFactory){
+app.controller('oneSongController', function($scope, oneSong, similarSongsByInstrument, OneSongFactory, ComposerFactory, CartFactory){
     $scope.song = oneSong;
-    OneSongFactory.fetchBySimilarInstruments(oneSong.id)
-        .then(function(similarSongs){
-            $scope.similarSongsByInstrument = similarSongs
-        })
+    $scope.similarSongsByInstrument = similarSongsByInstrument;
+
+    $scope.stars = [1, 2, 3];
+    $scope.emptyStars = [4, 5];
+
     ComposerFactory.fetchSimilarComposers(oneSong.composer.id)
         .then(function(similarComposersSongs){
             $scope.similarSongsByComposer = similarComposersSongs
-        })
-})
+        });
+
+    $scope.addToCart = function(song, quantity) {
+        CartFactory.addToCart(song, quantity)
+        .then(function(response) {
+            $scope.cart = response;
+        });
+    };
+
+});
 
