@@ -18,8 +18,8 @@ app.controller('cartCtrl', function ($scope, CartFactory) {
   };
 
   $scope.getCartTotal = function () {
-    return CartFactory.getCartTotal();
-  }
+     return CartFactory.getCartTotal();
+  };
 
   $scope.inventory = [1,2,3,4,5,6,7,8,9,10];
 
@@ -27,6 +27,7 @@ app.controller('cartCtrl', function ($scope, CartFactory) {
         CartFactory.updateCart(song, quantity)
         .then(function(response) {
             $scope.cart = response;
+            $scope.getCartTotal();
         });
     };
 

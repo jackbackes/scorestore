@@ -3,7 +3,6 @@ app.factory('CartFactory', function($http){
 	return {
 
 		getCart: function () {
-			console.log(cachedCartItems);
 			return $http.get('/api/v1/cart')
 			.then(function(response) {
 				angular.copy(response.data, cachedCartItems);
@@ -26,7 +25,7 @@ app.factory('CartFactory', function($http){
 
 			return $http.put('/api/v1/cart', {song: song, quantity: quantity})
 			.then(function(response) {
-				cachedCartItems.push(response.data);
+				angular.copy(response.data, cachedCartItems);
 				return response.data;
 			});
 		
@@ -53,7 +52,6 @@ app.factory('CartFactory', function($http){
 				for(var i = 0; i < cachedCartItems.length; i++){
 					sum += (+cachedCartItems[i].song.price * cachedCartItems[i].quantity);
 				}
-				console.log(sum);
 				return sum;
 			}
 
