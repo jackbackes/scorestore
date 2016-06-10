@@ -19,5 +19,10 @@ app.controller('adminDashCtrl', function ($scope, SongsFactory) {
     });
   };
 
-  
+});
+
+app.controller('songFormCtrl', function ($scope, SongsFactory) {
+  $scope.updateOrCreate = function (song) {
+    SongsFactory.createOrUpdateSong(song);
+  };
 });

@@ -1,4 +1,4 @@
-<form class="admin-edit-form" >
+<form class="admin-edit-form" ng-submit="updateOrCreate(song)">
   <label>Title</label>
   <input type="text" ng-model="song.title">
   <label>Subtitle</label>
@@ -19,6 +19,6 @@
   <input type="text" ng-model="song.sourceURL">
   <label>Public Domain Status</label>
   <input type="text" ng-model="song.publicDomainStatus">
-  <button>Save</button>
+  <button type="submit">Save</button>
   <button>Cancel</button>
 </form>

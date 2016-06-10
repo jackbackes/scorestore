@@ -12,6 +12,7 @@ app.config(function ($stateProvider) {
 
   .state('songForm', {
     url: '/songForm',
-    templateUrl: 'js/adminDash/adminDash.songForm.html'
+    templateUrl: 'js/adminDash/adminDash.songForm.html',
+    controller: 'songFormCtrl'
   });
 });

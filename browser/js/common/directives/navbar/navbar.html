@@ -16,7 +16,7 @@
         </ul>
         <ul>
             <div>
-                <button ui-sref="adminDash" class="btn login-button">Admin Only!</button>
+                <button ng-show="user.isAdmin" ui-sref="adminDash" class="btn login-button">Admin Only!</button>
                 <button ui-sref="cart" class="btn glyphicon glyphicon-shopping-cart"></button>
             </div>
             <div ng-show="!isLoggedIn()" ng-repeat="button in loggedOutButtons">
