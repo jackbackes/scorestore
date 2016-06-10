@@ -8,5 +8,10 @@ app.config(function ($stateProvider) {
     url: '/songs',
     templateUrl: 'js/adminDash/adminDash.songs.html',
     controller: 'adminDashCtrl'
+  })
+
+  .state('songForm', {
+    url: '/songForm',
+    templateUrl: 'js/adminDash/adminDash.songForm.html'
   });
 });

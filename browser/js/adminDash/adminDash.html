@@ -1,5 +1,5 @@
-<div class="container" id="view-buttons">
-  <button ui-sref="adminDash.songs">Music</button>
+<div ng-controller="adminDashCtrl" class="container" id="view-buttons">
+  <button ui-sref="adminDash.songs" ng-click="getSongs()">Music</button>
   <button>Orders</button>
   <button>Users</button>
 </div>
