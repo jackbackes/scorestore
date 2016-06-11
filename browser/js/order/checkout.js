@@ -6,24 +6,28 @@ app.config(function ($stateProvider) {
     });
 });
 
-app.controller('CheckoutCtrl', function ($scope, Session, $state, CartFactory, AUTH_EVENTS) {
+app.controller('CheckoutCtrl', function ($scope, Session, $state, CartFactory) {
 
 	$scope.session = Session;
 
-	CartFactory.getCart()
-	  .then(function(data) {
-	    $scope.cart = data || null;
-	  });
+	$scope.submitAddress = function (address, user) {
+		$scope.addressError = null;
+		CartFactory.submitAddress(address)
+		.then(function () {
+			$state.go('order');
+		})
+		.catch(function (error) {
+            $scope.addressError = error.message;
+        });
+	}
 })
 
-app.controller('UserLoginCtrl', function ($scope, AuthService, $state) {
+app.controller('UserLoginCtrl', function ($scope, AuthService) {
     $scope.login = {};
     $scope.error = null;
 
     $scope.sendLogin = function (loginInfo) {
-    	console.log("In sendLogin")
         $scope.error = null;
-
         AuthService.login(loginInfo).then()
        	.catch(function () {
             $scope.error = 'Invalid login credentials.';
@@ -33,7 +37,7 @@ app.controller('UserLoginCtrl', function ($scope, AuthService, $state) {
 
 });
 
-app.controller('GuestLoginCtrl', function ($scope, AuthService, $state) {
+app.controller('GuestLoginCtrl', function ($scope, AuthService) {
     $scope.guest = {};
     $scope.error = null;
 

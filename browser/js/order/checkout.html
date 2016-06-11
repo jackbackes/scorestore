@@ -5,14 +5,17 @@
           <h3>Complete Your Order</h3>
         </header>
         <div class="col-xs-12" ng-show="!guestLogin">
-            <button ng-click="userLogin=false; guestLogin=!guestLogin" class="button large expanded text-center">Checkout As Guest</button>
+            <button ng-click="userLogin=false; signUp=false; guestLogin=!guestLogin" class="button large expanded text-center">Checkout As Guest</button>
+        </div>
+        <div class="col-xs-12" ng-show="!signUp">
+            <button ng-click="userLogin=false; guestLogin=false; signUp=!signUp" class="button large expanded text-center">SignUp</button>
         </div>
         <div class="col-xs-12" ng-show="!userLogin">
-            <button ng-click="userLogin=!userLogin; guestLogin=false; guestLoginForm.$submitted=false" class="button large expanded text-center">Login to Checkout</button>
+            <button ng-click="userLogin=!userLogin; signUp=false; guestLogin=false; guestLoginForm.$submitted=false" class="button large expanded text-center">Login to Checkout</button>
         </div>
   
         <div ng-show="guestLogin && !userLogin" ng-controller="GuestLoginCtrl">
-          <form name="guestLoginForm" novalidate ng-submit="sendGuest(guest) && guestLoginForm.$valid">
+          <form name="guestLoginForm" novalidate ng-submit="guestLoginForm.$valid && sendGuest(guest)">
             <alert type="danger" ng-show="error">
                     {{ error }}
             </alert>
@@ -31,18 +34,24 @@
         </div>
 
         <div ng-controller="UserLoginCtrl" ng-show="userLogin && !guestLogin">
-            <form id="login-form" name="loginForm" ng-submit="sendLogin(login)">
+            <form name="loginForm" novalidate ng-submit="loginForm.$valid && sendLogin(login)">
                 <alert type="danger" ng-show="error">
                     {{ error }}
                 </alert>
-
+                <div ng-messages="loginForm.email.$error" ng-hide="loginForm.email.$pristine" role="alert">
+                    <div ng-message="required" class="alert alert-warning">Email is required</div>
+                    <div ng-message="email" ng-show="loginForm.$submitted" class="alert alert-warning">Please enter a valid email</div>
+                </div>
+                <div ng-messages="loginForm.password.$error" ng-show="loginForm.$submitted" role="alert">
+                    <div ng-message="required" class="alert alert-warning">Password is required</div>
+                </div>
                 <div class="form-group">
-                    <label for="email">Email address</label>
-                    <input type="text" ng-model="login.email" class="form-control" id="email" placeholder="Enter email">
+                    <label for="email" class="control-label">Email address</label>
+                    <input class="form-control" type="email" ng-model="login.email" name="email" id="email" placeholder="Enter email">
                 </div>
                 <div class="form-group">
                     <label for="login-password">Password</label>
-                    <input type="password" ng-model="login.password" class="form-control" id="login-password" placeholder="Password">
+                    <input type="password" ng-model="login.password" name="password" class="form-control" id="login-password" placeholder="Password" required>
                 </div>
                 <div class="text-center">
                   <button type="submit" class="button">Submit</button>
@@ -56,14 +65,11 @@
           <h3>Enter Shipping Address</h3>
         </header>
           <div class="well cart-container">
-            <form class="form-inline" role="form" novalidate name="addressForm" ng-submit="submitAddress()">
+            <form class="form-inline" role="form" novalidate name="addressForm" ng-submit="addressForm.$valid && submitAddress(orderAddress, session)">
               <fieldset>
                 <alert type="danger" ng-show="error">
-                  {{ error }}
+                  {{ addressError }}
                 </alert>
-                <div ng-messages="addressForm.first.$error" ng-hide="addressForm.title.$pristine" role="alert">
-                  <div ng-message="required" class="alert alert-warning">First Name Require</div>
-                </div>
                 <div class="row">
                   <div class="form-group col-md-6">
                     <label for="firstName" class="control-label">First Name</label>
@@ -154,7 +160,7 @@
                   <div class="form-group col-md-4">
                     <label for="zipCode" class="control-label">Zip Code</label>
                     <div>
-                      <input class="form-control" name="zipCode" type="text" ng-model="orderAddress.zipCode" required>
+                      <input class="form-control" name="zipCode" type="text" ng-model="orderAddress.zipCode" placeholder="5 digits" required ng-minlength="5" ng-maxlength="5">
                     </div>
                   </div>
                 </div>

@@ -1,0 +1,54 @@
+<section>
+	<div class="row orderpage-container">
+		<div ng-show="!updatingCart">
+			<header class="text-center">
+				<h3>Submit Your Order</h3>
+			</header>
+			<div class="well col-xs-3">
+				<h5>Shipping Address</h5>
+				<p>{{shippingAddress.firstName}} {{shippingAddress.lastName}}</p>
+				<p>{{shippingAddress.address}}</p>
+				<p>{{shippingAddress.city}}, {{shippingAddress.state}} {{shippingAddress.zipCode}}</p>
+				<a ui-sref="checkout">Edit Shipping Address</a>
+			</div>
+			<div class="col-xs-1">
+			</div>
+			<div class="well col-xs-8">
+				<table class="table">
+			      	<tr ng-repeat="item in cart">
+			    		<td class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
+							<div class="order-info">
+								<div class="order-details">
+									<p>Song: {{item.song.title}} by {{item.song.composer.fullName}}</p>
+									<p>Quantity: {{item.quantity}}</p> 
+								</div>
+							</div>
+			    		</td>
+			    		<td class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+			    			<p>{{item.song.price * item.quantity | currency}}</p>
+			    		</td>
+			    	</tr>
+			        <tr>
+			            <td class="col-lg-10 col-md-10 col-sm-10 col-xs-10" >
+			                <p id="total">Total:  </p>
+			            </td>
+			            <td class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+			                <p>{{getCartTotal() | currency}}</p>
+			            </td>
+			        </tr>
+	      		</table>
+	      		<a ng-click="updatingCart=!updatingCart">Edit Cart</a>
+			</div>
+		</div>
+		<div ng-show="updatingCart">
+			<shopping-cart the-cart="cart"></shopping-cart>
+			<div class="row">
+			    <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9" >
+			    </div>
+			    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+			          <button ng-click="updatingCart=!updatingCart" class="button">Return to Checkout</button>
+			    </div>
+			</div>
+		</div>
+	</div>
+</section>

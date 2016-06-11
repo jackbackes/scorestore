@@ -103,18 +103,18 @@
         //         .catch(function () {return null});
         // }
 
-        // this.guestLogin = function(credentials) {
-        //     return $http.post('/api/v1/guest', credentials)
-        //         .then(function(guest){
-        //             var data = guest.data;
-        //             Session.create(data.id, data.user);
-        //             $rootScope.$broadcast(GUEST_EVENTS.loginSuccess);
-        //             return data.user;
-        //         })
-        //         .catch(function () {
-        //             return $q.reject({ message: 'Email already registered as user.  Please login to checkout.' });
-        //         });
-        // }
+        this.guestLogin = function(credentials) {
+            return $http.post('/api/v1/guest', credentials)
+                .then(function(guest){
+                    var data = guest.data;
+                    Session.create(data.id, data.user);
+                    // $rootScope.$broadcast(GUEST_EVENTS.loginSuccess);
+                    return data.user;
+                })
+                .catch(function () {
+                    return $q.reject({ message: 'Email already registered as user.  Please login to checkout.' });
+                });
+        }
 
         this.login = function (credentials) {
             console.log('Here1');
