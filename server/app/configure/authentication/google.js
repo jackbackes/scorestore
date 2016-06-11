@@ -16,8 +16,6 @@ module.exports = function (app, db) {
     };
 
     var verifyCallback = function (accessToken, refreshToken, profile, done) {
-        console.log( 'google: verifying callback' )
-        console.log(profile);
         let profileJson = profile._json;
         var newUser = {
           google_id: profileJson.id,
@@ -59,8 +57,6 @@ module.exports = function (app, db) {
     app.get('/auth/google/callback',
         passport.authenticate('google', {failureRedirect: '/login'}),
         function (req, res) {
-            console.log('===== AUTHENTICATING GOOGLE =====');
-            console.log( req.user );
             res.redirect('/');
         });
 
