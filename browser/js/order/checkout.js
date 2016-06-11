@@ -7,17 +7,6 @@ app.config(function ($stateProvider) {
 });
 
 app.controller('CheckoutCtrl', function ($scope, Session, $state, CartFactory, AUTH_EVENTS) {
-	// $rootScope.$on(AUTH_EVENTS.loginSuccess, function (event) {
-	// 	console.log(event.data);
-	// })
-	// AuthService.getLoggedInUser()
-	// .then(function(user) {
-	// 	if (user) {
-	// 		$scope.user = user;
-	// 	}
-	// 	else { $scope.user = null}
-			
-	// });
 
 	$scope.session = Session;
 
@@ -28,7 +17,6 @@ app.controller('CheckoutCtrl', function ($scope, Session, $state, CartFactory, A
 })
 
 app.controller('UserLoginCtrl', function ($scope, AuthService, $state) {
-	console.log("Here")
     $scope.login = {};
     $scope.error = null;
 
@@ -36,13 +24,25 @@ app.controller('UserLoginCtrl', function ($scope, AuthService, $state) {
     	console.log("In sendLogin")
         $scope.error = null;
 
-        AuthService.login(loginInfo).then(function (response) {
-        	console.log(response);
-        	$scope.$parent.user = response;
-        }).catch(function () {
+        AuthService.login(loginInfo).then()
+       	.catch(function () {
             $scope.error = 'Invalid login credentials.';
         });
 
+    };
+
+});
+
+app.controller('GuestLoginCtrl', function ($scope, AuthService, $state) {
+    $scope.guest = {};
+    $scope.error = null;
+
+    $scope.sendGuest = function (guestInfo) {
+        $scope.error = null;
+        AuthService.guestLogin(guestInfo).then()
+        .catch(function (error) {
+        	$scope.error = error.message;
+        })
     };
 
 });

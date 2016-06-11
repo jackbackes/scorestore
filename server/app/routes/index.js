@@ -11,6 +11,8 @@ router.use('/v1/songs', require('./songs'));
 
 router.use('/v1/cart', require('./cart'));
 
+router.use('/v1/guest', require('./guest'));
+
 // Make sure this is after all of
 // the registered routes!
 

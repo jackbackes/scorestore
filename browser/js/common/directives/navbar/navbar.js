@@ -19,6 +19,7 @@ app.directive('navbar', function ($rootScope, AuthService, AUTH_EVENTS, $state) 
             scope.home = { label: 'Home', state: 'home' };
 
             scope.user = null;
+            scope.guest = null;
 
             scope.isLoggedIn = function () {
                 return AuthService.isAuthenticated();
@@ -37,15 +38,24 @@ app.directive('navbar', function ($rootScope, AuthService, AUTH_EVENTS, $state) 
                 });
             };
 
+            // var setGuest = function () {
+            //     console.log('Here Guest');
+            //     AuthService.getGuest().then(function (guest) {
+            //         scope.guest = guest;
+            //     })
+            // }
+
             var removeUser = function () {
                 scope.user = null;
             };
 
             setUser();
+            // setGuest();
 
             $rootScope.$on(AUTH_EVENTS.loginSuccess, setUser);
             $rootScope.$on(AUTH_EVENTS.logoutSuccess, removeUser);
             $rootScope.$on(AUTH_EVENTS.sessionTimeout, removeUser);
+            // $rootScope.$on(GUEST_EVENTS.loginSuccess, setGuest);
 
         }
 

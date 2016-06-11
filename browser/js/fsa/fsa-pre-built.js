@@ -21,8 +21,12 @@
         logoutSuccess: 'auth-logout-success',
         sessionTimeout: 'auth-session-timeout',
         notAuthenticated: 'auth-not-authenticated',
-        notAuthorized: 'auth-not-authorized'
+        notAuthorized: 'auth-not-authorized',
     });
+
+    //  app.constant('GUEST_EVENTS', {
+    //     loginSuccess: 'guest-login-success',
+    // });
 
     app.factory('AuthInterceptor', function ($rootScope, $q, AUTH_EVENTS) {
         var statusDict = {
@@ -77,7 +81,7 @@
             if (this.isAuthenticated() && fromServer !== true) {
                 return $q.when(Session.user);
             }
-
+            console.log('getLoggedInUser');
             // Make request GET /session.
             // If it returns a user, call onSuccessfulLogin with the response.
             // If it returns a 401 response, we catch it and instead resolve to null.
@@ -86,6 +90,31 @@
             });
 
         };
+
+        // this.getGuest = function () {
+        //     return $http.get('/guestsession')
+        //         .then(function(guest){
+        //             console.log("Here5", data)
+        //             var data = guest.data;
+        //             Session.create(data.id, data.user);
+        //             $rootScope.$broadcast(GUEST_EVENTS.loginSuccess);
+        //             return data.user;
+        //         })
+        //         .catch(function () {return null});
+        // }
+
+        // this.guestLogin = function(credentials) {
+        //     return $http.post('/api/v1/guest', credentials)
+        //         .then(function(guest){
+        //             var data = guest.data;
+        //             Session.create(data.id, data.user);
+        //             $rootScope.$broadcast(GUEST_EVENTS.loginSuccess);
+        //             return data.user;
+        //         })
+        //         .catch(function () {
+        //             return $q.reject({ message: 'Email already registered as user.  Please login to checkout.' });
+        //         });
+        // }
 
         this.login = function (credentials) {
             console.log('Here1');
@@ -106,8 +135,7 @@
     });
 
     app.service('Session', function ($rootScope, AUTH_EVENTS) {
-
-        var self = this;
+        var self= this;
 
         $rootScope.$on(AUTH_EVENTS.notAuthenticated, function () {
             self.destroy();
