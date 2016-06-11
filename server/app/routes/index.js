@@ -9,6 +9,8 @@ router.use('/members', require('./members'));
 
 router.use('/v1/songs', require('./songs'));
 
+router.use('/v1/users', require('./users'));
+
 router.use('/v1/cart', require('./cart'));
 
 // Make sure this is after all of
