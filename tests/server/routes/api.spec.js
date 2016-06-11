@@ -711,6 +711,7 @@ describe( '/api/v1', function () {
 //             return adminAgent.delete( '/api/v1/order/1' )
 //               .expect( 204 )
 //           } )
+//         xit( 'an admin can restore an order')
 //           // by enabling paranoid mode we can prevent true destruction of orders. this would be important for auditing/accounting - we don't want to delete an order if a transaction has been successful, even if it doesn't show up in the user's own order history.
 //         it( 'orders are deleted VIRTUALLY but stay in the database', function () {
 //           return adminAgent.delete( '/api/v1/order/2' )

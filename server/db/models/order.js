@@ -22,5 +22,7 @@ module.exports = function (db) {
       total: {
         type: Sequelize.DECIMAL
       }
+    }, {
+      paranoid: true
     });
   };

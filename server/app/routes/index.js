@@ -28,6 +28,8 @@ router.get('/v1/composer/:composerId/similarComposers', function(req, res, next)
 	.catch(next)
 })
 
+router.use('/v1', require('./api/v1'));
+
 router.use(function (req, res) {
     res.status(404).end();
 });
