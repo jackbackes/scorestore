@@ -8,6 +8,8 @@
   <input type="text" ng-model="user.lastName" required>
   <label>Email</label>
   <input required type="text" ng-model="user.email" required>
+  <label>Admin</label>
+  <input required type="checkbox" ng-model="user.isAdmin">
   <button type="submit">Save</button>
   <button ui-sref="adminDash.users">Cancel</button>
 </form>
