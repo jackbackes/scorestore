@@ -22,17 +22,30 @@ module.exports = function (app, db) {
     };
 
     var verifyCallback = function (token, tokenSecret, profile, done) {
+        let twitterJson = profile._json;
+        let fullName = twitterJson.name.split(' ');
+        let firstName = fullName.shift();
+        let lastName = fullName.join(' ') || "";
+        let avatar = twitterJson.profile_image_url;
+        let userInfo = {
+          email: twitterJson.id + '@twitter.com',
+          firstName: firstName,
+          lastName: lastName,
+          twitter_id: twitterJson.id,
+          twitterData: twitterJson
+        }
+        // console.log(twitterJson);
 
-        UserModel.findOne({
+        User.findOne({
             where: {
                 twitter_id: profile.id
             }
-        }).exec()
-            .then(function (user) {
+        }).then(function (user) {
                 if (user) { // If a user with this twitter id already exists.
-                    return user;
+                    user.twitterData = userInfo.twitterData;
+                    return User.update(user);
                 } else { // If this twitter id has never been seen before and no user is attached.
-                    return createNewUser(token, tokenSecret, profile);
+                    return User.create(userInfo);
                 }
             })
             .then(function (user) {
