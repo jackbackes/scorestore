@@ -14,6 +14,6 @@ module.exports = {
   "GOOGLE": {
     "clientID": "422783382244-3v2ue47880kjunhkh96uj3i4jvuni14l.apps.googleusercontent.com",
     "clientSecret": "6zcgLsBFZPuLo8wd1vPPnC5k",
-    "callbackURL": "http://127.0.0.1:1337/scorestore/google/callback"
+    "callbackURL": "http://127.0.0.1:1337/auth/google/callback"
   }
 };

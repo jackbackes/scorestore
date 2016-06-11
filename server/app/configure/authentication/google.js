@@ -16,19 +16,25 @@ module.exports = function (app, db) {
     };
 
     var verifyCallback = function (accessToken, refreshToken, profile, done) {
-
+        console.log( 'google: verifying callback' )
+        console.log(profile);
+        let profileJson = profile._json;
+        var newUser = {
+          google_id: profileJson.id,
+          firstName: profileJson.given_name,
+          lastName: profileJson.family_name,
+          email: profileJson.email
+        }
         User.findOne({
                 where: {
-                    google_id: profile.id
+                    google_id: newUser.google_id
                 }
             })
             .then(function (user) {
                 if (user) {
                     return user;
                 } else {
-                    return User.create({
-                        google_id: profile.id
-                    });
+                    return User.create(newUser);
                 }
             })
             .then(function (userToLogin) {
@@ -53,6 +59,8 @@ module.exports = function (app, db) {
     app.get('/auth/google/callback',
         passport.authenticate('google', {failureRedirect: '/login'}),
         function (req, res) {
+            console.log('===== AUTHENTICATING GOOGLE =====');
+            console.log( req.user );
             res.redirect('/');
         });
 
