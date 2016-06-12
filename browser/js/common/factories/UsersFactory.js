@@ -16,15 +16,10 @@ app.factory('UsersFactory', function ($http) {
 
     createOrUpdateUser: function (user) {
       if(user.id) {
-        return $http.get('api/v1/users/' + user.id)
-          .then(function (response) {
-            let foundUser = response.data;
-              return $http.put('api/v1/users/' + foundUser.id, user);
-          });
-        } else {
-          delete user.id;
-          return $http.post('api/v1/users/', user);
-        }
+          return $http.put('api/v1/users/' + user.id, user);
+      } else {
+        return $http.post('api/v1/users/', user);
+      }
     },
 
     deleteUser: function (id) {
