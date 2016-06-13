@@ -57,7 +57,6 @@
         function onSuccessfulLogin(response) {
             var data = response.data;
             Session.create(data.id, data.user);
-            console.log("AuthService")
             $rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
             return data.user;
         }
@@ -117,7 +116,6 @@
         }
 
         this.login = function (credentials) {
-            console.log('Here1');
             return $http.post('/login', credentials)
                 .then(onSuccessfulLogin)
                 .catch(function () {
@@ -129,6 +127,16 @@
             return $http.get('/logout').then(function () {
                 Session.destroy();
                 $rootScope.$broadcast(AUTH_EVENTS.logoutSuccess);
+            });
+        };
+
+        this.signup = function (credentials) {
+            return $http.post('/signup', credentials)
+            .then(function (response) {
+                return response.data;
+            })
+            .catch(function (err) {
+                console.log(err);
             });
         };
 
