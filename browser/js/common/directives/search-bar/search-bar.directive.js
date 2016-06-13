@@ -7,22 +7,13 @@ app.directive( 'searchBar', function ( $rootScope, AuthService, AUTH_EVENTS, $st
 
 app.controller( 'TypeaheadCtrl', function ( $scope, $http, $state, $rootScope ) {
 
-  // $rootScope.$on( "$routeChangeSuccess", function ( event, currentRoute, previousRoute ) {
-  //   window.scrollTo( 0, 0 );
-  // } );
-
   var _selected;
 
-  $scope.selected = undefined;
-
-  // $scope.goToSelection = function ( songId ) {
-  //   console.log('going to selection', $scope.selected.id);
-  //   $state.go( 'oneSong', {
-  //     songId: $scope.selected.id
-  //   } )
-  // };
-
-  // Any function returning a promise object can be used to load values asynchronously
+/**
+ * [getSongs sends a query to the search route]
+ * @param  {String} searchQuery [title string to search]
+ * @return {Object[]}             [an array of song objects]
+ */
   $scope.getSongs = function ( searchQuery ) {
     console.log( searchQuery );
     let config = {
@@ -58,7 +49,6 @@ app.controller( 'TypeaheadCtrl', function ( $scope, $http, $state, $rootScope ) 
     },
     getterSetter: true
   };
-  let thisScope = $scope;
 
   $scope.selectOption = function ( item, model, label ) {
     console.log( 'selected', item, model, label )
@@ -66,8 +56,6 @@ app.controller( 'TypeaheadCtrl', function ( $scope, $http, $state, $rootScope ) 
       songId: item.id
     } )
   }
-
-
 } );
 
 let searchBarTemplate = `
