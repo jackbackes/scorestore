@@ -7,11 +7,11 @@ app.factory('SongsFactory', function ($http) {
       });
     },
 
-    createOrUpdateSong: function (song) {
+    createOrUpdateSong: function (song, composer, genre) {
       if(song.id) {
-        return $http.put('api/v1/songs/' + song.id, song);
+        return $http.put('api/v1/songs/' + song.id, {song: song, composer: composer, genre: genre});
       } else {
-        return $http.post('api/v1/songs/', song);
+        return $http.post('api/v1/songs/', {song: song, composer: composer, genre: genre});
       }
     },
 

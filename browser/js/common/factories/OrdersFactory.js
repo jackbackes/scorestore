@@ -34,14 +34,22 @@ app.factory('OrdersFactory', function ($http, $q) {
     },
 
     markAsShipped: function (id) {
-      return $http.put('api/v1/order/' + id + '/shipped')
+      return $http.put('api/v1/order/' + id + '/status', {status: 'Processing', shipped: true})
+      .then(function(response) {
+        return response.data;
+      });
+    },
+
+    markAsCancelled: function (id) {
+      return $http.put('api/v1/order/' + id + '/status', {status: 'Cancelled'})
       .then(function(response) {
         return response.data;
       });
     },
 
     markAsDelivered: function (id) {
-      return $http.put('api/v1/order/' + id + '/delivered')
+      let date = new Date();
+      return $http.put('api/v1/order/' + id + '/status', {status: 'Completed', deliveredAt: date})
       .then(function(response) {
         return response.data;
       });

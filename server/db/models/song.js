@@ -5,6 +5,7 @@ var Sequelize = require('sequelize');
 var database = require('../_db');
 var Genre = database.model('genre');
 var Photo = database.model('photo');
+//defaultScope include order? photo?
 
 module.exports = function (db) {
      db.define('song', {
@@ -27,11 +28,11 @@ module.exports = function (db) {
             allowNull: false
         },
         price: {
-            type: Sequelize.DECIMAL,
+            type: Sequelize.DECIMAL,  //price greater than zero validation
             allowNull: false
         },
         inventoryQuantity: {
-            type: Sequelize.INTEGER,
+            type: Sequelize.INTEGER,  //quantity greater than zero validation
             allowNull: false
         },
         instrumentTags: {

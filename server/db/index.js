@@ -22,8 +22,8 @@ var Address = db.model('address');
 var Review = db.model('review');
 var Order = db.model('order');
 
-Song.belongsTo(Composer);
-Song.belongsTo(Genre);
+Song.belongsTo(Composer, {foreignkey: {allowNull: false} });
+Song.belongsTo(Genre, {foreignkey: {allowNull: false}});
 Song.belongsToMany(Order, {through: 'song_order'}); //Seqelize does not support "hasMany" for n:m associations.
 
 Order.belongsTo(Address); //put the addressId on the order table
@@ -42,3 +42,6 @@ Song.belongsTo(Photo);
 User.belongsTo(Photo);
 
 module.exports = db;
+
+//can make class method on a model that takes db as its argument, and include associations in the class method
+// then just need to call the method in index.js for each model with associations

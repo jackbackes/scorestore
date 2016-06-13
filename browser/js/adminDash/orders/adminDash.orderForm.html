@@ -1,11 +1,12 @@
 
 <div class="row orderpage-container">
   <div ng-show="!editing">
-    <button class="btn-raised btn-primary" ui-sref="adminDash.orders">Return to All Orders</button>
+    <button class="btn btn-raised btn-primary" ui-sref="adminDash.orders">Return to All Orders</button>
     <h4>Order #{{order.id}} by {{order.user.email}}</h4>
       <h5>Status: {{status || order.status}}</h5>
       <button class="btn btn-raised btn-primary" ng-click="markAsShipped(order.id)">Mark as Shipped</button>
      <button class="btn btn-raised btn-primary" ng-click="markAsDelivered(order.id)">Mark as Delivered</button>
+     <button class="btn btn-raised btn-primary" ng-click="markAsCancelled(order.id)">Mark as Cancelled</button>
       <button class="btn btn-raised btn-primary" ng-click="deleteOrder(order.id)">Delete Order</button>
       <div class="row">
         <div class="col-xs-5 well">
@@ -19,7 +20,7 @@
           <p>{{order.address.firstName}} {{order.address.lastName}}</p>
           <p>{{order.address.address}}</p>
           <p>{{order.address.city}}, {{order.address.state}} {{order.address.zipCode}}</p>
-          <a ng-click="editAddress=!editAddress; editing=!editing">Edit Shipping Address</a>
+          <!-- implement if time <a ng-click="editAddress=!editAddress; editing=!editing">Edit Shipping Address</a> -->
         </div>
       </div>
       <div class="well">
@@ -30,13 +31,14 @@
                 <div class="order-info">
                   <p>Song: {{song.title}}</p>
                   <p>Quantity: {{song.song_order.quantity}}</p>
-                  <div ng-show="editOrder">
+                  <!-- Implementing editing orders if time -->
+                  <!-- <div ng-show="editOrder">
                     <p>Edit Quantity
                         <span><select class="selectpicker" name="quantity" ng-init="quantityToAdd = inventory[0]" ng-options="number for number in inventory" ng-model="quantityToAdd" required>
                         </select><button ng-click="editing = false; updateCart(item.song, quantityToAdd)" class="btn btn-raised btn-primary">Confirm Edit</button></span>
                         </p>
                     <button class="btn btn-raised btn-primary" ng-click="removeFromCart(song)" id="remove">Remove Song from Order</button>
-                  </div>
+                  </div> -->
                 </div>
               </td>
               <td class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
@@ -52,11 +54,11 @@
                 </td>
             </tr>
         </table>
-        <a ng-click="editOrder=!editOrder">Edit Order Information</a>
+        <!-- Implement if time <a ng-click="editOrder=!editOrder">Edit Order Information</a>-->
       </div>
   </div>
+  <!--Implement if time
   <div ng-show="editAddress">
-  <!-- <div ng-show="!pastAddresses"> -->
     <header class="text-center">
       <h3>Edit Shipping Address</h3>
     </header>
@@ -164,7 +166,7 @@
         </form>
       </div>
     </div>
-  </div>
+  </div> -->
 
   
 

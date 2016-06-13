@@ -43,17 +43,24 @@ app.controller('orderFormCtrl', function ($scope, CartFactory, OrdersFactory, th
     });
   };
 
+  $scope.markAsDelivered = function(id) {
+    OrdersFactory.markAsDelivered(id)
+    .then(function(data) {
+      $scope.status = data
+    });
+  };
+
+  $scope.markAsCancelled = function(id) {
+    OrdersFactory.markAsCancelled(id)
+    .then(function(data) {
+      $scope.status = data;
+    });
+  };
+
   $scope.deleteOrder = function (id) {
     OrdersFactory.deleteOrder(id)
     .then(function () {
       $state.go('adminDash.orders');
-    });
-  };
-
-   $scope.markAsDelivered = function(id) {
-    OrdersFactory.markAsDelivered(id)
-    .then(function(data) {
-      $scope.status = data
     });
   };
 });

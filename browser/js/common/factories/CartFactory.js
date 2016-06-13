@@ -13,7 +13,7 @@ app.factory('CartFactory', function($http, $q){
 
 		addToCart: function(song, quantity){
 
-			return $http.post('/api/v1/cart', {song: song, quantity: quantity})
+			return $http.post('/api/v1/cart/songs', {song: song, quantity: quantity})
 			.then(function(response) {
 				cachedCartItems.push(response.data);
 				return response.data;
@@ -24,7 +24,7 @@ app.factory('CartFactory', function($http, $q){
 
 		updateCart: function(song, quantity){
 
-			return $http.put('/api/v1/cart', {song: song, quantity: quantity})
+			return $http.put('/api/v1/cart/songs/' + song.id, {song: song, quantity: quantity})
 			.then(function(response) {
 				angular.copy(response.data, cachedCartItems);
 				return response.data;
@@ -35,7 +35,7 @@ app.factory('CartFactory', function($http, $q){
 
 
 		removeFromCart: function(item) {
-			return $http.delete('/api/v1/cart/' + item.song.id)
+			return $http.delete('/api/v1/cart/songs/' + item.song.id)
 			.then(function(response) {
 				angular.copy(response.data, cachedCartItems);
 			})
@@ -44,10 +44,6 @@ app.factory('CartFactory', function($http, $q){
 		getCartTotal: function() {
 			if (!cachedCartItems.length) return null;
 			else if (cachedCartItems.length < 2) return cachedCartItems[0].song.price * cachedCartItems[0].quantity;
-			// else return cachedCartItems.reduce( (a,b) => {
-			// 	console.log(a);
-			// 	(+a.song.price * a.quantity) + (+b.song.price * b.quantity)
-			// });
 			else {
 				var sum = 0;
 				for(var i = 0; i < cachedCartItems.length; i++){
@@ -87,6 +83,7 @@ app.factory('CartFactory', function($http, $q){
 				})
 		},
 
+		// save for implementing address history
 		// getOrderAddress: function (order) {
 		// 	return $http.get('/api/v1/order/' + order.id + '/address')
 		// 		.then(function(response) {

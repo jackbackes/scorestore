@@ -7,7 +7,7 @@ module.exports = function (db) {
 
     return db.define('order', {
       status: {
-        type:Sequelize.ENUM('Created', 'Processing', "Completed"),
+        type:Sequelize.ENUM('Created', 'Processing', "Completed", "Cancelled"),
         defaultValue: 'Created'
       },
       shipped: {

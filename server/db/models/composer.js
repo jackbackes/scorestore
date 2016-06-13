@@ -3,7 +3,7 @@
 
 var Sequelize = require('sequelize');
 var database = require('../_db');
-var Song = database.model('song');
+var Song = database.model('song'); //define inside the instance methods
 var Photo = database.model('photo');
 
 module.exports = function (db) {
@@ -26,28 +26,7 @@ module.exports = function (db) {
         instanceMethods: {
             findSimilar: function () {
               var that = this;
-              return Song.findAll({
-                where: {
-                  composerId: this.id
-                }
-              })
-              .then(function(songs) {
-                return Promise.all(songs.map(function(a){
-                  return a.genreId;
-                }));
-              })
-              .then(function(genres) {
-                return Song.findAll({
-                  where: {
-                    genreId: {
-                      $in: genres
-                    },
-                    composerId: {
-                      $ne: that.id
-                    }
-                  }
-                });
-              })
+              this.findSimilarSongs()
               .then(function (songs) {
                 return Promise.all(songs.map(function(a){
                   return a.composerId;

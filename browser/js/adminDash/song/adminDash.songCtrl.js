@@ -22,8 +22,8 @@ app.controller('adminDashSongsCtrl', function ($scope, SongsFactory) {
 });
 
 app.controller('songFormCtrl', function ($scope, OneSongFactory, SongsFactory, $stateParams, $state) {
-  $scope.updateOrCreate = function (song) {
-    SongsFactory.createOrUpdateSong(song)
+  $scope.updateOrCreate = function (song, composer, genre) {
+    SongsFactory.createOrUpdateSong(song, composer, genre)
     .then(function () {
       $state.go('adminDash.songs');
     });

@@ -10,8 +10,12 @@ const Address = db.model('address');
 const User = db.model('user');
 const stripe = require("stripe")("sk_test_BQokikJOvBiI2HlWgH4olfQ2");
 const Promise = require('sequelize').Promise;
+const Auth = require('../../../../configure/auth-middleware.js')
 
-router.get( '/:orderId', ( req, res, next ) => {
+
+
+router.get( '/:orderId', Auth.assertAdmin, ( req, res, next ) => {
+
   let orderId = req.params.orderId;
   Order.findOne( {
     include: [Song, Address, User],
@@ -25,7 +29,7 @@ router.get( '/:orderId', ( req, res, next ) => {
   .catch(next);
 });
 
-router.get( '/:orderId/restore', (req, res, next ) => {
+router.get( '/:orderId/restore', Auth.assertAdmin, (req, res, next ) => {
   let orderId = req.params.orderId;
   Order.restore({
     where: {
@@ -36,14 +40,7 @@ router.get( '/:orderId/restore', (req, res, next ) => {
   }).catch(next)
 })
 
-// router.post( '/', ( req, res, next ) => {
-//   let order = req.body;
-//   Order.create( order )
-//     .then( order => res.status( 201 ).send( order ) )
-//     .catch( err => next( _error('could not create order', err, 500 ) ) )
-// } );
-
-
+// make this an instance method
 router.post('/', function (req, res, next) {
   let user = req.user || req.session.guest;
   let stripeToken = req.body.response.id;
@@ -87,7 +84,7 @@ router.post('/', function (req, res, next) {
    
 });
 
-router.delete( '/:orderId', ( req, res, next ) => {
+router.delete( '/:orderId', Auth.assertAdmin, ( req, res, next ) => {
   console.log( 'deleting' );
   let orderId = req.params.orderId;
   Order.destroy( {
@@ -101,11 +98,11 @@ router.delete( '/:orderId', ( req, res, next ) => {
       .catch( err => next( _error( 'could not delete order', err, 500 ) ) )
 } )
 
-router.put('/:orderId/shipped', (req, res, next) => {
-  Order.update( {
-      status: 'Processing',
-      shipped: true
-    },
+// put to orderId/status and then send the new status?
+
+router.put('/:orderId/status', Auth.assertAdmin, (req, res, next) => {
+   let status = req.body.status; //'Processing' === shipped ; "Completed" === delivered
+   Order.update( req.body,
     { where:
        {
         id: req.params.orderId
@@ -113,51 +110,39 @@ router.put('/:orderId/shipped', (req, res, next) => {
   })
   .then( (updated) => {
     if(!updated) throw _error('could not update order', 500);
-    res.status(200).send('Processing');
+    res.status(200).send(status);
   }).catch(next);
 });
 
-router.put('/:orderId/delivered', (req, res, next) => {
-  Order.update( {
-      status: 'Completed',
-    },
-    { where:
-       {
-        id: req.params.orderId
-       }
-  })
-  .then( (updated) => {
-    if(!updated) throw _error('could not update order', 500);
-    res.status(200).send('Completed');
-  }).catch(next);
-});
+//Save for implementation if Admin can update order address
+// router.put('/:orderId/address',  (req, res, next) => {
+//   let newAddress = req.body;
+//   Order.findById(req.params.orderId)
+//   .then(function (order) {
+//     return Address.update(newAddress, {
+//       where: {
+//         id: order.addressId
+//       }
+//     });
+//   })
+//   .then((updated) => {
+//     if(!updated) throw _error('could not update order', newAddress, 500);
+//     res.status(200).send({updated, newAddress});
+//   }).catch(next);
+// });
 
-router.put('/:orderId/address', (req, res, next) => {
-  let newAddress = req.body;
-  Order.findById(req.params.orderId)
-  .then(function (order) {
-    return Address.update(newAddress, {
-      where: {
-        id: order.addressId
-      }
-    })
-  })
-  .then( (updated) => {
-    if(!updated) throw _error('could not update order', newAddress, 500);
-    res.status(200).send({updated, newAddress});
-  }).catch(next);
-})
-
-router.get('/:orderId/address', (req, res, next) => {
-  Order.findById(req.params.orderId)
-  .then(function (order) {
-    res.send(order.getAddress());
-  })
-  .catch(next);
-})
+// router.get('/:orderId/address', (req, res, next) => {
+//   Order.findById(req.params.orderId)
+//   .then(function (order) {
+//     res.send(order.getAddress());
+//   })
+//   .catch(next);
+// });
 
 //tracking number
-
+// post route
+// take various parts of unique information and hash same information together to generate confirmation number
+// just call when charging after transaction successful
 router.get('/:orderId/confirmation-number', (req, res, next) => {
   let orderId = req.params.orderId;
   Order.findById(orderId).then( order => {
