@@ -3,26 +3,25 @@
 const path = require('path');
 const router = require('express').Router();
 const db = require(path.join(__dirname, '../../../db'));
-const Song = db.model('song');
-const Composer = db.model('composer');
-const Genre = db.model('genre');
-const Photo = db.model('photo');
+const User = db.model('user');
+// const Composer = db.model('composer');
+// const Genre = db.model('genre');
+// const Photo = db.model('photo');
 
 router.get('', function (req, res, next){
-  return Song.findAll({
-    include: [Composer, Genre, Photo],
+  return User.findAll({
     where: req.query
   })
-  .then(function (songs) {
-    res.send(songs);
+  .then(function (users) {
+    res.send(users);
   })
   .catch(next);
 });
 
 router.param('id', function (req, res, next, id) {
-  return Song.findById(id, {include: [Composer, Genre, Photo]})
-  .then(function (song) {
-    req.song = song;
+  return User.findById(id)
+  .then(function (user) {
+    req.foundUser = user;
     next();
   })
   .catch(next);
@@ -31,7 +30,7 @@ router.param('id', function (req, res, next, id) {
 router.post('/', function (req, res, next) {
   if (req.user) {
     if (req.user.isAdmin) {
-      Song.create(req.body)
+      User.create(req.body)
       .then(function () {
         res.sendStatus(201);
       })
@@ -45,13 +44,13 @@ router.post('/', function (req, res, next) {
 });
 
 router.get('/:id', function (req, res, next) {
-  res.send(req.song);
+  res.send(req.foundUser);
 });
 
 router.delete('/:id', function (req, res, next) {
   if (req.user) {
     if (req.user.isAdmin) {
-      req.song.destroy()
+      req.foundUser.destroy()
       .then(function () {
         res.sendStatus(204);
       })
@@ -67,7 +66,7 @@ router.delete('/:id', function (req, res, next) {
 router.put('/:id', function (req, res, next) {
   if (req.user) {
     if (req.user.isAdmin) {
-      req.song.update(req.body)
+      req.foundUser.update(req.body)
       .then(function () {
         res.sendStatus(200);
       })
@@ -79,13 +78,5 @@ router.put('/:id', function (req, res, next) {
     res.sendStatus(401);
   }
 });
-
-router.get('/:id/similarInstruments', function(req, res, next){
-  req.song.findSimilarByInstruments()
-  .then(function(similarSongs){
-    res.send(similarSongs)
-  })
-  .catch(next);
-})
 
 module.exports = router;
