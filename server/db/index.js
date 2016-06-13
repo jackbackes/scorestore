@@ -1,28 +1,44 @@
 'use strict';
 
 var db = require('./_db');
-var User = require('./models/user')(db);
-var Song = require('./models/song')(db);
-var Composer = require('./models/composer')(db);
-var Genre = require('./models/genre')(db);
-var Address = require('./models/address')(db);
-var Review = require('./models/review')(db);
+module.exports = db;
 
+require('./models/user')(db);
+require('./models/genre')(db);
+require('./models/photo')(db);
+require('./models/song')(db);
+require('./models/composer')(db);
+require('./models/address')(db);
+require('./models/review')(db);
+require('./models/order')(db);
+require('./models/orderSong')(db);
+
+var User = db.model('user');
+var Genre = db.model('genre');
+var Photo = db.model('photo');
+var Song = db.model('song');
+var Composer = db.model('composer');
+var Address = db.model('address');
+var Review = db.model('review');
+var Order = db.model('order');
 
 Song.belongsTo(Composer);
 Song.belongsTo(Genre);
-Song.belongsToMany(Order, {through: 'song_order'});
-Order.belongsToMany(Song, {through: 'song_order'});
+Song.belongsToMany(Order, {through: 'song_order'}); //Seqelize does not support "hasMany" for n:m associations.
 
-Composer.belongsToMany(Genre, {through: 'composer_genre'});
-Genre.belongsToMany(Composer, {through: 'composer_genre'});
-
+Order.hasOne(Address);
+Order.belongsTo(User);
+Order.belongsToMany(Song, {through: 'song_order'}); //Seqelize does not support "hasMany" for n:m associations.
 Review.belongsTo(Song);
 Review.belongsTo(User);
 
 User.hasMany(Address);
 User.hasMany(Review);
+User.hasMany(Order);
 
+Review.belongsTo(Song);
+Review.belongsTo(User);
+Song.belongsTo(Photo);
+User.belongsTo(Photo);
 
 module.exports = db;
-

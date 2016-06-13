@@ -1,14 +1,19 @@
 'use strict';
 
-var _ = require('lodash');
+
 var Sequelize = require('sequelize');
+var database = require('../_db');
+var Genre = database.model('genre');
+var Photo = database.model('photo');
 
 module.exports = function (db) {
-
-     return db.define('song', {
+     db.define('song', {
         title: {
             type: Sequelize.STRING,
             allowNull: false
+        },
+        subtitle: {
+          type: Sequelize.STRING
         },
         description: {
             type: Sequelize.TEXT,
@@ -28,11 +33,6 @@ module.exports = function (db) {
         inventoryQuantity: {
             type: Sequelize.INTEGER,
             allowNull: false
-        },
-        imageURL: {
-            type: Sequelize.STRING,
-            allowNull: false,
-            defaultValue: './images/default-image.jpg'
         },
         instrumentTags: {
             type: Sequelize.ARRAY(Sequelize.STRING),
@@ -59,29 +59,48 @@ module.exports = function (db) {
         }
     }, {
         instanceMethods: {
-            findSimilar: function () {
-              return this.Model.findAll({
-                where: {
-                  id: {
-                    $ne: this.id
-                  },
-                  instrumentTags: {
-                    $overlap: this.instrumentTags
-                  }
+          findSimilarByInstruments: function () {
+            return this.Model.findAll({
+              include: [Photo],
+              where: {
+                id: {
+                  $ne: this.id
+                },
+                instrumentTags: {
+                  $overlap: this.instrumentTags
                 }
-              });
+              }
+            });
+          },
+          findSimilarByGenre: function () {
+            return this.Model.findAll({
+              where: {
+                id: {
+                  $ne: this.id
+                },
+                genreId: this.genreId
+              }
+            });
           }
         },
         classMethods: {
-            findByTag: function (tag) {
-              return this.findAll({
-                where: {
-                  instrumentTags: {
-                    $contains: [tag]
-                  }
+          findByInstrumentTag: function (tag) {
+            return this.findAll({
+              where: {
+                instrumentTags: {
+                  $contains: [tag]
                 }
-              });
-            }
-        },
+              }
+            });
+          },
+          findByGenre: function (genre) {
+            return this.findAll({
+              include: [Genre],
+              where: {
+                genreName: genre
+              }
+            });
+          }
+        }
     });
 };

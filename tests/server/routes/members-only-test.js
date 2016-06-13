@@ -2,10 +2,10 @@
 var expect = require('chai').expect;
 
 var Sequelize = require('sequelize');
-var dbURI = 'postgres://localhost:5432/testing-fsg';
-var db = new Sequelize(dbURI, {
-    logging: false
-});
+var dbURI = 'postgres://localhost:5432/testingfsg';
+process.env.NODE_ENV = 'testing';
+var db = require('../../../server/db');
+
 require('../../../server/db/models/user')(db);
 
 var supertest = require('supertest');
