@@ -27,5 +27,7 @@ app.controller('myAccountCtrl', function ($scope, Session, OrdersFactory) {
 
     $scope.orders = userOrders;
 
+    
+
 
 });
