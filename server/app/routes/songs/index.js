@@ -8,7 +8,7 @@ const Composer = db.model('composer');
 const Genre = db.model('genre');
 const Photo = db.model('photo');
 
-router.get('/', function (req, res, next){
+router.get('', function (req, res, next){
   return Song.findAll({
     include: [Composer, Genre, Photo],
     where: req.query

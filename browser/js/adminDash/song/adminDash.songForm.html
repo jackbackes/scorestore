@@ -1,0 +1,27 @@
+<form class="admin-edit-form" ng-submit="updateOrCreate(song)">
+  <label ng-hide="newSong">ID</label>
+  <input ng-hide="newSong" type="text" ng-model="song.id" ng-disabled="true">
+  <h3 ng-show="newSong">Create a New Song</h3>
+  <label>Title</label>
+  <input type="text" ng-model="song.title" required>
+  <label>Subtitle</label>
+  <input type="text" ng-model="song.subtitle">
+  <label>Description</label>
+  <input required type="text" ng-model="song.description">
+  <label>Year Composed</label>
+  <input type="text" ng-model="song.year">
+  <label>File Name</label>
+  <input required type="text" ng-model="song.fileName">
+  <label>Price</label>
+  <input type="text" required ng-model="song.price">
+  <label>Inventory Quantity</label>
+  <input type="text" required ng-model="song.inventoryQuantity">
+  <label>Instruments</label>
+  <input type="text" ng-model="song.instrumentTags">
+  <label>Source URL</label>
+  <input type="text" ng-model="song.sourceURL">
+  <label>Public Domain Status</label>
+  <input type="text" ng-model="song.publicDomainStatus">
+  <button type="submit">Save</button>
+  <button ui-sref="adminDash.songs">Cancel</button>
+</form>

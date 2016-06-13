@@ -7,17 +7,8 @@ app.config(function ($stateProvider) {
 });
 
 app.controller('cartCtrl', function ($scope, CartFactory) {
-
   CartFactory.getCart()
   .then(function(data) {
     $scope.cart = data || null;
   });
-
-  $scope.removeFromCart = function(item) {
-    return CartFactory.removeFromCart(item)
-  };
-
-  $scope.getCartTotal = function () {
-    return CartFactory.getCartTotal();
-  }
 });
