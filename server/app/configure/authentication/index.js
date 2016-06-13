@@ -6,9 +6,9 @@ var SequelizeStore = require('connect-session-sequelize')(session.Store);
 
 var ENABLED_AUTH_STRATEGIES = [
     'local',
-    //'twitter',
-    //'facebook',
-    //'google'
+    'twitter',
+    'facebook',
+    'google'
 ];
 
 module.exports = function (app, db) {
@@ -61,6 +61,15 @@ module.exports = function (app, db) {
             res.status(401).send('No authenticated user.');
         }
     });
+
+    // app.get('/guestsession', function (req, res) {
+    //     console.log("Req", req.session)
+    //     if (req.session.guest) {
+    //         res.send({ user: req.session.guest, id: req.sessionID });
+    //     } else {
+    //         res.status(401).send('No guest');
+    //     }
+    // });
 
     // Simple /logout route.
     app.get('/logout', function (req, res) {
