@@ -1,5 +1,4 @@
 app.directive( 'searchBar', function ( $rootScope, AuthService, AUTH_EVENTS, $state ) {
-
   return {
     controller: 'TypeaheadCtrl',
     template: searchBarTemplate
@@ -8,19 +7,20 @@ app.directive( 'searchBar', function ( $rootScope, AuthService, AUTH_EVENTS, $st
 
 app.controller( 'TypeaheadCtrl', function ( $scope, $http, $state, $rootScope ) {
 
-  $rootScope.$on( "$routeChangeSuccess", function ( event, currentRoute, previousRoute ) {
-    window.scrollTo( 0, 0 );
-  } );
+  // $rootScope.$on( "$routeChangeSuccess", function ( event, currentRoute, previousRoute ) {
+  //   window.scrollTo( 0, 0 );
+  // } );
 
   var _selected;
 
   $scope.selected = undefined;
 
-  $scope.goToSelection = function ( songId ) {
-    $state.go( 'oneSong', {
-      songId: $scope.selected.id
-    } )
-  };
+  // $scope.goToSelection = function ( songId ) {
+  //   console.log('going to selection', $scope.selected.id);
+  //   $state.go( 'oneSong', {
+  //     songId: $scope.selected.id
+  //   } )
+  // };
 
   // Any function returning a promise object can be used to load values asynchronously
   $scope.getSongs = function ( searchQuery ) {
@@ -62,9 +62,8 @@ app.controller( 'TypeaheadCtrl', function ( $scope, $http, $state, $rootScope ) 
 
   $scope.selectOption = function ( item, model, label ) {
     console.log( 'selected', item, model, label )
-    thisScope.selected = item;
     $state.go( 'oneSong', {
-      songId: $scope.selected.id
+      songId: item.id
     } )
   }
 
@@ -72,20 +71,18 @@ app.controller( 'TypeaheadCtrl', function ( $scope, $http, $state, $rootScope ) 
 } );
 
 let searchBarTemplate = `
-<div class="row" >
-    <!-- /.col-lg-6 -->
-    <div class="col-lg-6">
         <div class="input-group">
-            <h4>Custom templates for results</h4>
-            <pre>Model: {{selected | json}}</pre>
-            <input type="text" ng-model="queryString" placeholder="Custom template" uib-typeahead="song as song.name for song in songs" typeahead-on-select="goToSelection()"  typeahead-template-url="/js/common/directives/search-bar/typeahead-template.html" class="form-control" typeahead-show-hint="true"
-                typeahead-min-length="0" ng-keyUp = "updateSongs(queryString)" >
+            <input
+              type="text"
+              ng-model="queryString"
+              placeholder="...search for a song"
+              uib-typeahead="song as song.title for song in songs"
+              typeahead-on-select="selectOption($item, $model, $label)"
+              typeahead-template-url="/js/common/directives/search-bar/typeahead-template.html" class="form-control" typeahead-show-hint="true"
+              typeahead-min-length="0"
+              ng-keyUp = "updateSongs(queryString)" >
+            </input>
             <span class="input-group-btn">
-      </span>
+            </span>
         </div>
-        <!-- /input-group -->
-    </div>
-    <!-- /.col-lg-6 -->
-</div>
-<!-- /.row -->
 `
