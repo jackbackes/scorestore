@@ -16,19 +16,23 @@ module.exports = function (app, db) {
     };
 
     var verifyCallback = function (accessToken, refreshToken, profile, done) {
-
+        let profileJson = profile._json;
+        var newUser = {
+          google_id: profileJson.id,
+          firstName: profileJson.given_name,
+          lastName: profileJson.family_name,
+          email: profileJson.email
+        }
         User.findOne({
                 where: {
-                    google_id: profile.id
+                    google_id: newUser.google_id
                 }
             })
             .then(function (user) {
                 if (user) {
                     return user;
                 } else {
-                    return User.create({
-                        google_id: profile.id
-                    });
+                    return User.create(newUser);
                 }
             })
             .then(function (userToLogin) {
