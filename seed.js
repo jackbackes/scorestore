@@ -89,42 +89,31 @@ let seedComposers = function(){
   });
 }
 
-// let seedOrders = function(resolvedSeedUsers, resolvedSeed){
-//   let orders = [
-//     {
-//       songs: [
-//         { songId: 1, quantity: 10 },
-//         { songId: 2, quantity: 1 },
-//         { songId: 3, quantity: 4 }
-//       ],
-//       userId: 1,
-//       shippingAddress: {
-//         firstName: "Jimmy",
-//         lastName: "Neutron",
-//         address: "123 Mars Avenue",
-//         city: "MoonBase",
-//         state: "TX",
-//         zipCode: 75252
-//       }
-//     }]
-//   let testingOrder = orders[0];
-//   return Promise.all(resolvedSeedUsers).spread( (testing, obama) => [
-//     testing.createOrder( {
-//       include: [
-//         //include the correct user
-//         {model: User, where: {id: testingOrder.userId}},
-//         //include the songs into the order
-//       ]
-//       //add the shipping address
-//     } ).then(order => {
-//       order.createAddress( testingOrder.shippingAddress )
-//       return Promise.all(testingOrder.songs.map(function(song) {
-//         console.log(song)
-//       }))
-
-//       })
-//   ] )
-// };
+let seedOrders = function(/*resolvedSeedUsers, resolvedSeedSongs*/){
+  return [
+    {
+      songs: [
+        { songId: 1, quantity: 10 },
+        { songId: 2, quantity: 1 },
+        { songId: 3, quantity: 4 }
+      ],
+      orderInfo: {
+        userId: 1,
+        shipped: true,
+        deliveredAt: Date.now(),
+        transactionSuccessful: true,
+        total: 22.22,
+      },
+      shippingAddress: {
+        firstName: "Jimmy",
+        lastName: "Neutron",
+        address: "123 Mars Avenue",
+        city: "MoonBase",
+        state: "TX",
+        zipCode: 75252
+      }
+    }]
+};
 
 // let seedReviews = function(resolvedSeedUsers){
 //   let reviews = [
@@ -158,6 +147,15 @@ let seedPhotos = function(){
 db.sync({ force: true })
     .then(function () {
         return Promise.all([seedUsers(), seedComposers(), seedGenres(), seedPhotos(), seedSongs()])
+        .spread( (users, composers, genres, photos, songs) => {
+          return User.findById(1).then( user => {
+            console.log('found user:', user);
+            let orders = seedOrders();
+            return user.createOrder(orders[0].orderId).then( (order) => {
+              return [users, composers, genres, photos, songs, order];
+            })
+          })
+        })
     })
     .then(function () {
         console.log(chalk.green('Seed successful!'));

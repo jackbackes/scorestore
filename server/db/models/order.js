@@ -1,7 +1,7 @@
 'use strict';
 
-
 var Sequelize = require('sequelize');
+const randomstring = require('randomstring');
 
 module.exports = function (db) {
 
@@ -19,8 +19,27 @@ module.exports = function (db) {
       transactionSuccessful: {
         type: Sequelize.BOOLEAN
       },
+      confirmationNumber: {
+        type: Sequelize.STRING,
+        unique: true
+      },
       total: {
         type: Sequelize.DECIMAL
+      }
+    }, {
+      paranoid: true,
+      instanceMethods: {
+        generateConfirmationNumber: function(){
+          let thisOrder = this;
+          let confNumber = randomstring.generate({
+            length: 10,
+            capitalization: 'uppercase'
+          });
+          // console.log(thisOrder);
+          this.setDataValue('confirmationNumber', confNumber);
+          this.save();
+          return confNumber;
+        }
       }
     });
   };
