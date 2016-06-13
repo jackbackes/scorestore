@@ -13,29 +13,47 @@ app.controller('adminDashOrdersCtrl', function ($scope, OrdersFactory) {
     });
   };
 
-  $scope.deleteOrder = function (id) {
-    OrdersFactory.deleteOrder(id)
-    .then(function () {
-      $scope.getOrders();
+  
+});
+
+app.controller('orderFormCtrl', function ($scope, CartFactory, OrdersFactory, theOrder, $state) {
+  // $scope.updateOrCreate = function (order) {
+  //   OrdersFactory.createOrUpdateOrder(order)
+  //   .then(function () {
+  //     $state.go('adminDash.orders');
+  //   });
+  // };
+
+  $scope.order = theOrder;
+  var statusInventory = ['Created', 'Processing', 'Cancelled', 'Completed']
+
+
+  $scope.updateAddress = function(address, order) {
+      CartFactory.updateAddress(address, order)
+      .then(function (data) {
+        $scope.editAddress = false;
+        $scope.editing = false;
+      });
+  };
+
+  $scope.markAsShipped = function(id) {
+    OrdersFactory.markAsShipped(id)
+    .then(function(data) {
+      $scope.status = data;
     });
   };
 
-});
-
-app.controller('orderFormCtrl', function ($scope, OrdersFactory, $stateParams, $state) {
-  $scope.updateOrCreate = function (order) {
-    OrdersFactory.createOrUpdateOrder(order)
+  $scope.deleteOrder = function (id) {
+    OrdersFactory.deleteOrder(id)
     .then(function () {
       $state.go('adminDash.orders');
     });
   };
 
-  if ($stateParams.id) {
-    OrdersFactory.fetchOrder($stateParams.id)
-    .then(function (order) {
-      $scope.order = order;
+   $scope.markAsDelivered = function(id) {
+    OrdersFactory.markAsDelivered(id)
+    .then(function(data) {
+      $scope.status = data
     });
-  } else {
-    $scope.newOrder = true;
-  }
+  };
 });
