@@ -11,7 +11,7 @@ const Promise = require('sequelize').Promise;
 
 router.get('/', function (req, res, next){
   
-   
+   //is something supposed to happen here? If not why do I exist? -KHOB
 });
 
 router.post('/', function (req, res, next) {
@@ -19,6 +19,7 @@ router.post('/', function (req, res, next) {
 	let stripeToken = req.body.response.id;
 	let total = req.body.total * 100
 	
+	//potentially order could have a charge/checkout method -- KHOB
 	stripe.charges.create({
 		amount: total,
 		currency: 'usd',
@@ -40,6 +41,7 @@ router.post('/', function (req, res, next) {
 			})
 			.then(function(order) {
 				return Promise.map(req.session.cart, function(item) {
+					//missing return on 44 (song) and 46 (order) -- KHOB
 					Song.findById(item.song.id)
 					.then(function(song) {
 						order.addSong(song, {quantity: item.quantity})	

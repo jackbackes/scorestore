@@ -7,8 +7,12 @@ var Genre = database.model('genre');
 var Photo = database.model('photo');
 
 module.exports = function (db) {
+  //number validations for price/quantity to be > 0 -- KHOB 
+  //url validators in sequelize -- KHOB
+
+  //default scope to have certain fields auto-populated -- KHOB
      db.define('song', {
-        title: {
+        title: { //consider unique title -- KHOB
             type: Sequelize.STRING,
             allowNull: false
         },
@@ -88,7 +92,7 @@ module.exports = function (db) {
             return this.findAll({
               where: {
                 instrumentTags: {
-                  $contains: [tag]
+                  $contains: [tag] //might need to drop array brackets -- KHOB
                 }
               }
             });

@@ -8,8 +8,9 @@ const Composer = db.model('composer');
 const Genre = db.model('genre');
 const Photo = db.model('photo');
 
+//be consistent with '' and '/' -- KHOB
 router.get('', function (req, res, next){
-  return Song.findAll({
+  return Song.findAll({ //return is not necessary -- KHOB
     include: [Composer, Genre, Photo],
     where: req.query
   })
@@ -33,11 +34,11 @@ router.post('/', function (req, res, next) {
     if (req.user.isAdmin) {
       Song.create(req.body)
       .then(function () {
-        res.sendStatus(201);
+        res.sendStatus(201); //might want to send result of creation (id) -- KHOB
       })
       .catch(next);
     } else {
-      res.sendStatus(403);
+      res.sendStatus(403); //uniform error handling -- KHOB
     }
    } else {
     res.sendStatus(401);
@@ -50,7 +51,7 @@ router.get('/:id', function (req, res, next) {
 
 router.delete('/:id', function (req, res, next) {
   if (req.user) {
-    if (req.user.isAdmin) {
+    if (req.user.isAdmin) { //auth middleware or authentication -- KHOB
       req.song.destroy()
       .then(function () {
         res.sendStatus(204);

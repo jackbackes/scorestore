@@ -29,7 +29,7 @@ module.exports = function (db) {
         type: Sequelize.STRING,
         allowNull: false,
         validate: {
-          len: [5, 5]
+          len: [5, 5] //as an aside -- zip can be up to ten (if including dash -- KHOB)
         }
       }
 

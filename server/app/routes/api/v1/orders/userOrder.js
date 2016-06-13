@@ -11,8 +11,8 @@ router.post( '/', ( req, res, next ) => {
   let order = req.body;
   let userId = req.params.userId;
   User.findById( userId ).then( user => {
-    if(!user) throw 'no user';
-    user.createOrder( order )
+    if(!user) throw 'no user'; //error utility -- KHOB
+    user.createOrder( order ) //if you return this you are thenable -- KHOB
     .then( order => res.status( 201 ).send( order ) )
     .catch( err => next( 'could not create order:' + err ) )
 

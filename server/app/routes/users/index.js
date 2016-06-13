@@ -68,7 +68,7 @@ router.put('/:id', function (req, res, next) {
     if (req.user.isAdmin) {
       req.foundUser.update(req.body)
       .then(function () {
-        res.sendStatus(200);
+        res.sendStatus(200); //might as well do 204 if there is no body -- KHOB
       })
       .catch(next);
     } else {

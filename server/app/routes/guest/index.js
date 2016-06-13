@@ -5,7 +5,7 @@ const router = require('express').Router();
 const db = require(path.join(__dirname, '../../../db'));
 const User = db.model('user');
 
-
+//consider to have this near address (maybe in new checkout route) -- KHOB
 router.post('/', function (req, res, next) {
     User.findOrCreate({where:
       {

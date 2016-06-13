@@ -3,11 +3,12 @@
 
 var Sequelize = require('sequelize');
 var database = require('../_db');
-var Song = database.model('song');
+var Song = database.model('song'); //consider in instance method itself -- KHOB
 var Photo = database.model('photo');
 
 module.exports = function (db) {
-    db.define('composer', { 
+    db.define('composer', {
+    //don't forget that an empty string won't be caught by allowNull; look into notEmpty -- KHOB 
         firstName: {
             type: Sequelize.STRING,
             allowNull: false
@@ -24,6 +25,7 @@ module.exports = function (db) {
         }
     }, {
         instanceMethods: {
+          //findSimilar is using a lot of 'findSimilarSong' functionality; call findSimilarSong in here -- KHOB
             findSimilar: function () {
               var that = this;
               return Song.findAll({

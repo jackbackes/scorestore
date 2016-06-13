@@ -5,6 +5,8 @@ var db = require('../../db');
 var Composer = db.model('composer');
 
 
+//throw all of these in v1 folder and add to index there -- KHOB
+
 router.use('/members', require('./members'));
 
 router.use('/v1/songs', require('./songs'));
@@ -20,7 +22,7 @@ router.use('/v1/order', require('./order'));
 // Make sure this is after all of
 // the registered routes!
 
-
+//find me a home -- KHOB
 router.get('/v1/composer/:composerId/similarComposers', function(req, res, next){
 	Composer.findById(req.params.composerId)
 	.then(function(composer){

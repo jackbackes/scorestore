@@ -12,4 +12,5 @@ router.post('', function (req, res, next) {
   .then(function (user) {
     res.send(user);
   });
+  //no catch -- KHOB
 });

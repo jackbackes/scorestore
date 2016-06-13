@@ -5,6 +5,8 @@ const randomstring = require('randomstring');
 
 module.exports = function (db) {
 
+    //what if I want to cancel my order? -- KHOB
+
     return db.define('order', {
       shipped: {
         type: Sequelize.BOOLEAN,
@@ -23,7 +25,7 @@ module.exports = function (db) {
         type: Sequelize.STRING,
         unique: true
       },
-      total: {
+      total: { //best to store as integer (ideally) b/c JS handles decimals with weird rounding errors -- KHOB
         type: Sequelize.DECIMAL
       }
     }, {
