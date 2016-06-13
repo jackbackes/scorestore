@@ -7,7 +7,7 @@ app.directive('navbar', function ($rootScope, AuthService, AUTH_EVENTS, $state) 
         link: function (scope) {
 
             scope.loggedInButtons = [
-                 {label: 'Logout', state: 'logout', auth: true},
+                 {label: 'Logout', state: 'logout', auth: true, },
                  { label: 'My Account', state: 'myAccount', auth: true }
             ];
 
@@ -34,7 +34,6 @@ app.directive('navbar', function ($rootScope, AuthService, AUTH_EVENTS, $state) 
             var setUser = function () {
                 AuthService.getLoggedInUser().then(function (user) {
                     scope.user = user;
-
                 });
             };
 

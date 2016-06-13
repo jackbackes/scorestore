@@ -7,6 +7,13 @@ app.factory('OrdersFactory', function ($http) {
       });
     },
 
+    // getUserOrders: function(id){
+    //   return $http.get('/api/v1/orders/userOrder/' + id)
+    //   .then(function(res){
+    //     return res.data;
+    //   });
+    // },
+
     fetchOrder: function(id){
       return $http.get('/api/v1/orders/' + id)
       .then(function(order){

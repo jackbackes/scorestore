@@ -10,9 +10,20 @@ const stripe = require("stripe")("sk_test_BQokikJOvBiI2HlWgH4olfQ2");
 const Promise = require('sequelize').Promise;
 
 router.get('/', function (req, res, next){
-  
-   
+  	Order.findAll({
+  		include: [User, Address]
+  	})
+  	.then(function(orders){
+  		console.log(orders);
+  		res.send(orders);
+  	})
+  	.catch(next);
 });
+
+// router.get('/', function (req, res, next){
+
+// });
+
 
 router.post('/', function (req, res, next) {
 	let user = req.user || req.session.guest;
