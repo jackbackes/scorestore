@@ -6,7 +6,7 @@ app.config(function ($stateProvider) {
     });
 });
 
-app.controller('OrderCtrl', function ($scope, Session, $state, OrderFactory, CartFactory) {
+app.controller('OrderCtrl', function ($scope, Session, $state, OrdersFactory, CartFactory) {
 	var total;
 	$scope.session = Session;
 
@@ -33,7 +33,7 @@ app.controller('OrderCtrl', function ($scope, Session, $state, OrderFactory, Car
 
 	$scope.submitPayment = function(status, response) {
 		console.log("total", total)
-		OrderFactory.submitPayment(response, total)
+		OrdersFactory.submitPayment(response, total)
 		.then(function () {
 			$state.go('thankyou');
 		})

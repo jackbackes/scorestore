@@ -1,17 +1,178 @@
-<form class="admin-edit-form" ng-submit="updateOrCreate(user)">
-  <label ng-hide="newSong">ID</label>
-  <input ng-hide="newSong" type="text" ng-model="user.id" ng-disabled="true">
-  <h3 ng-show="newSong">Create a New Song</h3>
-  <label>First Name</label>
-  <input type="text" ng-model="user.firstName" required>
-  <label>Last Name</label>
-  <input type="text" ng-model="user.lastName" required>
-  <label>Email</label>
-  <input required type="text" ng-model="user.email" required>
-  <label>Password</label>
-  <input required type="password" ng-model="user.password" required>
-  <label>Admin</label>
-  <input required type="checkbox" ng-model="user.isAdmin">
-  <button type="submit">Save</button>
-  <button ui-sref="adminDash.users">Cancel</button>
-</form>
+
+<div class="row orderpage-container">
+  <div ng-show="!editing">
+    <button class="btn-raised btn-primary" ui-sref="adminDash.orders">Return to All Orders</button>
+    <h4>Order #{{order.id}} by {{order.user.email}}</h4>
+      <h5>Status: {{status || order.status}}</h5>
+      <button class="btn btn-raised btn-primary" ng-click="markAsShipped(order.id)">Mark as Shipped</button>
+     <button class="btn btn-raised btn-primary" ng-click="markAsDelivered(order.id)">Mark as Delivered</button>
+      <button class="btn btn-raised btn-primary" ng-click="deleteOrder(order.id)">Delete Order</button>
+      <div class="row">
+        <div class="col-xs-5 well">
+          <h5>User Information</h5>
+          <p>{{order.user.fullName}}</p>
+          <p>{{order.user.email}}</p>
+        </div>
+        <div class="col-xs-2"></div>
+        <div class="col-xs-5 well">
+          <h5>Shipping Address</h5>
+          <p>{{order.address.firstName}} {{order.address.lastName}}</p>
+          <p>{{order.address.address}}</p>
+          <p>{{order.address.city}}, {{order.address.state}} {{order.address.zipCode}}</p>
+          <a ng-click="editAddress=!editAddress; editing=!editing">Edit Shipping Address</a>
+        </div>
+      </div>
+      <div class="well">
+        <h5>Order Information</h5>
+        <table class="table">
+            <tr ng-repeat="song in order.songs">
+              <td class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
+                <div class="order-info">
+                  <p>Song: {{song.title}}</p>
+                  <p>Quantity: {{song.song_order.quantity}}</p>
+                  <div ng-show="editOrder">
+                    <p>Edit Quantity
+                        <span><select class="selectpicker" name="quantity" ng-init="quantityToAdd = inventory[0]" ng-options="number for number in inventory" ng-model="quantityToAdd" required>
+                        </select><button ng-click="editing = false; updateCart(item.song, quantityToAdd)" class="btn btn-raised btn-primary">Confirm Edit</button></span>
+                        </p>
+                    <button class="btn btn-raised btn-primary" ng-click="removeFromCart(song)" id="remove">Remove Song from Order</button>
+                  </div>
+                </div>
+              </td>
+              <td class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                <p>{{song.price * song.song_order.quantity | currency}}</p>
+              </td>
+            </tr>
+            <tr>
+                <td class="col-lg-10 col-md-10 col-sm-10 col-xs-10" >
+                    <p id="total">Total:  </p>
+                </td>
+                <td class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                    <p>{{order.total | currency}}</p>
+                </td>
+            </tr>
+        </table>
+        <a ng-click="editOrder=!editOrder">Edit Order Information</a>
+      </div>
+  </div>
+  <div ng-show="editAddress">
+  <!-- <div ng-show="!pastAddresses"> -->
+    <header class="text-center">
+      <h3>Edit Shipping Address</h3>
+    </header>
+      <div class="well cart-container">
+        <form class="form-inline" role="form" novalidate name="addressForm" ng-submit="addressForm.$valid && updateAddress(orderAddress, order)">
+          <fieldset>
+            <div class="row">
+              <div class="form-group col-md-6">
+                <label for="firstName" class="control-label">First Name</label>
+                <div>
+                  <input class="form-control" name="firstName" type="text" ng-model="orderAddress.firstName" required>
+                </div>
+              </div>
+              <div class="form-group col-md-6">
+                <label for="lastName" class="control-label">Last Name</label>
+                <div>
+                  <input class="form-control" name="lastName" type="text" ng-model="orderAddress.lastName" required>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="form-group col-md-12">
+                <label for="address" class="control-label">Address</label>
+                <div>
+                  <input class="form-control" name="address" type="text" ng-model="orderAddress.address" required>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="form-group col-md-6">
+                <label for="city" class="control-label">City</label>
+                <div>
+                  <input class="form-control" name="city" type="text" ng-model="orderAddress.city" required>
+                </div>
+              </div>
+              <div class="form-group col-md-2">
+                <label for="state" class="control-label">State</label>
+                <div>
+                   <select class="selectpicker" name="state" ng-model="orderAddress.state" required>
+                      <option value="AK">AK</option>
+                      <option value="AL">AL</option>
+                      <option value="AR">AR</option>
+                      <option value="AZ">AZ</option>
+                      <option value="CA">CA</option>
+                      <option value="CO">CO</option>
+                      <option value="CT">CT</option>
+                      <option value="DC">DC</option>
+                      <option value="DE">DE</option>
+                      <option value="FL">FL</option>
+                      <option value="GA">GA</option>
+                      <option value="HI">HI</option>
+                      <option value="IA">IA</option>
+                      <option value="ID">ID</option>
+                      <option value="IL">IL</option>
+                      <option value="IN">IN</option>
+                      <option value="KS">KS</option>
+                      <option value="KY">KY</option>
+                      <option value="LA">LA</option>
+                      <option value="MA">MA</option>
+                      <option value="MD">MD</option>
+                      <option value="ME">ME</option>
+                      <option value="MI">MI</option>
+                      <option value="MN">MN</option>
+                      <option value="MO">MO</option>
+                      <option value="MS">MS</option>
+                      <option value="MT">MT</option>
+                      <option value="NC">NC</option>
+                      <option value="ND">ND</option>
+                      <option value="NE">NE</option>
+                      <option value="NH">NH</option>
+                      <option value="NJ">NJ</option>
+                      <option value="NM">NM</option>
+                      <option value="NV">NV</option>
+                      <option value="NY">NY</option>
+                      <option value="OH">OH</option>
+                      <option value="OK">OK</option>
+                      <option value="OR">OR</option>
+                      <option value="PA">PA</option>
+                      <option value="RI">RI</option>
+                      <option value="SC">SC</option>
+                      <option value="SD">SD</option>
+                      <option value="TN">TN</option>
+                      <option value="TX">TX</option>
+                      <option value="UT">UT</option>
+                      <option value="VA">VA</option>
+                      <option value="VT">VT</option>
+                      <option value="WA">WA</option>
+                      <option value="WI">WI</option>
+                      <option value="WV">WV</option>
+                      <option value="WY">WY</option>
+                   </select>
+                </div>
+              </div>
+              <div class="form-group col-md-4">
+                <label for="zipCode" class="control-label">Zip Code</label>
+                <div>
+                  <input class="form-control" name="zipCode" type="text" ng-model="orderAddress.zipCode" required ng-minlength="5" ng-maxlength="5">
+                </div>
+              </div>
+            </div>
+            <div class="text-center">
+                <button type="submit" class="button">Edit Shipping Address</button>
+            </div>
+          </fieldset>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  
+
+</div>
+
+
+
+
+
+
+

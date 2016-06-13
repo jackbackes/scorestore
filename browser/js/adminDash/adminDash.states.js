@@ -26,5 +26,22 @@ app.config(function ($stateProvider) {
     url: '/userForm/:id',
     templateUrl: 'js/adminDash/users/adminDash.userForm.html',
     controller: 'userFormCtrl'
+  })
+
+  .state('adminDash.orders', {
+    url: '/orders',
+    templateUrl: 'js/adminDash/orders/adminDash.orders.html',
+    controller: 'adminDashOrdersCtrl'
+  })
+
+  .state('orderForm', {
+    url: '/orderForm/:id',
+    templateUrl: 'js/adminDash/orders/adminDash.orderForm.html',
+    controller: 'orderFormCtrl',
+    resolve: {
+      theOrder: function($stateParams, OrdersFactory) {
+        return OrdersFactory.fetchOrder($stateParams.id);
+      }
+    }
   });
 });

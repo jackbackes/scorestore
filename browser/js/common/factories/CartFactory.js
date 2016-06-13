@@ -1,5 +1,6 @@
 app.factory('CartFactory', function($http, $q){
 	var cachedCartItems = [];
+	var cachedAddress = [];
 	return {
 
 		getCart: function () {
@@ -76,6 +77,22 @@ app.factory('CartFactory', function($http, $q){
 				return response.data;
 			});
 		},
+
+		updateAddress: function (address, order) {
+			
+			return $http.put('/api/v1/order/' + order.id + '/address', address)
+				.then(function(response) {
+					angular.copy(response.data, cachedAddress);
+					return cachedAddress;
+				})
+		},
+
+		// getOrderAddress: function (order) {
+		// 	return $http.get('/api/v1/order/' + order.id + '/address')
+		// 		.then(function(response) {
+		// 			return response.data;
+		// 		})
+		// }
 
 		// getAddressHistory: function() {
 		// 	return $http.get('/api/v1/user/address-history')
