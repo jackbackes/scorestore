@@ -1,6 +1,9 @@
 <a>
     <!-- <img ng-src="http://upload.wikimedia.org/wikipedia/commons/thumb/{{match.model.flag}}" width="16"> -->
-    <span ng-bind-html="match.model.title | uibTypeaheadHighlight:query" ng-click="$parent.$parent.$parent.$parent.selectOption(match.model)" ></span>
+    <span
+      ng-bind-html="match.model.title | uibTypeaheadHighlight:query"
+      ng-click="$parent.$parent.$parent.$parent.selectOption(match.model)" >
+    </span>
 </a>
 
 
