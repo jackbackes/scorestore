@@ -31,12 +31,12 @@
 				</label>
 
 				<div class="row">
-					<div class="small-2 columns">
+					<div class="small-1 columns">
 						<label for="middle-label" class="middle quantity">Quantity:</label>
 					</div>
-					<div class="small-3 columns">
+					<div class="small-4 columns">
 						<!-- <input type="number" placeholder="Quantity" id="middle-label" ng-model="quantity"> -->
-						<select class="selectpicker" name="quantity" ng-options="number for number in inventory" ng-model="quantityToAdd" required></select>
+						<select class="selectpicker" name="quantity" ng-init="quantityToAdd = inventory[0]" ng-options="number for number in inventory" ng-model="quantityToAdd" required></select>
 					</div>
 					<div class="small-7 columns">
 						<a ui-sref="cart" ng-click="addToCart(song, quantityToAdd)" class="button large expanded">Add to Cart</a>

@@ -29,7 +29,6 @@ module.exports = function (db) {
         type: Sequelize.STRING,
         allowNull: false,
         validate: {
-          isInt: true,
           len: [5, 5]
         }
       }

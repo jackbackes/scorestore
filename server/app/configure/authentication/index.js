@@ -62,6 +62,15 @@ module.exports = function (app, db) {
         }
     });
 
+    // app.get('/guestsession', function (req, res) {
+    //     console.log("Req", req.session)
+    //     if (req.session.guest) {
+    //         res.send({ user: req.session.guest, id: req.sessionID });
+    //     } else {
+    //         res.status(401).send('No guest');
+    //     }
+    // });
+
     // Simple /logout route.
     app.get('/logout', function (req, res) {
         req.logout();
