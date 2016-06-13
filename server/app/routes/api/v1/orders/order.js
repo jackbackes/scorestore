@@ -44,8 +44,21 @@ router.delete( '/:orderId', ( req, res, next ) => {
       }
     } )
     .then( ( rows ) => res.status( 204 ).send() )
-    .catch( err => next( _error( 'could not delete order', err, 500 ) ) )
+      .catch( err => next( _error( 'could not delete order', err, 500 ) ) )
 } )
+
+router.put('/:orderId', (req, res, next) => {
+  let orderId = req.params.orderId, orderData = req.body;
+  console.log('updating order',orderId);
+  Order.update(orderData, {
+    where: {
+      id: orderId
+    }
+  }).then( (updated) => {
+    if(!updated) throw _error('could not update order', {orderData}, 500);
+    res.status(200).send({updated, orderData});
+  }).catch(next);
+})
 
 //tracking number
 

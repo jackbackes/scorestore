@@ -1,6 +1,5 @@
 'use strict';
 
-
 var Sequelize = require('sequelize');
 const randomstring = require('randomstring');
 
