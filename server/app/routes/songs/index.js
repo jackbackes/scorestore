@@ -8,6 +8,15 @@ const Composer = db.model('composer');
 const Genre = db.model('genre');
 const Photo = db.model('photo');
 
+//route for search bar
+router.get('/s', function(req, res, next){
+  console.log(req.body);
+  console.log(JSON.parse(req.query.where));
+  console.log(req.data);
+  let searchOptions = Object.assign({}, {limit: 20, include: [Composer, Genre, Photo]}, {where: JSON.parse(req.query.where)});
+  return Song.findAll(searchOptions).then( songs => res.send(songs) ).catch(next)
+})
+
 router.get('', function (req, res, next){
   return Song.findAll({
     include: [Composer, Genre, Photo],
@@ -18,6 +27,8 @@ router.get('', function (req, res, next){
   })
   .catch(next);
 });
+
+
 
 router.param('id', function (req, res, next, id) {
   return Song.findById(id, {include: [Composer, Genre, Photo]})
