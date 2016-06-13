@@ -39,7 +39,8 @@
 						<select class="selectpicker" name="quantity" ng-init="quantityToAdd = inventory[0]" ng-options="number for number in inventory" ng-model="quantityToAdd" required></select>
 					</div>
 					<div class="small-7 columns">
-						<a ui-sref="cart" ng-click="addToCart(song, quantityToAdd)" class="button large expanded">Add to Cart</a>
+						<a ng-show="song.inventoryQuantity" ui-sref="cart" ng-click="addToCart(song, quantityToAdd)" class="button large expanded">Add to Cart</a>
+						<h3 ng-hide="song.inventoryQuantity">Currently Unavailable</h3>
 					</div>
 				</div>
 			</div>

@@ -6,7 +6,7 @@ const User = db.model('user');
 const Address = db.model('address');
 module.exports = router;
 
-router.post('', function (req, res, next) {
+router.post('/', function (req, res, next) {
   req.body.user.isGuest = false;
   req.body.user.isAdmin = false;
   if (req.body.address) {
