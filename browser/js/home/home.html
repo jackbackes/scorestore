@@ -8,7 +8,7 @@
       <div class="col-lg-4 col-md-6 col-xs-12 products" ng-repeat="song in songs">
         <div class="row">
           <div class="col-lg-4 col-md-6 col-xs-12">
-            <a ui-sref="<<<<song({songId: song.id})>>>>>"><img class="thumbnail" height="200" width="200" ng-src="{{ song.photo.externalUrl }}"></a>
+            <a ui-sref="oneSong({songId: song.id})"><img class="thumbnail" height="200" width="200" ng-src="{{ song.photo.externalUrl }}"></a>
           </div>
           <div class="col-lg-8 col-md-6 col-xs-12">
             <div class="product-info">

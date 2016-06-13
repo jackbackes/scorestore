@@ -1,73 +1,67 @@
 <section id="checkout-page">
-    <div class="checkout-container">     
-    	<header class="text-center">
-    		<h3>Complete Your Order</h3>
-    	</header>
-        <div class="row order-container" ng-show="!session.user && !isGuest">
-            <div class="col-xs-12">
-                <button ng-click="isGuest=!isGuest" class="button large expanded text-center">Checkout As Guest</button>
+    <div class="checkout-container">   
+      <div class="row order-container" ng-show="!session.user">
+        <header class="text-center">
+          <h3>Complete Your Order</h3>
+        </header>
+        <div class="col-xs-12" ng-show="!guestLogin">
+            <button ng-click="userLogin=false; signUp=false; guestLogin=!guestLogin" class="button large expanded text-center">Checkout As Guest</button>
+        </div>
+        <div class="col-xs-12" ng-show="!signUp">
+            <button ng-click="userLogin=false; guestLogin=false; signUp=!signUp" class="button large expanded text-center">SignUp</button>
+        </div>
+        <div class="col-xs-12" ng-show="!userLogin">
+            <button ng-click="userLogin=!userLogin; signUp=false; guestLogin=false; guestLoginForm.$submitted=false" class="button large expanded text-center">Login to Checkout</button>
+        </div>
+  
+        <div ng-show="guestLogin && !userLogin" ng-controller="GuestLoginCtrl">
+          <form name="guestLoginForm" novalidate ng-submit="guestLoginForm.$valid && sendGuest(guest)">
+            <alert type="danger" ng-show="error">
+                    {{ error }}
+            </alert>
+            <div ng-messages="guestLoginForm.email.$error" ng-hide="guestLoginForm.email.$pristine" role="alert">
+                <div ng-message="required" class="alert alert-warning">Email is required</div>
+                <div ng-message="email" ng-show="guestLoginForm.$submitted" class="alert alert-warning">Please enter a valid email</div>
             </div>
-            <div class="col-xs-12">
-                <button ng-click="userLogin = !userLogin" ng-show="!userLogin" class="button large expanded text-center">Login to Checkout</button>
+            <div class="form-group"> 
+              <label for="email" class="control-label">Email address</label>
+              <input class="form-control" name="email" type="email" ng-model="guest.email" id="email" placeholder="Enter email" required>
             </div>
-      
-
-            <div ng-controller="UserLoginCtrl">
-                <form ng-show="userLogin" id="login-form" name="loginForm" ng-submit="sendLogin(login)">
-                    <alert type="danger" ng-show="error">
-                        {{ error }}
-                    </alert>
-
-                    <div class="form-group">
-                        <label for="email">Email address</label>
-                        <input type="text" ng-model="login.email" class="form-control" id="email" placeholder="Enter email">
-                    </div>
-                    <div class="form-group">
-                        <label for="login-password">Password</label>
-                        <input type="password" ng-model="login.password" class="form-control" id="login-password" placeholder="Password">
-                    </div>
-                    <button type="submit" class="btn btn-default">Submit</button>
-                </form>
+            <div class="text-center">
+                <button type="submit" class="button">Submit</button>
             </div>
+          </form>
         </div>
 
-        <div class="row" ng-show="session.user || isGuest">
-            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-
-                <form class="admin-edit-form" ng-submit="updateOrCreate(song)">
-                  <label ng-hide="newSong">ID</label>
-                  <input ng-hide="newSong" type="text" ng-model="song.id" ng-disabled="true">
-                  <h3 ng-show="newSong">Create a New Song</h3>
-                  <label>Title</label>
-                  <input type="text" ng-model="song.title">
-                  <label>Subtitle</label>
-                  <input type="text" ng-model="song.subtitle">
-                  <label>Description</label>
-                  <input type="text" ng-model="song.description">
-                  <label>Year Composed</label>
-                  <input type="text" ng-model="song.year">
-                  <label>File Name</label>
-                  <input type="text" ng-model="song.fileName">
-                  <label>Price</label>
-                  <input type="text" ng-model="song.price">
-                  <label>Inventory Quantity</label>
-                  <input type="text" ng-model="song.inventoryQuantity">
-                  <label>Instruments</label>
-                  <input type="text" ng-model="song.instrumentTags">
-                  <label>Source URL</label>
-                  <input type="text" ng-model="song.sourceURL">
-                  <label>Public Domain Status</label>
-                  <input type="text" ng-model="song.publicDomainStatus">
-                  <button type="submit">Save</button>
-                  <button ui-sref="adminDash.songs">Cancel</button>
-                </form>
-
-            
-            </div>
-
-            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-              <shopping-cart the-cart="cart"></shopping-cart>
-            </div>
+        <div ng-controller="UserLoginCtrl" ng-show="userLogin && !guestLogin">
+            <form name="loginForm" novalidate ng-submit="loginForm.$valid && sendLogin(login)">
+                <alert type="danger" ng-show="error">
+                    {{ error }}
+                </alert>
+                <div ng-messages="loginForm.email.$error" ng-hide="loginForm.email.$pristine" role="alert">
+                    <div ng-message="required" class="alert alert-warning">Email is required</div>
+                    <div ng-message="email" ng-show="loginForm.$submitted" class="alert alert-warning">Please enter a valid email</div>
+                </div>
+                <div ng-messages="loginForm.password.$error" ng-show="loginForm.$submitted" role="alert">
+                    <div ng-message="required" class="alert alert-warning">Password is required</div>
+                </div>
+                <div class="form-group">
+                    <label for="email" class="control-label">Email address</label>
+                    <input class="form-control" type="email" ng-model="login.email" name="email" id="email" placeholder="Enter email">
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Password</label>
+                    <input type="password" ng-model="login.password" name="password" class="form-control" id="login-password" placeholder="Password" required>
+                </div>
+                <div class="text-center">
+                  <button type="submit" class="button">Submit</button>
+                </div>
+            </form>
         </div>
+      </div>
+
+      <div class="row" ng-show="session.user">
+          <address-form address="shippingAddress"></address-form>
+      </div>
     </div>
 </section>

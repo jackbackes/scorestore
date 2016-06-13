@@ -14,4 +14,23 @@
 	margin-top: 30px
 }
 
+.form-inline {
+	padding: 10px;
+}
+
+.form-inline .form-group input {
+	width:100%;
+}
+
+.orderpage-container {
+	margin: 0 auto;
+	width: 80%;
+	margin-top: 30px;
+	h3 {
+		margin-bottom: 20px;
+	}
+	p {
+		margin-bottom: 3px;
+	}
+}
 

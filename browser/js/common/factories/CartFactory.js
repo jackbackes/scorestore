@@ -1,4 +1,4 @@
-app.factory('CartFactory', function($http){
+app.factory('CartFactory', function($http, $q){
 	var cachedCartItems = [];
 	return {
 
@@ -55,7 +55,34 @@ app.factory('CartFactory', function($http){
 				return sum;
 			}
 
-		}
+		},
+
+		submitAddress: function(address){
+
+			return $http.post('/api/v1/cart/address', address)
+			.then(function(response) {
+				return response.data;
+			})
+			.catch(function () {
+                return $q.reject({ message: 'No items in shopping cart.' });
+            });
+		
+
+		},
+
+		getAddress: function() {
+			return $http.get('/api/v1/cart/address')
+			.then(function(response) {
+				return response.data;
+			});
+		},
+
+		// getAddressHistory: function() {
+		// 	return $http.get('/api/v1/user/address-history')
+		// 	.then(function(response) {
+		// 		return response.data;
+		// 	});
+		// }
 	};
 
 });

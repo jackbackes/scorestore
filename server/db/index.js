@@ -26,13 +26,13 @@ Song.belongsTo(Composer);
 Song.belongsTo(Genre);
 Song.belongsToMany(Order, {through: 'song_order'}); //Seqelize does not support "hasMany" for n:m associations.
 
-Order.hasOne(Address);
+Order.belongsTo(Address); //put the addressId on the order table
 Order.belongsTo(User);
 Order.belongsToMany(Song, {through: 'song_order'}); //Seqelize does not support "hasMany" for n:m associations.
 Review.belongsTo(Song);
 Review.belongsTo(User);
 
-User.hasMany(Address);
+User.belongsTo(Address);  //put the addressId on the user table
 User.hasMany(Review);
 User.hasMany(Order);
 
