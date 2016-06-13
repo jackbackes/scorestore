@@ -10,16 +10,10 @@ app.controller('CheckoutCtrl', function ($scope, Session, $state, CartFactory) {
 
 	$scope.session = Session;
 
-	$scope.submitAddress = function (address, user) {
-		$scope.addressError = null;
-		CartFactory.submitAddress(address)
-		.then(function () {
-			$state.go('order');
-		})
-		.catch(function (error) {
-            $scope.addressError = error.message;
-        });
-	}
+	CartFactory.getAddress()
+      .then(function(data) {
+        $scope.shippingAddress = data;
+    });
 })
 
 app.controller('UserLoginCtrl', function ($scope, AuthService) {

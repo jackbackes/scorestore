@@ -75,7 +75,14 @@ app.factory('CartFactory', function($http, $q){
 			.then(function(response) {
 				return response.data;
 			});
-		}
+		},
+
+		// getAddressHistory: function() {
+		// 	return $http.get('/api/v1/user/address-history')
+		// 	.then(function(response) {
+		// 		return response.data;
+		// 	});
+		// }
 	};
 
 });

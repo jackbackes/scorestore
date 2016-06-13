@@ -67,7 +67,6 @@ router.post('/address', function (req, res, next) {
 })
 
 router.get('/address', function (req, res, next) {
-  console.log(req.session);
   if (req.session.shippingAddress) {
     res.send(req.session.shippingAddress);
   }

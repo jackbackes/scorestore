@@ -6,137 +6,39 @@
 			</header>
 			<div class="col-xs-5">
 				<div class="well">
-					<!-- <form class="form-inline" role="form" novalidate name="billingForm" ng-submit="billingForm.$valid && submitBillingInfo(billingInfo, session)">
-		              <fieldset>
-		              	<legend>Billing Information</legend>
+	                <form stripe:form="submitPayment">
+	                <legend>Credit Card Information</legend>
+	                <alert type="danger" ng-show="error">
+				      {{ orderError }}
+				    </alert>
+	               	<fieldset>
 		                <div class="row">
-		                  <div class="form-group col-md-12">
-		                    <label for="firstName" class="control-label">First Name</label>
-		                    <div>
-		                      <input class="form-control" name="firstName" type="text" ng-model="billingInfo.firstName" required>
-		                    </div>
-		                  </div>
-		                </div>
-		                <div class="row">
-		                  <div class="form-group col-md-12">
-		                    <label for="lastName" class="control-label">Last Name</label>
-		                    <div>
-		                      <input class="form-control" name="lastName" type="text" ng-model="billingInfo.lastName" required>
-		                    </div>
-		                  </div>
-		                </div>
-		                <div class="row">
-		                  <div class="form-group col-md-12">
-		                    <label for="address" class="control-label">Address</label>
-		                    <div>
-		                      <input class="form-control" name="address" type="text" ng-model="billingInfo.address" required>
-		                    </div>
-		                  </div>
-		                </div>
-		                <div class="row">
-		                  <div class="form-group col-md-12">
-		                    <label for="city" class="control-label">City</label>
-		                    <div>
-		                      <input class="form-control" name="city" type="text" ng-model="billingInfo.city" required>
-		                    </div>
-		                  </div>
-		                </div>
-		                <div class="row">
-		                  <div class="form-group col-md-4">
-		                    <label for="state" class="control-label">State</label>
-		                  	<div>
-		                  		<select class="selectpicker" name="state" ng-model="billingInfo.state" required>
-		                          <option value="AK">AK</option>
-		                          <option value="AL">AL</option>
-		                          <option value="AR">AR</option>
-		                          <option value="AZ">AZ</option>
-		                          <option value="CA">CA</option>
-		                          <option value="CO">CO</option>
-		                          <option value="CT">CT</option>
-		                          <option value="DC">DC</option>
-		                          <option value="DE">DE</option>
-		                          <option value="FL">FL</option>
-		                          <option value="GA">GA</option>
-		                          <option value="HI">HI</option>
-		                          <option value="IA">IA</option>
-		                          <option value="ID">ID</option>
-		                          <option value="IL">IL</option>
-		                          <option value="IN">IN</option>
-		                          <option value="KS">KS</option>
-		                          <option value="KY">KY</option>
-		                          <option value="LA">LA</option>
-		                          <option value="MA">MA</option>
-		                          <option value="MD">MD</option>
-		                          <option value="ME">ME</option>
-		                          <option value="MI">MI</option>
-		                          <option value="MN">MN</option>
-		                          <option value="MO">MO</option>
-		                          <option value="MS">MS</option>
-		                          <option value="MT">MT</option>
-		                          <option value="NC">NC</option>
-		                          <option value="ND">ND</option>
-		                          <option value="NE">NE</option>
-		                          <option value="NH">NH</option>
-		                          <option value="NJ">NJ</option>
-		                          <option value="NM">NM</option>
-		                          <option value="NV">NV</option>
-		                          <option value="NY">NY</option>
-		                          <option value="OH">OH</option>
-		                          <option value="OK">OK</option>
-		                          <option value="OR">OR</option>
-		                          <option value="PA">PA</option>
-		                          <option value="RI">RI</option>
-		                          <option value="SC">SC</option>
-		                          <option value="SD">SD</option>
-		                          <option value="TN">TN</option>
-		                          <option value="TX">TX</option>
-		                          <option value="UT">UT</option>
-		                          <option value="VA">VA</option>
-		                          <option value="VT">VT</option>
-		                          <option value="WA">WA</option>
-		                          <option value="WI">WI</option>
-		                          <option value="WV">WV</option>
-		                          <option value="WY">WY</option>
-		                       </select>
-		                    </div>
-		                  </div>
-		                  <div class="form-group col-md-8">
-		                    <label for="zipCode" class="control-label">Zip Code</label>
-		                    <div>
-		                      <input class="form-control" name="zipCode" type="text" ng-model="billingInfo.zipCode" placeholder="5 digits" required ng-minlength="5" ng-maxlength="5">
-		                    </div>
-		                  </div>
-		                </div> -->
-		                <form stripe:form="submitPayment">
-		                <legend>Credit Card Information</legend>
-		               	<fieldset>
-			                <div class="row">
-			                	<div class="form-group col-xs-12">
-				                	<label for="credit-card" class="control-label">Credit Card Number</label>
-								      <input class="form-control" name="credit-card" type="text" required data-stripe="number" size="20">
-								    </label>
-								</div>
+		                	<div class="form-group col-xs-12">
+			                	<label for="credit-card" class="control-label">Credit Card Number</label>
+							      <input class="form-control" name="credit-card" type="text" required data-stripe="number" size="20">
+							    </label>
 							</div>
+						</div>
 
-							<div class="row">
-			                	<div class="form-group col-xs-6">
-			                		<label for="expiration">Expiration (MM/YY)</label>
-			                		<div class="row">
-			                			<div class="col-xs-5">
-										    <input type="text" name="exp-month" size="2" data-stripe="exp-month">
-										</div>
-										<div class="col-xs-1">/</div>
-										<div class="col-xs-5">
-											<input type="text" name="exp-year" size="2" data-stripe="exp-year">
-										</div>
+						<div class="row">
+		                	<div class="form-group col-xs-6">
+		                		<label for="expiration">Expiration (MM/YY)</label>
+		                		<div class="row">
+		                			<div class="col-xs-5">
+									    <input type="text" name="exp-month" size="2" data-stripe="exp-month">
+									</div>
+									<div class="col-xs-1">/</div>
+									<div class="col-xs-5">
+										<input type="text" name="exp-year" size="2" data-stripe="exp-year">
 									</div>
 								</div>
-								<div class="form-group col-xs-6">
-								    <label for="CVC" class="control-label">CVC</label>
-								      <input type="text" name="exp-month" size="4" data-stripe="cvc">
-								    </label>
-							  	</div>
 							</div>
+							<div class="form-group col-xs-6">
+							    <label for="CVC" class="control-label">CVC</label>
+							      <input type="text" name="exp-month" size="4" data-stripe="cvc">
+							    </label>
+						  	</div>
+						</div>
 						<div class="text-center">
 		                  <div>
 		                    <button type="submit" class="button">Submit Payment</button>

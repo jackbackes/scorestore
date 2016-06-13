@@ -6,65 +6,56 @@ const db = require(path.join(__dirname, '../../../db'));
 const Song = db.model('song');
 const Order = db.model('order');
 const Address = db.model('address');
+const stripe = require("stripe")("sk_test_BQokikJOvBiI2HlWgH4olfQ2");
+const Promise = require('sequelize').Promise;
 
 router.get('/', function (req, res, next){
   
-
-
-
    
 });
 
-// router.post('/', function (req, res, next) {
-//   if (req.session.cart) {
-//   	var inCart = false;
-//   	req.session.cart = req.session.cart.map(function(elem){
-//   		if(elem.song.id === req.body.song.id){
-//   			inCart = true;
-//   			elem.quantity += req.body.quantity;
-//   			return elem;
-//   		} else {
-//   			return elem;
-//   		}
-//   	})
-//   	if(inCart === false) req.session.cart.push({song: req.body.song, quantity: req.body.quantity});
-//   } else {
-//   	req.session.cart = [{song: req.body.song, quantity: req.body.quantity}];
-//   }
-//   res.send(req.session.cart);
-// });
+router.post('/', function (req, res, next) {
+	let user = req.user || req.session.guest;
+	let stripeToken = req.body.response.id;
+	let total = req.body.total * 100
+	
+	stripe.charges.create({
+		amount: total,
+		currency: 'usd',
+		source: stripeToken,
+		description: "Example Order"
+	}, function (err, charge) {
+		if (err) {
+			res.status(403).send(err.type);
+		}
+		else { 
+			Address.findOrCreate({where: req.session.shippingAddress})
+			.spread(function(address, createdAddress) {
+				return Order.create({
+					transactionSuccessful: true,
+					total: req.body.total,
+					addressId: address.id,
+					userId: user.id
+				})
+			})
+			.then(function(order) {
+				return Promise.map(req.session.cart, function(item) {
+					Song.findById(item.song.id)
+					.then(function(song) {
+						order.addSong(song, {quantity: item.quantity})	
+					});
+				})
+			})
+			.then(function() {
+				// delete req.session.cart;
+				// delete req.session.shippingAddress;
+				res.sendStatus(200);
+			})
+			.catch(next)		
+		}
+	})
+   
+});
 
-// router.put('/', function(req, res, next){
-
-// 	req.session.cart = req.session.cart.map(function(elem){
-//   		if(elem.song.id === req.body.song.id){
-//   			elem.quantity = req.body.quantity;
-//   			return elem;
-//   		} else {
-//   			return elem;
-//   		}
-//   	})
-//   	res.send(req.session.cart);
-
-// })
-
-// router.delete('/:songId', function (req, res, next) {
-
-//   req.session.cart = req.session.cart.filter(item =>  { 
-//     return item.song.id !== +req.params.songId; 
-//   });
-//   res.send(req.session.cart);
-// });
-
-
-// router.post('/address', function (req, res, next) {
-//   if (req.session.cart) {
-//     req.session.shippingAddress = req.body;
-//     res.sendStatus(201);
-//   }
-//   else {
-//     res.sendStatus(403);
-//   }
-// })
 
 module.exports = router;

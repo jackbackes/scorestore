@@ -1,0 +1,129 @@
+<section>
+<!-- <div class='cart-container' ng-show="pastAddresses">
+	<div class="col-lg-4 col-md-6 col-xs-12 products" ng-repeat="address in addressHistory">
+	    <div class="well">
+	        <h5>Shipping Address</h5>
+	        <p>{{address.firstName}} {{address.lastName}}</p>
+	        <p>{{address.address}}</p>
+	        <p>{{address.city}}, {{address.state}} {{addresss.zipCode}}</p>
+	        <input type="checkbox" /><button type="submit" ng-click="submitAddress(orderAddress, session)" class="button">Choose Address></button>
+	    </div>
+	</div>
+	<div>
+		<button class="button" ng-click="pastAddresses=!pastAddresses">Enter New Address</button>
+	</div> -->
+</div>
+	<!-- <div ng-show="!pastAddresses"> -->
+		<header class="text-center">
+		  <h3>Enter Shipping Address</h3>
+		</header>
+		<div class="well cart-container">
+			<form class="form-inline" role="form" novalidate name="addressForm" ng-submit="addressForm.$valid && submitAddress(orderAddress, session)">
+			  <fieldset>
+			    <alert type="danger" ng-show="error">
+			      {{ addressError }}
+			    </alert>
+			    <div class="row">
+			      <div class="form-group col-md-6">
+			        <label for="firstName" class="control-label">First Name</label>
+			        <div>
+			          <input class="form-control" name="firstName" type="text" ng-model="orderAddress.firstName" required>
+			        </div>
+			      </div>
+			      <div class="form-group col-md-6">
+			        <label for="lastName" class="control-label">Last Name</label>
+			        <div>
+			          <input class="form-control" name="lastName" type="text" ng-model="orderAddress.lastName" required>
+			        </div>
+			      </div>
+			    </div>
+			    <div class="row">
+			      <div class="form-group col-md-12">
+			        <label for="address" class="control-label">Address</label>
+			        <div>
+			          <input class="form-control" name="address" type="text" ng-model="orderAddress.address" required>
+			        </div>
+			      </div>
+			    </div>
+			    <div class="row">
+			      <div class="form-group col-md-6">
+			        <label for="city" class="control-label">City</label>
+			        <div>
+			          <input class="form-control" name="city" type="text" ng-model="orderAddress.city" required>
+			        </div>
+			      </div>
+			      <div class="form-group col-md-2">
+			        <label for="state" class="control-label">State</label>
+			        <div>
+			           <select class="selectpicker" name="state" ng-model="orderAddress.state" required>
+			              <option value="AK">AK</option>
+			              <option value="AL">AL</option>
+			              <option value="AR">AR</option>
+			              <option value="AZ">AZ</option>
+			              <option value="CA">CA</option>
+			              <option value="CO">CO</option>
+			              <option value="CT">CT</option>
+			              <option value="DC">DC</option>
+			              <option value="DE">DE</option>
+			              <option value="FL">FL</option>
+			              <option value="GA">GA</option>
+			              <option value="HI">HI</option>
+			              <option value="IA">IA</option>
+			              <option value="ID">ID</option>
+			              <option value="IL">IL</option>
+			              <option value="IN">IN</option>
+			              <option value="KS">KS</option>
+			              <option value="KY">KY</option>
+			              <option value="LA">LA</option>
+			              <option value="MA">MA</option>
+			              <option value="MD">MD</option>
+			              <option value="ME">ME</option>
+			              <option value="MI">MI</option>
+			              <option value="MN">MN</option>
+			              <option value="MO">MO</option>
+			              <option value="MS">MS</option>
+			              <option value="MT">MT</option>
+			              <option value="NC">NC</option>
+			              <option value="ND">ND</option>
+			              <option value="NE">NE</option>
+			              <option value="NH">NH</option>
+			              <option value="NJ">NJ</option>
+			              <option value="NM">NM</option>
+			              <option value="NV">NV</option>
+			              <option value="NY">NY</option>
+			              <option value="OH">OH</option>
+			              <option value="OK">OK</option>
+			              <option value="OR">OR</option>
+			              <option value="PA">PA</option>
+			              <option value="RI">RI</option>
+			              <option value="SC">SC</option>
+			              <option value="SD">SD</option>
+			              <option value="TN">TN</option>
+			              <option value="TX">TX</option>
+			              <option value="UT">UT</option>
+			              <option value="VA">VA</option>
+			              <option value="VT">VT</option>
+			              <option value="WA">WA</option>
+			              <option value="WI">WI</option>
+			              <option value="WV">WV</option>
+			              <option value="WY">WY</option>
+			           </select>
+			        </div>
+			      </div>
+			      <div class="form-group col-md-4">
+			        <label for="zipCode" class="control-label">Zip Code</label>
+			        <div>
+			          <input class="form-control" name="zipCode" type="text" ng-model="orderAddress.zipCode" required ng-minlength="5" ng-maxlength="5">
+			        </div>
+			      </div>
+			    </div>
+			    <div class="text-center">
+			      <div ng-show="!checkout">
+			        <button type="submit" class="button">Enter Shipping Address</button>
+			      </div>
+			    </div>
+			  </fieldset>
+			</form>
+		</div>
+	</div>
+</section>

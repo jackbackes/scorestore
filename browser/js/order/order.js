@@ -7,7 +7,7 @@ app.config(function ($stateProvider) {
 });
 
 app.controller('OrderCtrl', function ($scope, Session, $state, OrderFactory, CartFactory) {
-
+	var total;
 	$scope.session = Session;
 
 	CartFactory.getCart()
@@ -17,36 +17,29 @@ app.controller('OrderCtrl', function ($scope, Session, $state, OrderFactory, Car
 
 	CartFactory.getAddress()
 	  .then(function(data) {
-	  	console.log('data', data)
 	    $scope.shippingAddress = data;
 	});
 
 	$scope.getCartTotal = function () {
-		return CartFactory.getCartTotal();
+		total = CartFactory.getCartTotal();
+		if (total) {
+			total = total.toFixed(2);
+			return total;
+		}
+		else {
+			return 0;
+		}
 	};
 
 	$scope.submitPayment = function(status, response) {
-		console.log("status", status);
-		console.log('response', response);
-		// console.log(billingInfo)
-		// handler.open({
-	 //      name: 'Stripe.com',
-	 //      description: '2 widgets',
-	 //      amount: 2000
-  //   	});
+		console.log("total", total)
+		OrderFactory.submitPayment(response, total)
+		.then(function () {
+			$state.go('thankyou');
+		})
+		.catch(function (error) {
+            $scope.orderError = error.message;
+        });
 	};
-
-
-
-	// var handler = StripeCheckout.configure({
-	//     key: 'pk_test_6pRNASCoBOKtIshFeQd4XMUh',
-	//     image: '/img/documentation/checkout/marketplace.png',
-	//     locale: 'auto',
-	//     token: function(token) {
-	//     	console.log("here", token)
-	//       // You can access the token ID with `token.id`.
-	//       // Get the token ID to your server-side code for use.
-	//     }
-	//   });
 
 })
