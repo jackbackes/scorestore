@@ -32,6 +32,10 @@ module.exports = function (db) {
         password: {
             type: Sequelize.STRING
         },
+        resetPassword: {
+            type: Sequelize.BOOLEAN,
+            defaultValue: false
+        },
         salt: {
             type: Sequelize.STRING
         },
@@ -69,9 +73,13 @@ module.exports = function (db) {
         },
         hooks: {
             beforeValidate: function (user) {
+                console.log('beforeValidate');
                 if (user.changed('password')) {
+                    console.log('password:', user.password);
                     user.salt = user.Model.generateSalt();
+                    console.log('salt:', user.salt);
                     user.password = user.Model.encryptPassword(user.password, user.salt);
+                    console.log('password:', user.password);
                 }
             }
         }
