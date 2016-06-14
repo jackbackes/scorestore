@@ -22,7 +22,7 @@ app.controller( 'TypeaheadCtrl', function ( $scope, $http, $state, $rootScope ) 
  * @return {Object[]}             [an array of song objects]
  */
   $scope.getSongs = function ( searchQuery ) {
-    console.log( searchQuery );
+    // console.log( searchQuery );
     let config = {
       params: {
         where: {
