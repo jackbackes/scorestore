@@ -41,8 +41,7 @@ module.exports = function (db) {
           });
           // console.log(thisOrder);
           this.setDataValue('confirmationNumber', confNumber);
-          this.save();
-          return confNumber;
+          return this.save();
         }
       }
     });

@@ -11,14 +11,11 @@ const Photo = db.model('photo');
 
 //route for search bar
 router.get('/s', function(req, res, next){
-  console.log(req.body);
-  console.log(JSON.parse(req.query.where));
-  console.log(req.data);
   let searchOptions = Object.assign({}, {limit: 20, include: [Composer, Genre, Photo]}, {where: JSON.parse(req.query.where)});
   return Song.findAll(searchOptions).then( songs => res.send(songs) ).catch(next)
-})
+});
 
-router.get('', function (req, res, next){
+router.get('/', function (req, res, next){
   return Song.findAll({
     include: [Composer, Genre, Photo],
     where: req.query

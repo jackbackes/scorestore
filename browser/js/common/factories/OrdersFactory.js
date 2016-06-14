@@ -1,4 +1,4 @@
-app.factory('OrdersFactory', function ($http, $q) {
+app.factory('OrdersFactory', function ($http, $q, EmailFactory) {
 
   var errorFunc = function(error) {
       return $q.reject(error.statusText);
@@ -6,7 +6,7 @@ app.factory('OrdersFactory', function ($http, $q) {
 
   var successFunc = function(response) {
     return response.data;
-  }
+  };
 
   return {
     getOrders: function () {
@@ -23,7 +23,10 @@ app.factory('OrdersFactory', function ($http, $q) {
 
     submitPayment: function(response, total) {
       return $http.post('/api/v1/order', {response: response, total: total})
-      .then(successFunc)
+      .then(function (res) {
+        console.log(res.data);
+        EmailFactory.sendConfirmation(res.data.confirmationNumber);
+      })
       .catch(function () {
           return $q.reject({ message: 'Stripe Card Error' });
       });
