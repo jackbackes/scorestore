@@ -1,11 +1,11 @@
 'use strict';
 
 var Auth = {};
+var http = require('http')
 
 function HttpError (status, message) {
   var err = new Error(message || http.STATUS_CODES[status]);
   err.status = status;
-  // Object.setPrototypeOf(err, HttpError.prototype);
   return err;
 }
 
@@ -30,7 +30,7 @@ Auth.assert = function (assertion, status) {
 
 Auth.assertAuthenticated = Auth.assert(Auth.isAuthenticated, 401);
 
-Auth.assertAdmin = Auth.assert(Auth.isAdmin);
+Auth.assertAdmin = Auth.assert(Auth.isAdmin, 403);
 
 Auth.assertSelf = Auth.assert(Auth.isSelf);
 

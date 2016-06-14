@@ -1,10 +1,13 @@
-<ul>
-  <span>
-	<button class="btn btn-raised btn-primary" id="add-song" ui-sref="songForm">Add Song</button>
-  </span>
-  <span ng-repeat="song in songs">
-    <h3><a ng-href="/songs/{{song.id}}">{{song.title}}</a></h3>
-    <button ui-sref="songForm({id: song.id})">Edit</button>
-    <button ng-click="deleteSong(song.id)">Delete</button>
-  </span>
-</ul>
+<div class="orderpage-container">
+  <div growl></div>
+	<ul>
+	  <span>
+		<button class="btn btn-raised btn-primary admin-add-btn" id="add-song" ui-sref="songForm">Add Song</button>
+	  </span>
+	  <span ng-repeat="song in songs">
+	    <h3 class="admin-heading"><a ng-href="/songs/{{song.id}}">{{song.title}}</a></h3>
+	    <button class="btn btn-raised btn-warning admin-edit-btn" ui-sref="songForm({id: song.id})">Edit</button>
+	    <button class="btn btn-raised btn-danger admin-edit-btn" ng-click="deleteSong(song.id)">Delete</button>
+	  </span>
+	</ul>
+</div>

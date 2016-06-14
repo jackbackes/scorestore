@@ -24,24 +24,6 @@ module.exports = function (db) {
         }
     }, {
         instanceMethods: {
-            findSimilar: function () {
-              var that = this;
-              this.findSimilarSongs()
-              .then(function (songs) {
-                return Promise.all(songs.map(function(a){
-                  return a.composerId;
-                }));
-              })
-              .then(function(composers) {
-                return that.Model.findAll({
-                  where: {
-                    id: {
-                      $in: composers
-                    }
-                  }
-                });
-              });    
-            },
           findSimilarSongs: function () {
                 var that = this;
                 return Song.findAll({
@@ -66,8 +48,26 @@ module.exports = function (db) {
                       }
                     }
                   });
-                })
-            }
+                });
+            },
+            findSimilar: function () {
+              var that = this;
+              this.findSimilarSongs()
+              .then(function (songs) {
+                return Promise.all(songs.map(function(a){
+                  return a.composerId;
+                }));
+              })
+              .then(function(composers) {
+                return that.Model.findAll({
+                  where: {
+                    id: {
+                      $in: composers
+                    }
+                  }
+                });
+              });    
+            },
             
         },
   });

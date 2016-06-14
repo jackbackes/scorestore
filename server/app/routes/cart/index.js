@@ -3,6 +3,7 @@
 const path = require('path');
 const router = require('express').Router();
 const db = require(path.join(__dirname, '../../../db'));
+const User = db.model('user');
 
 router.get('/', function (req, res, next){
   // send the cart on the session if it exists
@@ -24,7 +25,7 @@ router.post('/songs', function (req, res, next) {
   		} else {
   			return elem;
   		}
-  	})
+  	});
   	if(inCart === false) req.session.cart.push({song: req.body.song, quantity: req.body.quantity});
   } else {
   	req.session.cart = [{song: req.body.song, quantity: req.body.quantity}];
@@ -41,10 +42,10 @@ router.put('/songs/:songId', function(req, res, next){
   		} else {
   			return elem;
   		}
-  	})
+  	});
   	res.send(req.session.cart);
 
-})
+});
 
 router.delete('/songs/:songId', function (req, res, next) {
 
@@ -55,7 +56,7 @@ router.delete('/songs/:songId', function (req, res, next) {
 });
 
 
-router.post('/address', function (req, res, next) {
+router.put('/address', function (req, res, next) {
   // add the shipping address on the req.session
   if (req.session.cart) {
     req.session.shippingAddress = req.body;
@@ -64,7 +65,7 @@ router.post('/address', function (req, res, next) {
   else {
     res.sendStatus(403);
   }
-})
+});
 
 router.get('/address', function (req, res, next) {
   if (req.session.shippingAddress) {
@@ -73,6 +74,20 @@ router.get('/address', function (req, res, next) {
   else {
     res.sendStatus(403);
   }
-})
+});
+
+router.post('/guest', function (req, res, next) {
+    User.findOrCreate({where:
+      {
+        email: req.body.email,
+        isGuest: true
+      }
+    })
+    .spread(function(user, createdUser) {
+      req.session.guest = user;
+      res.send({user: user, id: req.sessionID});
+    })
+    .catch(next);
+});
 
 module.exports = router;

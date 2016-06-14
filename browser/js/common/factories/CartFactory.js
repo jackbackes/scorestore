@@ -56,7 +56,7 @@ app.factory('CartFactory', function($http, $q){
 
 		submitAddress: function(address){
 
-			return $http.post('/api/v1/cart/address', address)
+			return $http.put('/api/v1/cart/address', address)
 			.then(function(response) {
 				return response.data;
 			})

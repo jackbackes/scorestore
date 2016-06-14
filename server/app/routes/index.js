@@ -13,7 +13,6 @@ router.use('/v1/users', require('./users'));
 
 router.use('/v1/cart', require('./cart'));
 
-router.use('/v1/guest', require('./guest'));
 
 
 

@@ -104,7 +104,7 @@
         // }
 
         this.guestLogin = function(credentials) {
-            return $http.post('/api/v1/guest', credentials)
+            return $http.post('/api/v1/cart/guest', credentials)
                 .then(function(guest){
                     var data = guest.data;
                     Session.create(data.id, data.user);

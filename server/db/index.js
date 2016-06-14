@@ -36,8 +36,6 @@ User.belongsTo(Address);  //put the addressId on the user table
 User.hasMany(Review);
 User.hasMany(Order);
 
-Review.belongsTo(Song);
-Review.belongsTo(User);
 Song.belongsTo(Photo);
 User.belongsTo(Photo);
 

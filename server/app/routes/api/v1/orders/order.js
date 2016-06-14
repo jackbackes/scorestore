@@ -10,11 +10,11 @@ const Address = db.model('address');
 const User = db.model('user');
 const stripe = require("stripe")("sk_test_BQokikJOvBiI2HlWgH4olfQ2");
 const Promise = require('sequelize').Promise;
-const Auth = require('../../../../configure/auth-middleware.js')
+const Auth = require('../../../../configure/auth-middleware.js');
 
 
 
-router.get( '/:orderId', Auth.assertAdmin, ( req, res, next ) => {
+router.get( '/:orderId', Auth.assertAdminOrSelf, ( req, res, next ) => {
 
   let orderId = req.params.orderId;
   Order.findOne( {
@@ -24,7 +24,7 @@ router.get( '/:orderId', Auth.assertAdmin, ( req, res, next ) => {
     }
   })
   .then( order => {
-      res.status( 200 ).send( order )
+      res.status( 200 ).send( order );
   })
   .catch(next);
 });
@@ -36,15 +36,15 @@ router.get( '/:orderId/restore', Auth.assertAdmin, (req, res, next ) => {
       id: orderId
     }
   }).then( result => {
-    res.status(201).send(result)
-  }).catch(next)
-})
+    res.status(201).send(result);
+  }).catch(next);
+});
 
-// make this an instance method
+// make this an instance method??
 router.post('/', function (req, res, next) {
   let user = req.user || req.session.guest;
   let stripeToken = req.body.response.id;
-  let total = req.body.total * 100
+  let total = req.body.total * 100;
   
   stripe.charges.create({
     amount: total,
@@ -63,29 +63,28 @@ router.post('/', function (req, res, next) {
           total: req.body.total,
           addressId: address.id,
           userId: user.id
-        })
+        });
       })
       .then(function(order) {
         return Promise.map(req.session.cart, function(item) {
           Song.findById(item.song.id)
           .then(function(song) {
-            order.addSong(song, {quantity: item.quantity, price: song.price})  
+            order.addSong(song, {quantity: item.quantity, price: song.price});  
           });
-        })
+        });
       })
       .then(function() {
         // delete req.session.cart;
         // delete req.session.shippingAddress;
         res.sendStatus(200);
       })
-      .catch(next)    
+      .catch(next);    
     }
-  })
+  });
    
 });
 
 router.delete( '/:orderId', Auth.assertAdmin, ( req, res, next ) => {
-  console.log( 'deleting' );
   let orderId = req.params.orderId;
   Order.destroy( {
       where: {
@@ -93,12 +92,10 @@ router.delete( '/:orderId', Auth.assertAdmin, ( req, res, next ) => {
       }
     } )
     .then( ( rows ) => {
-      res.status( 204 ).send() 
+      res.status( 204 ).send();
     })
-      .catch( err => next( _error( 'could not delete order', err, 500 ) ) )
-} )
-
-// put to orderId/status and then send the new status?
+      .catch( err => next( _error( 'could not delete order', err, 500 ) ) );
+} );
 
 router.put('/:orderId/status', Auth.assertAdmin, (req, res, next) => {
    let status = req.body.status; //'Processing' === shipped ; "Completed" === delivered
@@ -150,7 +147,7 @@ router.get('/:orderId/confirmation-number', (req, res, next) => {
     let confNumber = order.generateConfirmationNumber();
     res.status(201).send({orderId, confNumber});
   }).catch(next);
-})
+});
 
 router.get('/confirmation-number/:confNumber', (req, res, next) => {
   Order.findOne({
@@ -158,10 +155,10 @@ router.get('/confirmation-number/:confNumber', (req, res, next) => {
       confirmationNumber: req.params.confNumber
     }
   }).then( order => {
-    if(!order) throw _error('no order for confirmation number', {confNumber: req.params.confNumber}, 404)
-    res.status(200).send(order)
-  }).catch(next)
-})
+    if(!order) throw _error('no order for confirmation number', {confNumber: req.params.confNumber}, 404);
+    res.status(200).send(order);
+  }).catch(next);
+});
 
 
 router.use( function ( error, req, res, next ) {

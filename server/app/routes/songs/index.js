@@ -8,9 +8,6 @@ const Composer = db.model('composer');
 const Genre = db.model('genre');
 const Photo = db.model('photo');
 
-//add authentication middleware - see auther 
-// can pass another function to VERB methods (before (req, res) and use that function to validating users/admins)
-
 router.get('/', function (req, res, next){
   return Song.findAll({
     include: [Composer, Genre, Photo],

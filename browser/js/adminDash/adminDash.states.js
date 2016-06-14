@@ -37,11 +37,6 @@ app.config(function ($stateProvider) {
   .state('orderForm', {
     url: '/orderForm/:id',
     templateUrl: 'js/adminDash/orders/adminDash.orderForm.html',
-    controller: 'orderFormCtrl',
-    resolve: {
-      theOrder: function($stateParams, OrdersFactory) {
-        return OrdersFactory.fetchOrder($stateParams.id);
-      }
-    }
+    controller: 'orderFormCtrl'
   });
 });
