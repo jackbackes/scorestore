@@ -9,6 +9,9 @@ module.exports = function (db) {
       quantity: {
         type: Sequelize.INTEGER,
         defaultValue: 1
+      },
+      price: {
+      	type: Sequelize.DECIMAL
       }
     });
   };

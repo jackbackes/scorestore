@@ -6,6 +6,6 @@ app.config(function ($stateProvider) {
     });
 });
 
-app.controller("ThankYouCtrl", function($scope) {
-	$scope.name = "Jon";
+app.controller("ThankYouCtrl", function($scope, Session) {
+	$scope.session = Session
 })
