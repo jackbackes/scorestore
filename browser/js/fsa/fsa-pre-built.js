@@ -140,6 +140,10 @@
             });
         };
 
+        this.changePassword = function (password) {
+            return $http.put('/api/v1/users/changePassword', {password: password});
+        };
+
     });
 
     app.service('Session', function ($rootScope, AUTH_EVENTS) {
