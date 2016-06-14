@@ -1,7 +1,8 @@
 {
     "plugins": ["plugins/markdown", "plugins/summarize"],
     "opts": {
-      "recurse": true
+      "recurse": true,
+      "destination": "./docs"
     },
     "tags": {
         "allowUnknownTags": true,
@@ -15,6 +16,5 @@
     "templates": {
         "cleverLinks": true,
         "monospaceLinks": false
-    },
-    "destination": "./out"
+    }
 }
