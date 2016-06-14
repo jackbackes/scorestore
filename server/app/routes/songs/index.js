@@ -8,7 +8,7 @@ const Composer = db.model('composer');
 const Genre = db.model('genre');
 const Photo = db.model('photo');
 
-router.get('', function (req, res, next){
+router.get('/', function (req, res, next){
   return Song.findAll({
     include: [Composer, Genre, Photo],
     where: req.query
@@ -31,8 +31,8 @@ router.param('id', function (req, res, next, id) {
 router.post('/', function (req, res, next) {
   if (req.user) {
     if (req.user.isAdmin) {
-      Song.create(req.body)
-      .then(function () {
+      Song.create(req.body.song)
+      .then(function() {
         res.sendStatus(201);
       })
       .catch(next);
