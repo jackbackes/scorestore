@@ -1,7 +1,7 @@
 app.config(function ($stateProvider) {
     $stateProvider.state('cart', {
         url: '/cart',
-        templateUrl: 'js/Shopping-Cart/shopping-cart.html',
+        templateUrl: 'js/Shopping-cart/shopping-cart.html',
         controller: 'cartCtrl'
     });
 });
