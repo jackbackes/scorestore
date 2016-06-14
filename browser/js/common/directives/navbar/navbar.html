@@ -23,7 +23,7 @@
                 <button ui-sref="{{button.state}}" class="btn login-button">{{button.label}}</button>
             </div>
             <div ng-show="isLoggedIn()" ng-repeat="button in loggedInButtons">
-                <button ui-sref="{{button.state}}" class="btn login-button">{{button.label}}</button>
+                <button ui-sref="{{button.state}}({userId: user.id})" class="btn login-button">{{button.label}}</button>
             </div>
         </ul>
         <div ng-show="user" class="welcome">

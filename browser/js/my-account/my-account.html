@@ -26,9 +26,9 @@
 						<a class="button medium expanded">Save Changes</a>
 					</div>
 				</div>
-				<div>
+				<!-- <div>
 					<a ng-click="showOrders(userSess.user.id)" class="button large expanded">SHOW ORDERS</a>
-				</div>
+				</div> -->
 			</div>
 		</div>
 		<hr>
@@ -39,11 +39,36 @@
 					<hr>
 					<div ng-repeat="order in orders" class="media-object stack-for-small">
 							<h5>Order Number: THE CONFIRMATION NUMBER</h5>
-							<p>Your Order ID: {{ order.id }}</p>
-							<p>Your Order Total: {{ order.total }}</p>
+							<div class="column row">
+								<div class="col-lg-6">
+									<p>Your Order Was Shipped To:</p>
+									<p>{{ order.address.lastName }}, {{ order.address.firstName }}</p>
+									<p>{{ order.address.address }}</p>
+									<p>{{ order.address.city }}, {{ order.address.state }}, {{ order.address.state }}</p>
+								</div>
+								<div class="col-lg-6">
+									<span ng-repeat="song in order.songs">
+										<p>SONGS ORDERED:</p>
+										<p>{{ song.title }}</p>
+										<button ng-click="submitReview(); reviewing = !reviewing" class="button small">Write a Review for {{ song.title }}</button>
+										<div ng-show="reviewing">
+											<label>
+												My Review
+												<p>STARS(Out of 5): <input type="text" ng-model="stars" style="width: 40px"></p>
+												<textarea ng-model="review" placeholder="None"></textarea>
+											</label>
+											<div class="column row">
+												<span class="col-lg-6 theReview"><button ng-click="reviewMade = true; submitReview()" class="button">Submit</button></span>
+												<span class="col-lg-6"><p ng-show="reviewMade">Review Submitted</p></span>
+											</div>
+										</div>
+									</span>
+								</div>
+							</div>
+							<p>Your Order Total: ${{ order.total }}</p>
 							<p>Is Your Order Shipped: {{ order.shipped }}</p>
 							<p>Date of Order: {{ order.createdAt }}</p>
-					<button ng-click="submitReview()" class="button">Submit Review</button>
+						<hr>
 					</div>
 				</div>
 			</div>
