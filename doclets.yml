@@ -1,7 +1,7 @@
-dir: /
+dir: tests
 packageJson: package.json
 branches:
   - master
   - routetests
 articles:
- 	- Overview: README.md
+  - Overview: README.md
