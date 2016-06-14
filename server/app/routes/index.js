@@ -17,6 +17,8 @@ router.use('/v1/guest', require('./guest'));
 
 router.use('/v1/order', require('./order'));
 
+router.use('/v1/reviews', require('./reviews'));
+
 // Make sure this is after all of
 // the registered routes!
 

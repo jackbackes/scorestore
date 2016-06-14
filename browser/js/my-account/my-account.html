@@ -10,7 +10,15 @@
 					<h5>Your Account Info</h5>
 				</div>
 				<div class="row">
-					<div class="medium-6 large-12 columns">	
+					<div ng-hide="notEditing" class="well col-xs-6">
+						<h5>Address</h5>
+						<p>Street Address: {{ }}</p>
+						<p>City: {{  }}</p>
+						<p>State: {{  }}</p>
+						<p>Zip Code: {{  }}</p>
+						<a ng-click="notEditing = !notEditing">Edit Address</a>
+					</div>	
+					<div ng-hide="!notEditing" class="medium-6 large-12 columns">	
 						<p>Name: <input type="text" class="form-control" value="{{ userSess.user.fullName }}"></p>
 						<p>Address: 
 							<p>Street Address: <input type="text" class="form-control" value="Street Address"></p>
@@ -18,14 +26,14 @@
 							<p>State: <input type="text" class="form-control" value="State"></p>
 							<p>Zip Code: <input type="text" class="form-control" value="Zip Code"></p>
 						</p>
+						<div class="row">
+							<div>
+								<a ng-click="notEditing = !notEditing" class="button medium expanded">Save Changes</a>
+							</div>
+						</div>
 					</div>
 				</div>
 
-				<div class="row">
-					<div>
-						<a class="button medium expanded">Save Changes</a>
-					</div>
-				</div>
 				<!-- <div>
 					<a ng-click="showOrders(userSess.user.id)" class="button large expanded">SHOW ORDERS</a>
 				</div> -->
@@ -33,7 +41,7 @@
 		</div>
 		<hr>
 		<div class="column row">
-			<div class="tabs-content" data-tabs-content="example-tabs">
+			<div class="tabs-content column row" data-tabs-content="example-tabs">
 				<div class="tabs-panel is-active" id="panel1">
 					<h4>Orders</h4>
 					<hr>
@@ -44,21 +52,21 @@
 									<p>Your Order Was Shipped To:</p>
 									<p>{{ order.address.lastName }}, {{ order.address.firstName }}</p>
 									<p>{{ order.address.address }}</p>
-									<p>{{ order.address.city }}, {{ order.address.state }}, {{ order.address.state }}</p>
+									<p>{{ order.address.city }}, {{ order.address.state }}, {{ order.address.zipCode }}</p>
 								</div>
 								<div class="col-lg-6">
-									<span ng-repeat="song in order.songs">
 										<p>SONGS ORDERED:</p>
+									<span ng-repeat="song in order.songs">
 										<p>{{ song.title }}</p>
-										<button ng-click="submitReview(); reviewing = !reviewing" class="button small">Write a Review for {{ song.title }}</button>
+										<button ng-click="reviewing = !reviewing" class="button small">Write a Review for {{ song.title }}</button>
 										<div ng-show="reviewing">
 											<label>
 												My Review
 												<p>STARS(Out of 5): <input type="text" ng-model="stars" style="width: 40px"></p>
-												<textarea ng-model="review" placeholder="None"></textarea>
+												<textarea ng-model="review" placeholder="None"></textarea><p></p>
 											</label>
 											<div class="column row">
-												<span class="col-lg-6 theReview"><button ng-click="reviewMade = true; submitReview()" class="button">Submit</button></span>
+												<span class="col-lg-6 theReview"><button ng-click="submitReview(stars, review, song.id)" class="button">Submit</button></span>
 												<span class="col-lg-6"><p ng-show="reviewMade">Review Submitted</p></span>
 											</div>
 										</div>
@@ -68,6 +76,16 @@
 							<p>Your Order Total: ${{ order.total }}</p>
 							<p>Is Your Order Shipped: {{ order.shipped }}</p>
 							<p>Date of Order: {{ order.createdAt }}</p>
+						<hr>
+					</div>
+				</div>
+				<div class="tabs-panel is-active" id="panel1">
+					<h4>Reviews</h4>
+					<hr>
+					<div ng-repeat="review in userReviews" class="media-object stack-for-small">
+							<h5>Review for: {{ review.song.title }}</h5>
+							<p>Rating: {{ review.rating }}/5</p>
+							<p>Description: {{ review.description }}</p>
 						<hr>
 					</div>
 				</div>

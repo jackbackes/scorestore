@@ -73,35 +73,17 @@
 				<div class="tabs-panel is-active" id="panel1">
 					<h4>Reviews</h4>
 					<hr>
-					<div class="media-object stack-for-small">
+					<div ng-repeat="review in reviews" class="media-object stack-for-small">
 						<div class="media-object-section">
 							<img class="thumbnail" src="https://static4.fjcdn.com/thumbnails/comments/Gt+go+to+von+s+grocery+store+in+california+_c3626eed81d486427c3fc01db7bccd9a.gif">
 						</div>
 						<div class="media-object-section">
-							<h5>Mike Stevenson</h5>
-							<span ng-repeat="star in stars" class="glyphicon glyphicon-star"></span><span ng-repeat="emptyStar in emptyStars" class='glyphicon glyphicon-star-empty'></span>
-							<p>I'm going to improvise. Listen, there's something you should know about me... about inception. An idea is like a virus, resilient, highly contagious. The smallest seed of an idea can grow. It can grow to define or destroy you.</p>
+							<h5>{{ review.user.lastName }}, {{ review.user.firstName }}</h5>
+							<p>Rating: {{ review.rating }}/5</p>
+							<p>Description: {{ review.description }}</p>
 						</div>
+						<br>
 					</div>
-					<div class="media-object stack-for-small">
-						<div class="media-object-section">
-							<img class="thumbnail" src="http://www.joblo.com/newsimages1/bm-9313.jpg">
-						</div>
-						<div class="media-object-section">
-							<h5>Mike Stevenson</h5>
-							<p>I'm going to improvise. Listen, there's something you should know about me... about inception. An idea is like a virus, resilient, highly contagious. The smallest seed of an idea can grow. It can grow to define or destroy you</p>
-						</div>
-					</div>
-					<div class="media-object stack-for-small">
-						<div class="media-object-section">
-							<img class="thumbnail" src="http://www.joblo.com/newsimages1/bill-murray-comic-con200.jpg">
-						</div>
-						<div class="media-object-section">
-							<h5>Mike Stevenson</h5>
-							<p>I'm going to improvise. Listen, there's something you should know about me... about inception. An idea is like a virus, resilient, highly contagious. The smallest seed of an idea can grow. It can grow to define or destroy you</p>
-						</div>
-					</div>
-					
 				</div>
 			</div>
 		</div>

@@ -14,7 +14,7 @@ app.config(function ($stateProvider) {
     });
 });
 
-app.controller('oneSongController', function($scope, oneSong, similarSongsByInstrument, OneSongFactory, ComposerFactory, CartFactory){
+app.controller('oneSongController', function($scope, oneSong, similarSongsByInstrument, OneSongFactory, ComposerFactory, CartFactory, ReviewFactory){
     $scope.song = oneSong;
     $scope.similarSongsByInstrument = similarSongsByInstrument;
     $scope.inventory = [];
@@ -37,6 +37,12 @@ app.controller('oneSongController', function($scope, oneSong, similarSongsByInst
             $scope.cart = response;
         });
     };
+
+    ReviewFactory.getReviewBySong(oneSong.id)
+    .then(function(reviews){
+        $scope.reviews = reviews;
+        console.log(reviews);
+    })
 
 });
 
