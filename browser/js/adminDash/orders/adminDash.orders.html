@@ -1,10 +1,18 @@
+<div class="cart-container">
+  <div growl></div>
+  <h3>Filter Orders by Status</h3>
+    <input type="text" ng-model="orderStatus"/>
+    <div class="list-group">
+      <div class="list-group-item" ng-repeat="order in orders | filter: {status: orderStatus}">
+      <h3>{{order.id}}</h3>
+    	<button ui-sref="orderForm({id: order.id})">View/Edit Order Information</button>
+    </div>
+  </div>
+</div>
+<div>
+<!-- 	<h3>All Orders</h3>
 <ul>
-  <span ng-repeat="user in users">
-    <h3><a ng-href="/users/{{user.id}}">{{user.fullName}}</a></h3>
-    <button ui-sref="userForm({id: user.id})">Edit</button>
-    <button ng-click="deleteUser(user.id)">Delete</button>
+  <span ng-repeat="order in orders">
+    
   </span>
-  <span>
-    <button id="add-user" ui-sref="userForm">Add User</button>
-  </span>
-</ul>
+</ul> -->

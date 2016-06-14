@@ -1,5 +1,6 @@
 app.factory('CartFactory', function($http, $q){
 	var cachedCartItems = [];
+	var cachedAddress = [];
 	return {
 
 		getCart: function () {
@@ -12,8 +13,9 @@ app.factory('CartFactory', function($http, $q){
 
 		addToCart: function(song, quantity){
 
-			return $http.post('/api/v1/cart', {song: song, quantity: quantity})
+			return $http.post('/api/v1/cart/songs', {song: song, quantity: quantity})
 			.then(function(response) {
+				console.log(response.data)
 				cachedCartItems.push(response.data);
 				return response.data;
 			});
@@ -23,7 +25,7 @@ app.factory('CartFactory', function($http, $q){
 
 		updateCart: function(song, quantity){
 
-			return $http.put('/api/v1/cart', {song: song, quantity: quantity})
+			return $http.put('/api/v1/cart/songs/' + song.id, {song: song, quantity: quantity})
 			.then(function(response) {
 				angular.copy(response.data, cachedCartItems);
 				return response.data;
@@ -34,7 +36,7 @@ app.factory('CartFactory', function($http, $q){
 
 
 		removeFromCart: function(item) {
-			return $http.delete('/api/v1/cart/' + item.song.id)
+			return $http.delete('/api/v1/cart/songs/' + item.song.id)
 			.then(function(response) {
 				angular.copy(response.data, cachedCartItems);
 			})
@@ -42,13 +44,13 @@ app.factory('CartFactory', function($http, $q){
 
 		getCartTotal: function() {
 			if (!cachedCartItems.length) return null;
-			else if (cachedCartItems.length < 2) return cachedCartItems[0].song.price * cachedCartItems[0].quantity;
-			// else return cachedCartItems.reduce( (a,b) => {
-			// 	console.log(a);
-			// 	(+a.song.price * a.quantity) + (+b.song.price * b.quantity)
-			// });
+			else if (cachedCartItems.length < 2) {
+				console.log(cachedCartItems[0])
+				return cachedCartItems[0].song.price * cachedCartItems[0].quantity;
+			}
 			else {
 				var sum = 0;
+				console.log(cachedCartItems);
 				for(var i = 0; i < cachedCartItems.length; i++){
 					sum += (+cachedCartItems[i].song.price * cachedCartItems[i].quantity);
 				}
@@ -59,7 +61,7 @@ app.factory('CartFactory', function($http, $q){
 
 		submitAddress: function(address){
 
-			return $http.post('/api/v1/cart/address', address)
+			return $http.put('/api/v1/cart/address', address)
 			.then(function(response) {
 				return response.data;
 			})
@@ -76,6 +78,23 @@ app.factory('CartFactory', function($http, $q){
 				return response.data;
 			});
 		},
+
+		updateAddress: function (address, order) {
+			
+			return $http.put('/api/v1/order/' + order.id + '/address', address)
+				.then(function(response) {
+					angular.copy(response.data, cachedAddress);
+					return cachedAddress;
+				})
+		},
+
+		// save for implementing address history
+		// getOrderAddress: function (order) {
+		// 	return $http.get('/api/v1/order/' + order.id + '/address')
+		// 		.then(function(response) {
+		// 			return response.data;
+		// 		})
+		// }
 
 		// getAddressHistory: function() {
 		// 	return $http.get('/api/v1/user/address-history')

@@ -18,6 +18,20 @@ router.get('', function (req, res, next){
   .catch(next);
 });
 
+router.put('/changePassword', function (req, res, next) {
+  if (req.user) {
+    req.body.resetPassword = false;
+    req.user.update(req.body, {beforeUpdate: false})
+    .then(function () {
+      console.log(req.user);
+      res.sendStatus(200);
+    })
+    .catch(next);
+  } else {
+    res.sendStatus(401);
+  }
+});
+
 router.param('id', function (req, res, next, id) {
   return User.findById(id)
   .then(function (user) {
@@ -78,5 +92,14 @@ router.put('/:id', function (req, res, next) {
     res.sendStatus(401);
   }
 });
+
+
+
+
+
+
+
+
+
 
 module.exports = router;

@@ -76,6 +76,7 @@ var seedUsers = function () {
 
 let seedSongs = function(){
   return seedInfo.songs.map(function (songObj) {
+      console.log(songObj.sourceUrl);
       return Song.create(songObj);
   });
 

@@ -17,6 +17,10 @@ app.directive('addressForm', function (CartFactory, $state) {
 		        });
 			}
 
+            scope.updateAddress = function(address, order) {
+                CartFactory.updateAddress(address, order)
+            }
+
             // scope.getAddressHistory=function() {
             //     CartFactory.getAddressHistory()
             //     .then(function(data) {
