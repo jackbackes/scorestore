@@ -15,6 +15,7 @@ app.factory('CartFactory', function($http, $q){
 
 			return $http.post('/api/v1/cart/songs', {song: song, quantity: quantity})
 			.then(function(response) {
+				console.log(response.data)
 				cachedCartItems.push(response.data);
 				return response.data;
 			});
@@ -43,9 +44,13 @@ app.factory('CartFactory', function($http, $q){
 
 		getCartTotal: function() {
 			if (!cachedCartItems.length) return null;
-			else if (cachedCartItems.length < 2) return cachedCartItems[0].song.price * cachedCartItems[0].quantity;
+			else if (cachedCartItems.length < 2) {
+				console.log(cachedCartItems[0])
+				return cachedCartItems[0].song.price * cachedCartItems[0].quantity;
+			}
 			else {
 				var sum = 0;
+				console.log(cachedCartItems);
 				for(var i = 0; i < cachedCartItems.length; i++){
 					sum += (+cachedCartItems[i].song.price * cachedCartItems[i].quantity);
 				}

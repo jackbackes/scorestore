@@ -5,6 +5,7 @@ const router = require('express').Router();
 const db = require(path.join(__dirname, '../../../db'));
 const User = db.model('user');
 
+
 router.get('/', function (req, res, next){
   // send the cart on the session if it exists
   if (req.session.cart) res.send(req.session.cart);
@@ -30,7 +31,7 @@ router.post('/songs', function (req, res, next) {
   } else {
   	req.session.cart = [{song: req.body.song, quantity: req.body.quantity}];
   }
-  res.send(req.session.cart);
+  res.send(req.body);
 });
 
 router.put('/songs/:songId', function(req, res, next){

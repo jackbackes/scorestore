@@ -66,10 +66,11 @@ router.post('/', function (req, res, next) {
         });
       })
       .then(function(order) {
+        order.generateConfirmationNumber();
         return Promise.map(req.session.cart, function(item) {
-          Song.findById(item.song.id)
+          return Song.findById(item.song.id)
           .then(function(song) {
-            order.addSong(song, {quantity: item.quantity, price: song.price});  
+            return order.addSong(song, {quantity: item.quantity, price: song.price});  
           });
         });
       })
