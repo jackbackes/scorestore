@@ -21,9 +21,8 @@ router.get('', function (req, res, next){
 router.put('/changePassword', function (req, res, next) {
   if (req.user) {
     req.body.resetPassword = false;
-    req.user.update(req.body, {beforeUpdate: false})
+    req.user.update(req.body)
     .then(function () {
-      console.log(req.user);
       res.sendStatus(200);
     })
     .catch(next);

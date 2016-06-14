@@ -33,8 +33,7 @@ module.exports = function (app, db) {
           lastName: lastName,
           twitter_id: twitterJson.id,
           twitterData: twitterJson
-        }
-        // console.log(twitterJson);
+        };
 
         User.findOne({
             where: {

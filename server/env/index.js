@@ -13,6 +13,5 @@ if (process.env.NODE_ENV === 'production') {
 } else {
     appVariables = require(devConfigPath);
 }
-console.log('node environment:', process.env.NODE_ENV || 'development');
 if(Object.keys(appVariables).length === 0) throw "don't forget to populate variables!";
 module.exports = appVariables;
