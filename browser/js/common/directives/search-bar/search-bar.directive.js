@@ -1,3 +1,10 @@
+
+/**
+ * The search-bar directive can be placed on any page or in the navbar, and searches songs for similar titles.
+ * Controller: Typeahead Controller
+ * Templates: [directive definition, typeahead-template.html]
+ * @module angular ui-bootstrap
+ */
 app.directive( 'searchBar', function ( $rootScope, AuthService, AUTH_EVENTS, $state ) {
   return {
     controller: 'TypeaheadCtrl',

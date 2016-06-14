@@ -1,0 +1,7 @@
+dir: /
+packageJson: package.json
+branches:
+  - master
+  - routetests
+articles:
+ 	- Overview: README.md

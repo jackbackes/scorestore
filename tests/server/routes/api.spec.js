@@ -1,5 +1,6 @@
 'use strict';
 /**
+ * The API Spec route tests should comprehensively test the data api.
  * @module api-spec
  * @namespace api-spec
  * @overview Tests the data api routes
@@ -540,54 +541,62 @@ describe( '/api/v1', function () {
         .then( response => response.body.songs.should.have.lengthOf( 0 ) )
     } )
   } );
-  describe( '/order', function () {
-    let authdUserOrder1, authdUserOrder2, guestUserOrder1;
+  xdescribe( '/order', function () {
+    let authdUserOrder1, authdUserOrder2, guestUserOrder1, adminCreateOrderData, guestUserTrackedOrder
     beforeEach( function () {
-      let authdUserOrder1 = authd.createOrder( {
-        id: 1,
-        songs: [ {
+      let guest = User.findById( 3 )
+      let authd = User.findById( 1 )
+      return Promise.all( [authd, guest] ).then( results => {
+        let authdUser = results[0], guestUser = results[1];
+        console.log(authdUser, guestUser);
+        authdUserOrder1 = authdUser.createOrder( {
           id: 1,
-          quantity: 10
-        }, {
-          id: 3,
-          quantity: 1
-        } ]
-      } )
-      let authdUserOrder2 = authd.createOrder( {
-        id: 2,
-        songs: [ {
+          songs: [ {
+            id: 1,
+            quantity: 10
+          }, {
+            id: 3,
+            quantity: 1
+          } ]
+        } )
+        authdUserOrder2 = authdUser.createOrder( {
           id: 2,
-          quantity: 2
-        }, {
-          id: 5,
-          quantity: 1
-        } ]
-      } )
-      let guestUserOrder1 = guest.createOrder( {
-        id: 3,
-        songs: [ {
+          songs: [ {
+            id: 2,
+            quantity: 2
+          }, {
+            id: 5,
+            quantity: 1
+          } ]
+        } )
+        guestUserOrder1 = guestUser.createOrder( {
           id: 3,
-          quantity: 1
-        } ]
-      } )
-      let adminCreateOrderData = {
-        id: 4,
-        songs: [ {
-          id: 2,
-          quantity: 4
-        }, {
-          id: 10,
-          quantity: 3
-        } ]
-      }
-      let guestUserTrackedOrder = guest.createOrder( {
-        id: 5,
-        songs: [ {
+          songs: [ {
+            id: 3,
+            quantity: 1
+          } ]
+        } )
+        adminCreateOrderData = {
           id: 4,
-          quantity: 2
-        } ],
-        trackingNumber: 123456789
-      } )
+          songs: [ {
+            id: 2,
+            quantity: 4
+          }, {
+            id: 10,
+            quantity: 3
+          } ]
+        }
+        guestUserTrackedOrder = guestUser.createOrder( {
+          id: 5,
+          songs: [ {
+            id: 4,
+            quantity: 2
+          } ],
+          trackingNumber: 123456789
+        } )
+
+      })
+
     } );
 
     it( '/:orderId -- authorized user can only use these routes for their own account', function () {

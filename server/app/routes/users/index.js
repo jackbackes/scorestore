@@ -8,7 +8,7 @@ const User = db.model('user');
 // const Genre = db.model('genre');
 // const Photo = db.model('photo');
 
-router.get('', function (req, res, next){
+router.get('/', function (req, res, next){
   return User.findAll({
     where: req.query
   })
