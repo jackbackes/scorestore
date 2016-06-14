@@ -66,7 +66,13 @@ router.post('/', function (req, res, next) {
         });
       })
       .then(function(order) {
-        order.generateConfirmationNumber();
+        return order.generateConfirmationNumber()
+        .then(function () {
+          return order;
+        });
+      })
+      .then(function (order) {
+        res.order = order;
         return Promise.map(req.session.cart, function(item) {
           return Song.findById(item.song.id)
           .then(function(song) {
@@ -77,7 +83,7 @@ router.post('/', function (req, res, next) {
       .then(function() {
         // delete req.session.cart;
         // delete req.session.shippingAddress;
-        res.sendStatus(200);
+        res.status(200).send(res.order);
       })
       .catch(next);    
     }
@@ -145,7 +151,7 @@ router.get('/:orderId/confirmation-number', (req, res, next) => {
   let orderId = req.params.orderId;
   Order.findById(orderId).then( order => {
     if(!order) throw _error('no order', {orderId});
-    let confNumber = order.generateConfirmationNumber();
+    let confNumber = order.confirmationNumber;
     res.status(201).send({orderId, confNumber});
   }).catch(next);
 });
