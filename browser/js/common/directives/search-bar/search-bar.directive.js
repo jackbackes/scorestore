@@ -26,7 +26,7 @@ app.controller( 'TypeaheadCtrl', function ( $scope, $http, $state, $rootScope ) 
       }
     }
     return searchQuery ? $http.get( '/api/v1/songs/s', config )
-      .then( response => response.data ) : [];
+      .then( response => response.data ) : new Promise(resolve => resolve([]));
   };
 
   $scope.updateSongs = function ( customSelected ) {
