@@ -6,3 +6,6 @@ public
 .DS_Store
 coverage
 server/env/development.js
+process.json
+ecosystem.json
+docs
