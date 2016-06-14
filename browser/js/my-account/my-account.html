@@ -11,24 +11,25 @@
 				</div>
 				<div class="row">
 					<div ng-hide="notEditing" class="well col-xs-6">
-						<h5>Address</h5>
-						<p>Street Address: {{ }}</p>
-						<p>City: {{  }}</p>
-						<p>State: {{  }}</p>
-						<p>Zip Code: {{  }}</p>
+						<h5>{{ userWithAddress.fullName }}</h5>
+						<p>Street Address: {{ userWithAddress.streetAddress }}</p>
+						<p>City: {{ userWithAddress.city }}</p>
+						<p>State: {{ userWithAddress.state }}</p>
+						<p>Zip Code: {{ userWithAddress.zipCode }}</p>
 						<a ng-click="notEditing = !notEditing">Edit Address</a>
 					</div>	
 					<div ng-hide="!notEditing" class="medium-6 large-12 columns">	
-						<p>Name: <input type="text" class="form-control" value="{{ userSess.user.fullName }}"></p>
+						<p>First Name: <input type="text" ng-model="firstName" class="form-control" ></p>
+						<p>Last Name: <input type="text" ng-model="lastName" class="form-control"></p>
 						<p>Address: 
-							<p>Street Address: <input type="text" class="form-control" value="Street Address"></p>
-							<p>City: <input type="text" class="form-control" value="City"></p>
-							<p>State: <input type="text" class="form-control" value="State"></p>
-							<p>Zip Code: <input type="text" class="form-control" value="Zip Code"></p>
+							<p>Street Address: <input type="text" ng-model="streetAddress" class="form-control" ></p>
+							<p>City: <input type="text" ng-model="city" class="form-control"></p>
+							<p>State: <input type="text" ng-model="state" class="form-control"></p>
+							<p>Zip Code: <input type="text" ng-model="zipCode" class="form-control"></p>
 						</p>
 						<div class="row">
 							<div>
-								<a ng-click="notEditing = !notEditing" class="button medium expanded">Save Changes</a>
+								<a ng-click="notEditing = !notEditing; infoChanged();" class="button medium expanded">Save Changes</a>
 							</div>
 						</div>
 					</div>
