@@ -1,4 +1,5 @@
 var path = require('path');
+var process = require('process.json');
 var devConfigPath = path.join(__dirname, './development.js');
 var productionConfigPath = path.join(__dirname, './production.js');
 var testingConfigPath = path.join(__dirname, './testing.js');
