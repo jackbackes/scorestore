@@ -32,14 +32,13 @@ app.controller('OrderCtrl', function ($scope, Session, $state, OrdersFactory, Ca
 	};
 
 	$scope.submitPayment = function(status, response) {
-		console.log("total", total)
 		OrdersFactory.submitPayment(response, total)
 		.then(function () {
 			$state.go('thankyou');
 		})
 		.catch(function (error) {
-            $scope.orderError = error.message;
-        });
+        $scope.orderError = error.message;
+    });
 	};
 
-})
+});

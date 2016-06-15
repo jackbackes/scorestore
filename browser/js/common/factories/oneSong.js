@@ -16,18 +16,17 @@ app.factory('OneSongFactory', function($http){
 			return $http.get('/api/v1/songs/' + id)
 			.then(function(song){
 				return song.data;
-			})
+			});
 		},
 		fetchBySimilarInstruments: function(id){
 			return $http.get('/api/v1/songs/' + id + '/similarInstruments')
 			.then(function(similarSongs){
-				console.log(similarSongs);
-				return similarSongs.data
-			})
+				return similarSongs.data;
+			});
 		}
 
-	}
+	};
 
 	return obj;
 
-})
+});

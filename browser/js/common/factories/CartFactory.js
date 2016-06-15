@@ -22,7 +22,6 @@ app.factory('CartFactory', function($http, $q){
 
 			return $http.post('/api/v1/cart/songs', {song: song, quantity: quantity})
 			.then(function(response) {
-				console.log(response.data)
 				cachedCartItems.push(response.data);
 				return response.data;
 			});
@@ -46,18 +45,16 @@ app.factory('CartFactory', function($http, $q){
 			return $http.delete('/api/v1/cart/songs/' + item.song.id)
 			.then(function(response) {
 				angular.copy(response.data, cachedCartItems);
-			})
+			});
 		},
 
 		getCartTotal: function() {
 			if (!cachedCartItems.length) return null;
 			else if (cachedCartItems.length < 2) {
-				console.log(cachedCartItems[0])
 				return cachedCartItems[0].song.price * cachedCartItems[0].quantity;
 			}
 			else {
 				var sum = 0;
-				console.log(cachedCartItems);
 				for(var i = 0; i < cachedCartItems.length; i++){
 					sum += (+cachedCartItems[i].song.price * cachedCartItems[i].quantity);
 				}
@@ -82,7 +79,8 @@ app.factory('CartFactory', function($http, $q){
 		getAddress: function() {
 			return $http.get('/api/v1/cart/address')
 			.then(function(response) {
-				return response.data;
+				angular.copy(response.data, cachedAddress);
+				return cachedAddress;
 			});
 		},
 
@@ -92,7 +90,7 @@ app.factory('CartFactory', function($http, $q){
 				.then(function(response) {
 					angular.copy(response.data, cachedAddress);
 					return cachedAddress;
-				})
+				});
 		},
 
 		// save for implementing address history

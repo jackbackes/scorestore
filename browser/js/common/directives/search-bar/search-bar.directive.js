@@ -13,7 +13,7 @@ app.directive( 'searchBar', function ( $rootScope, AuthService, AUTH_EVENTS, $st
   return {
     controller: 'TypeaheadCtrl',
     template: searchBarTemplate
-  }
+  };
 } );
 
 /**
@@ -33,7 +33,6 @@ app.controller( 'TypeaheadCtrl', function ( $scope, $http, $state, $rootScope ) 
  * @return {Object[]}             [an array of song objects]
  */
   $scope.getSongs = function ( searchQuery ) {
-    // console.log( searchQuery );
     let config = {
       params: {
         where: {
@@ -42,7 +41,7 @@ app.controller( 'TypeaheadCtrl', function ( $scope, $http, $state, $rootScope ) 
           }
         }
       }
-    }
+    };
     return searchQuery ? $http.get( '/api/v1/songs/s', config )
       .then( response => response.data ) : new Promise(resolve => resolve([]));
   };
@@ -58,7 +57,7 @@ app.controller( 'TypeaheadCtrl', function ( $scope, $http, $state, $rootScope ) 
   $scope.updateSongs = function ( customSelected ) {
     $scope.getSongs( customSelected )
       .then( songs => $scope.songs = songs );
-  }
+  };
 
   $scope.ngModelOptionsSelected = function ( value ) {
     if ( arguments.length ) {
@@ -82,11 +81,10 @@ app.controller( 'TypeaheadCtrl', function ( $scope, $http, $state, $rootScope ) 
  * @description selectOption defines the behavior after an option is selected in the TypeAheadCtrl dropdown.
  */
   $scope.selectOption = function ( item, model, label ) {
-    // console.log( 'selected', item, model, label )
     $state.go( 'oneSong', {
       songId: item.id
-    } )
-  }
+    } );
+  };
 } );
 
 /**
@@ -109,4 +107,4 @@ let searchBarTemplate = `
             <span class="input-group-btn">
             </span>
         </div>
-`
+`;

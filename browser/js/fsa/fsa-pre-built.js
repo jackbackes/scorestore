@@ -38,7 +38,7 @@
         return {
             responseError: function (response) {
                 $rootScope.$broadcast(statusDict[response.status], response);
-                return $q.reject(response)
+                return $q.reject(response);
             }
         };
     });
@@ -80,7 +80,6 @@
             if (this.isAuthenticated() && fromServer !== true) {
                 return $q.when(Session.user);
             }
-            console.log('getLoggedInUser');
             // Make request GET /session.
             // If it returns a user, call onSuccessfulLogin with the response.
             // If it returns a 401 response, we catch it and instead resolve to null.
@@ -93,7 +92,6 @@
         // this.getGuest = function () {
         //     return $http.get('/guestsession')
         //         .then(function(guest){
-        //             console.log("Here5", data)
         //             var data = guest.data;
         //             Session.create(data.id, data.user);
         //             $rootScope.$broadcast(GUEST_EVENTS.loginSuccess);
