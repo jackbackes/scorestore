@@ -1,3 +1,10 @@
+/**
+ * @name cartFactory
+ * @type {factory}
+ * @memberof factories
+ * @summary The cart factory
+ * @requires $http, $q
+ */
 app.factory('CartFactory', function($http, $q){
 	var cachedCartItems = [];
 	var cachedAddress = [];
@@ -18,7 +25,7 @@ app.factory('CartFactory', function($http, $q){
 				cachedCartItems.push(response.data);
 				return response.data;
 			});
-		
+
 
 		},
 
@@ -29,7 +36,7 @@ app.factory('CartFactory', function($http, $q){
 				angular.copy(response.data, cachedCartItems);
 				return response.data;
 			});
-		
+
 
 		},
 
@@ -65,7 +72,7 @@ app.factory('CartFactory', function($http, $q){
 			.catch(function () {
                 return $q.reject({ message: 'No items in shopping cart.' });
             });
-		
+
 
 		},
 
@@ -78,7 +85,7 @@ app.factory('CartFactory', function($http, $q){
 		},
 
 		updateAddress: function (address, order) {
-			
+
 			return $http.put('/api/v1/order/' + order.id + '/address', address)
 				.then(function(response) {
 					angular.copy(response.data, cachedAddress);

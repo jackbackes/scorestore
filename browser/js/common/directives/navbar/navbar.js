@@ -1,3 +1,11 @@
+/**
+ * @name navbar
+ * @type {directive}
+ * @memberof directives
+ * @summary The navbar
+ * @requires ui-bootstrap app.controller.TypeaheadCtrl
+ */
+
 app.directive('navbar', function ($rootScope, AuthService, AUTH_EVENTS, $state) {
 
     return {

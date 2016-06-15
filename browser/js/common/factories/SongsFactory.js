@@ -1,5 +1,12 @@
+/**
+ * @name SongsFactory
+ * @type {factory}
+ * @memberof factories
+ * @summary The songs factory
+ * @requires $http, $q
+ */
 app.factory('SongsFactory', function ($http, $q) {
-  
+
   var errorFunc = function(error) {
       return $q.reject(error.statusText);
   };

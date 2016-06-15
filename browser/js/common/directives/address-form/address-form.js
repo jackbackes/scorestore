@@ -1,3 +1,10 @@
+/**
+ * @name address-form
+ * @type {directive}
+ * @memberof directives
+ * @summary The address form.
+ * @requires [CartFactory, $state]
+ */
 app.directive('addressForm', function (CartFactory, $state) {
     return {
         restrict: 'E',

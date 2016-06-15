@@ -1,3 +1,10 @@
+/**
+ * @name FullstackPics
+ * @type {factory}
+ * @deprecated since 1.0
+ * @memberof factories
+ * @summary The pics factory
+ */
 app.factory('FullstackPics', function () {
     return [
         'https://pbs.twimg.com/media/B7gBXulCAAAXQcE.jpg:large',

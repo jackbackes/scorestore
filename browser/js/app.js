@@ -1,4 +1,35 @@
+/**
+ * @overview your source for music!
+ * @summary your source for music!
+ * @author John Backes
+ * @author Geoff Bass
+ * @author Jon Perrelle
+ * @author Kelvin Masilamani
+ * @version 1.0
+ * @license MIT
+ * @example <caption>Getting Started</caption>
+ * // npm install
+ * // npm start
+ * @example <caption>Generating Documentation</caption>
+ * // jsdoc -c conf.json
+ * @example <caption>Running Tests</caption>
+ * # test server code
+ * //
+ * // gulp testServerJSWithCoverage
+ *
+ * # test brower code
+ * //
+ * // gulp testBrowserJS
+ * @description
+ * See our website [here]{@link http://162.243.27.75/}
+ * See our repo [here]{@link https://github.com/thejohnbackes/scorestore}
+ */
+
+
 'use strict';
+/**
+* @module FullstackGeneratedApp
+*/
 window.app = angular.module('FullstackGeneratedApp', ['fsaPreBuilt', 'ui.router', 'ui.bootstrap', 'ngAnimate', 'ngCookies', 'ngMessages', 'stripe', 'angular-growl']);
 
 app.config(function ($urlRouterProvider, $locationProvider) {

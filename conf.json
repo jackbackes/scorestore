@@ -4,6 +4,7 @@
       "recurse": true,
       "destination": "./docs"
     },
+    "title": "ScoreStore Documentation",
     "tags": {
         "allowUnknownTags": true,
         "dictionaries": ["jsdoc", "closure"]
