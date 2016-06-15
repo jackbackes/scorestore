@@ -1,3 +1,11 @@
+/**
+ * @name rando-greeting
+ * @deprecated since version 1.0
+ * @type {directive}
+ * @memberof directives
+ * @summary The shopping cart contains shopping cart functionality
+ * @requires ui-bootstrap app.controller.TypeaheadCtrl
+ */
 app.directive('randoGreeting', function (RandomGreetings) {
 
     return {

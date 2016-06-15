@@ -1,3 +1,10 @@
+/**
+ * @name EmailFactory
+ * @type {factory}
+ * @memberof factories
+ * @summary The email factory
+ * @requires $http
+ */
 app.factory('EmailFactory', function ($http) {
   return {
     sendConfirmation: function (confirmationNumber) {

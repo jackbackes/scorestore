@@ -1,3 +1,12 @@
+/**
+ * @name about
+ * @type {state}
+ * @memberof states
+ * @summary The search-bar directive can be placed on any page or in the navbar, and searches songs for similar titles.
+ * @requires ui-bootstrap
+ * @requires app.controller.TypeaheadCtrl
+ */
+
 app.config(function ($stateProvider) {
 
     // Register our *about* state.

@@ -1,3 +1,10 @@
+/**
+ * @name ComposerFactory
+ * @type {factory}
+ * @memberof factories
+ * @summary The composer factory
+ * @requires $http
+ */
 app.factory('ComposerFactory', function($http){
 
 	var obj;

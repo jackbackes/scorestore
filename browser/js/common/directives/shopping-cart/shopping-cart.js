@@ -1,3 +1,12 @@
+/**
+ * @name shopping-cart
+ * @type {directive}
+ * @memberof directives
+ * @summary The shopping cart contains shopping cart functionality
+ * @requires ui-bootstrap
+ * @requires app.controller.TypeaheadCtrl
+ */
+
 app.directive('shoppingCart', function (CartFactory) {
 
     return {

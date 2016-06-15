@@ -1,3 +1,11 @@
+/**
+ * @name OneSongFactory
+ * @type {factory}
+ * @memberof factories
+ * @summary The factory for generating a single song
+ * @requires $http
+ */
+
 app.factory('OneSongFactory', function($http){
 
 	var obj;

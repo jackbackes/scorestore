@@ -1,27 +1,41 @@
-<form id="login-form" name="loginForm" ng-submit="loginForm.$valid && sendLogin(login)">
+<div class="container-fluid">
+  <div class="row">
+    <div class="buffer oauth col-md-5">
+      <h4>Sign in with your favorite social media account!</h4>
+      <p>
+        <oauth-button provider-name="Google"></oauth-button>
+      </p>
+      <p>
+        <oauth-button provider-name="Twitter"></oauth-button>
+      </p>
+      <p>
+        <oauth-button provider-name="Facebook"></oauth-button>
+      </p>
+    </div>
+    <div class="col-md-7">
+      <form class="col-md-7" id="login-form" name="loginForm" ng-submit="loginForm.$valid && sendLogin(login)">
 
-    <alert type="danger" ng-show="error">
-        {{ error }}
-    </alert>
-    <div ng-messages="loginForm.email.$error" ng-hide="guestLoginForm.email.$pristine" role="alert">
-        <div ng-message="required" class="alert alert-warning">Email is required</div>
-        <div ng-message="email" ng-show="guestLoginForm.$submitted" class="alert alert-warning">Please enter a valid email</div>
+        <alert type="danger" ng-show="error">
+          {{ error }}
+        </alert>
+        <div ng-messages="loginForm.email.$error" ng-hide="guestLoginForm.email.$pristine" role="alert">
+          <div ng-message="required" class="alert alert-warning">Email is required</div>
+          <div ng-message="email" ng-show="guestLoginForm.$submitted" class="alert alert-warning">Please enter a valid email</div>
+        </div>
+        <div ng-messages="loginForm.password.$error" ng-hide="guestLoginForm.password.$pristine" role="alert">
+          <div ng-message="required" class="alert alert-warning">Password is required</div>
+        </div>
+        <div class="form-group">
+          <label for="email">Email address</label>
+          <input type="text" name="email" ng-model="login.email" class="form-control" id="email" placeholder="Enter email">
+        </div>
+        <div class="form-group">
+          <label for="login-password">Password</label>
+          <input type="password" name="password" ng-model="login.password" class="form-control" id="login-password" placeholder="Password">
+        </div>
+        <button type="submit" class="btn btn-default">Submit</button>
+      </form>
     </div>
-    <div ng-messages="loginForm.password.$error" ng-hide="guestLoginForm.password.$pristine" role="alert">
-        <div ng-message="required" class="alert alert-warning">Password is required</div>
-    </div>
-    <div class="form-group">
-        <label for="email">Email address</label>
-        <input type="text" name="email" ng-model="login.email" class="form-control" id="email" placeholder="Enter email">
-    </div>
-    <div class="form-group">
-        <label for="login-password">Password</label>
-        <input type="password" name="password" ng-model="login.password" class="form-control" id="login-password" placeholder="Password">
-    </div>
-    <button type="submit" class="btn btn-default">Submit</button>
-</form>
-<div class="buffer oauth">
-    <p><oauth-button provider-name="Google"></oauth-button></p>
-    <p><oauth-button provider-name="Twitter"></oauth-button></p>
-    <p><oauth-button provider-name="Facebook"></oauth-button></p>
+  </div>
+
 </div>

@@ -1,5 +1,12 @@
+/**
+ * @name UsersFactory
+ * @type {factory}
+ * @memberof factories
+ * @summary The users factory
+ * @requires $http, $q
+ */
 app.factory('UsersFactory', function ($http, $q) {
-  
+
   var errorFunc = function(error) {
       return $q.reject(error.statusText);
   };

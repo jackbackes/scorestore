@@ -1,3 +1,10 @@
+/**
+ * @name RandomGreetings
+ * @type {factory}
+ * @deprecated since 1.0
+ * @memberof factories
+ * @summary The random greetings factory
+ */
 app.factory('RandomGreetings', function () {
 
     var getRandomFromArray = function (arr) {

@@ -1,3 +1,10 @@
+/**
+ * @name OrdersFactory
+ * @type {factory}
+ * @memberof factories
+ * @summary The orders factory
+ * @requires $http, $q, EmailFactory
+ */
 app.factory('OrdersFactory', function ($http, $q, EmailFactory) {
 
   var errorFunc = function(error) {
