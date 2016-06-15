@@ -15,6 +15,13 @@ app.factory('OrdersFactory', function ($http, $q, EmailFactory) {
       .catch(errorFunc);
     },
 
+    getUserOrders: function(id){
+      return $http.get('/api/v1/orders/userOrders/' + id)
+      .then(function(res){
+        return res.data;
+      });
+    },
+
     fetchOrder: function(id){
       return $http.get('/api/v1/order/' + id)
       .then(successFunc)

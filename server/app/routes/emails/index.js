@@ -11,9 +11,11 @@ const transporter = nodemailer.createTransport({
 });
 
 router.put('/confirmation', function (req, res, next) {
+  console.log(req.session.guest)
+  let user = req.user || req.session.guest;
   let mailOptions = {
     from: 'scorestore@openmailbox.org',
-    to: req.user.email,
+    to: user.email,
     subject: 'Order Confirmation',
     text: 'Thank you for your order! Your confirmation number is ' + req.body.confirmationNumber
   };

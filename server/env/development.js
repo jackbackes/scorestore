@@ -1,4 +1,6 @@
 module.exports = {
+// keys removed. check evernote file that was shared to team.
+
 	"DATABASE_URI": "postgres://localhost:5432/fsg",
 	"SESSION_SECRET": "Optimus Prime is my real dad",
 	"TWITTER": {
