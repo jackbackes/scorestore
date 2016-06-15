@@ -5,16 +5,15 @@ const nodemailer = require('nodemailer');
 const transporter = nodemailer.createTransport({
   service: 'OpenMailBox',
   auth: {
-    user: 'scorestore@openmailbox.org',
+    user: 'scorestorebot@openmailbox.org',
     pass: 'supersecure'
   }
 });
 
 router.put('/confirmation', function (req, res, next) {
-  console.log(req.session.guest)
   let user = req.user || req.session.guest;
   let mailOptions = {
-    from: 'scorestore@openmailbox.org',
+    from: 'scorestorebot@openmailbox.org',
     to: user.email,
     subject: 'Order Confirmation',
     text: 'Thank you for your order! Your confirmation number is ' + req.body.confirmationNumber

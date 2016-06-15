@@ -1,3 +1,10 @@
+
+/**
+ * The search-bar directive can be placed on any page or in the navbar, and searches songs for similar titles.
+ * Controller: Typeahead Controller
+ * Templates: [directive definition, typeahead-template.html]
+ * @module angular ui-bootstrap
+ */
 app.directive( 'searchBar', function ( $rootScope, AuthService, AUTH_EVENTS, $state ) {
   return {
     controller: 'TypeaheadCtrl',
@@ -25,7 +32,7 @@ app.controller( 'TypeaheadCtrl', function ( $scope, $http, $state, $rootScope ) 
       }
     };
     return searchQuery ? $http.get( '/api/v1/songs/s', config )
-      .then( response => response.data ) : [];
+      .then( response => response.data ) : new Promise(resolve => resolve([]));
   };
 
   $scope.updateSongs = function ( customSelected ) {

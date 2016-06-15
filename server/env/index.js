@@ -6,13 +6,7 @@ var productionConfigPath = path.join(__dirname, './production.js');
 // var testingConfigPath = path.join(__dirname, './testing.js');
 let appVariables = {};
 
-appVariables = require(productionConfigPath)
-
-// else if (process.env.NODE_ENV === 'testing') {
-//     appVariables = require(testingConfigPath);
-// } else {
-//     appVariables = require(devConfigPath);
-// }
+appVariables = require(productionConfigPath);
 
 console.log('node environment:', process.env.NODE_ENV || 'development');
 

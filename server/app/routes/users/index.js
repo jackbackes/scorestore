@@ -5,11 +5,8 @@ const router = require('express').Router();
 const db = require(path.join(__dirname, '../../../db'));
 const User = db.model('user');
 const Address = db.model('address');
-// const Composer = db.model('composer');
-// const Genre = db.model('genre');
-// const Photo = db.model('photo');
 
-router.get('', function (req, res, next){
+router.get('/', function (req, res, next){
   return User.findAll({
     where: req.query
   })
@@ -107,7 +104,5 @@ router.put('/myAccount/:id', function (req, res, next) {
       });
     });
   });
-
-
 
 module.exports = router;

@@ -20,11 +20,8 @@ app.config(function ($stateProvider) {
     });
 });
 
-<<<<<<< HEAD
 app.controller('oneSongController', function($scope, oneSong, similarSongsByInstrument, OneSongFactory, ComposerFactory, CartFactory, ReviewFactory){
-=======
-app.controller('oneSongController', function($scope, oneSong, $state, similarSongsByInstrument, OneSongFactory, ComposerFactory, CartFactory){
->>>>>>> master
+
     $scope.song = oneSong;
     $scope.similarSongsByInstrument = similarSongsByInstrument;
     $scope.inventory = [];
@@ -52,7 +49,7 @@ app.controller('oneSongController', function($scope, oneSong, $state, similarSon
     .then(function(reviews){
         $scope.reviews = reviews;
         console.log(reviews);
-    })
+    });
 
 });
 
@@ -64,4 +61,3 @@ app.controller('sheetMusicCtrl', function($scope, $stateParams, OneSongFactory){
     });
 
 });
-

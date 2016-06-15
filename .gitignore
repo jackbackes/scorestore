@@ -8,5 +8,4 @@ coverage
 server/env/
 process.json
 ecosystem.json
-
-
+docs

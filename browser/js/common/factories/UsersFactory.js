@@ -34,17 +34,13 @@ app.factory('UsersFactory', function ($http, $q) {
     },
 
     deleteUser: function (id) {
-<<<<<<< HEAD
-      return $http.delete('api/v1/users/' + id);
-    },
-
-    updateUserInfo: function(id, fN, lN, sA, c, s, zC) {
-      return http.put('api/v1/users/myAccount' + id, {firstName:fN, lastName:lN, streetAddress:sA, city:c, state:s, zipCode:zC})
-=======
       return $http.delete('api/v1/users/' + id)
       .then()
       .catch(errorFunc);
->>>>>>> master
+    },
+
+    updateUserInfo: function(id, fN, lN, sA, c, s, zC) {
+      return http.put('api/v1/users/myAccount' + id, {firstName:fN, lastName:lN, streetAddress:sA, city:c, state:s, zipCode:zC});
     }
   };
 });
