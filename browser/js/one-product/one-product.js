@@ -12,9 +12,19 @@ app.config(function ($stateProvider) {
             }
         }
     });
+
+    $stateProvider.state('sheetMusic', {
+        url: '/songs/sheetMusic/:songId',
+        controller: 'sheetMusicCtrl',
+        templateUrl: 'js/one-product/sheet-music.html'
+    });
 });
 
+<<<<<<< HEAD
 app.controller('oneSongController', function($scope, oneSong, similarSongsByInstrument, OneSongFactory, ComposerFactory, CartFactory, ReviewFactory){
+=======
+app.controller('oneSongController', function($scope, oneSong, $state, similarSongsByInstrument, OneSongFactory, ComposerFactory, CartFactory){
+>>>>>>> master
     $scope.song = oneSong;
     $scope.similarSongsByInstrument = similarSongsByInstrument;
     $scope.inventory = [];
@@ -43,6 +53,18 @@ app.controller('oneSongController', function($scope, oneSong, similarSongsByInst
         $scope.reviews = reviews;
         console.log(reviews);
     })
+
+});
+
+app.controller('sheetMusicCtrl', function($scope, $stateParams, OneSongFactory){
+
+    OneSongFactory.fetchSong($stateParams.songId)
+    .then(function(data) {
+        console.log(data)
+        $scope.song = data;
+    })
+
+       
 
 });
 

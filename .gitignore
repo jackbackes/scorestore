@@ -1,7 +1,11 @@
 .idea
 node_modules
+bower_components
 npm-debug.log
 public
 .DS_Store
 coverage
 server/env/development.js
+process.json
+ecosystem.json
+

@@ -8,7 +8,7 @@
             <button ng-click="userLogin=false; signUp=false; guestLogin=!guestLogin" class="button large expanded text-center">Checkout As Guest</button>
         </div>
         <div class="col-xs-12" ng-show="!signUp">
-            <button ng-click="userLogin=false; guestLogin=false; signUp=!signUp" class="button large expanded text-center">SignUp</button>
+            <button ng-click="userLogin=false; guestLogin=false; signUp=!signUp" class="button large expanded text-center" ui-sref="signup({checkingOut: true})">SignUp</button>
         </div>
         <div class="col-xs-12" ng-show="!userLogin">
             <button ng-click="userLogin=!userLogin; signUp=false; guestLogin=false; guestLoginForm.$submitted=false" class="button large expanded text-center">Login to Checkout</button>

@@ -1,17 +1,21 @@
-<form class="admin-edit-form" ng-submit="updateOrCreate(user)">
-  <label ng-hide="newUser">ID</label>
-  <input ng-hide="newUser" type="text" ng-model="user.id" ng-disabled="true">
-  <h3 ng-show="newUser">Create a New User</h3>
-  <label>First Name</label>
-  <input type="text" ng-model="user.firstName" required>
-  <label>Last Name</label>
-  <input type="text" ng-model="user.lastName" required>
-  <label>Email</label>
-  <input required type="text" ng-model="user.email" required>
-  <label>Password</label>
-  <input required type="password" ng-model="user.password" required>
-  <label>Admin</label>
-  <input type="checkbox" ng-model="user.isAdmin">
-  <button type="submit">Save</button>
-  <button ui-sref="adminDash.users">Cancel</button>
-</form>
+<div class="row orderpage-container">
+  <div growl></div>
+  <form class="admin-edit-form" ng-submit="updateOrCreate(user)">
+    <label ng-hide="newUser">ID</label>
+    <input ng-hide="newUser" type="text" ng-model="user.id" ng-disabled="true">
+    <h3 ng-show="newUser">Create a New User</h3>
+    <label>First Name</label>
+    <input type="text" ng-model="user.firstName" required>
+    <label>Last Name</label>
+    <input type="text" ng-model="user.lastName" required>
+    <label>Email</label>
+    <input required type="text" ng-model="user.email" required>
+    <label>Password</label>
+    <input required type="password" ng-model="user.password" required>
+    <label>Admin</label>
+    <input type="checkbox" ng-model="user.isAdmin">
+    <button type="submit" class="btn btn-primary btn-raised">Save</button>
+    <button ui-sref="adminDash.users" class="btn btn-danger btn-raised">Cancel</button>
+  </form>
+</div>
+

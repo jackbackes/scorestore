@@ -1,17 +1,12 @@
 <nav class="navbar navbar-fixed-top">
     <div class="container">
         <div class="navbar-header">
-            <fullstack-logo></fullstack-logo>
+            <scorestore-logo></scorestore-logo>
         </div>
         <ul class="nav navbar-nav">
             <li><a ui-sref-active="active" ui-sref="home">{{ home.label }}</a></li>
             <li>
-                <div class="input-group" id="search-bar">
-                  <input type="text" class="form-control" placeholder="Search for...">
-                  <span class="input-group-btn">
-                    <button class="btn btn-default" type="button">Search</button>
-                  </span>
-                </div><!-- /input-group -->
+                <search-bar></search-bar>
             </li>
         </ul>
         <ul>
@@ -22,13 +17,18 @@
             <div ng-show="!isLoggedIn()" ng-repeat="button in loggedOutButtons">
                 <button ui-sref="{{button.state}}" class="btn login-button">{{button.label}}</button>
             </div>
+<<<<<<< HEAD
             <div ng-show="isLoggedIn()" ng-repeat="button in loggedInButtons">
                 <button ui-sref="{{button.state}}({userId: user.id})" class="btn login-button">{{button.label}}</button>
+=======
+            <div ng-show="isLoggedIn()">
+                <button ng-click="logout()" class="btn login-button">Logout</button>
+                <button ui-sref="myAccount" class="btn login-button">My Account</button>
+>>>>>>> master
             </div>
         </ul>
         <div ng-show="user" class="welcome">
             <span>Welcome, {{ user.email }}!</span>
-            <a ng-click="logout()">Logout</a>
         </div>
     </div>
 </nav>

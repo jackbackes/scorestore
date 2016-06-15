@@ -3,16 +3,20 @@ var router = require('express').Router();
 module.exports = router;
 const db = require( '../../../../../db' );
 const Order = db.model( 'order' );
+<<<<<<< HEAD
 const Song = db.model('song');
 const Address = db.model('address');
 const User = db.model('user');
+=======
+const Auth = require('../../../../configure/auth-middleware.js');
+>>>>>>> master
 
 function getOrders(where){
   let options = where ? {where} : {};
   return Order.findAll(options)
 }
 
-router.get('/', (req, res, next)=>{
+router.get('/', Auth.assertAdmin, (req, res, next)=>{
   let where = req.query || undefined;
   getOrders(where).then( orders => res.status(200).send(orders) )
              .catch(next)
