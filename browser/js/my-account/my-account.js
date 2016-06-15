@@ -7,13 +7,10 @@ app.config(function ($stateProvider) {
 });
 
 app.controller('myAccountCtrl', function ($scope, Session, OrdersFactory, $stateParams, ReviewFactory, UsersFactory) {
-    $scope.userSess = Session
-    console.log(Session);
     let userId = $stateParams.userId
 
     OrdersFactory.getUserOrders(userId)
     .then(function(orders){
-        // console.log(orders);
         $scope.orders = orders;
     })
 
@@ -32,9 +29,7 @@ app.controller('myAccountCtrl', function ($scope, Session, OrdersFactory, $state
     $scope.submitReview = function(stars, review, songId){
         $scope.reviewMade = true;
         ReviewFactory.createReview(stars, review, songId, userId)
-        .then(function(review){
-            console.log(review)
-        })
+        .then(function(review){})
     }
 
     $scope.infoChanged = function(){

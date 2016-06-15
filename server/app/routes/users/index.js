@@ -20,12 +20,7 @@ router.get('', function (req, res, next){
 });
 
 router.param('id', function (req, res, next, id) {
-  return User.findOne({
-    include: [Address],
-    where:{
-      id:id
-    }
-  })
+  return User.findById(id, {include: [Address] } )
   .then(function (user) {
     req.foundUser = user;
     next();
@@ -86,13 +81,7 @@ router.put('/:id', function (req, res, next) {
 });
 
 router.put('/myAccount/:id', function (req, res, next) {
-  User.findOne({
-    where:{
-      id: req.params.id
-    }
-  })
-  .then(function(user){
-    user.update({firstName:req.body.firstName, lastName:req.body.lastName})
+  req.foundUser.update({firstName:req.body.firstName, lastName:req.body.lastName})
     .then(function(updatedUser){
       Address.findOne({
         where:{
@@ -101,10 +90,10 @@ router.put('/myAccount/:id', function (req, res, next) {
       })
       .then(function(addressToUpdate){
         addressToUpdate.update(req.body);
+        res.sendStatus(200);
       });
     });
   });
-});
 
 
 module.exports = router;
