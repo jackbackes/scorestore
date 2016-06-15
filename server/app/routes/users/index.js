@@ -4,9 +4,7 @@ const path = require('path');
 const router = require('express').Router();
 const db = require(path.join(__dirname, '../../../db'));
 const User = db.model('user');
-// const Composer = db.model('composer');
-// const Genre = db.model('genre');
-// const Photo = db.model('photo');
+const Address = db.model('address');
 
 router.get('/', function (req, res, next){
   return User.findAll({
@@ -33,7 +31,7 @@ router.put('/changePassword', function (req, res, next) {
 });
 
 router.param('id', function (req, res, next, id) {
-  return User.findById(id)
+  return User.findById(id, {include: [Address] } )
   .then(function (user) {
     req.foundUser = user;
     next();
@@ -92,5 +90,20 @@ router.put('/:id', function (req, res, next) {
     res.sendStatus(401);
   }
 });
+
+router.put('/myAccount/:id', function (req, res, next) {
+  req.foundUser.update({firstName:req.body.firstName, lastName:req.body.lastName})
+    .then(function(updatedUser){
+      Address.findOne({
+        where:{
+          id: updatedUser.addressId
+        }
+      })
+      .then(function(addressToUpdate){
+        addressToUpdate.update(req.body);
+        res.sendStatus(200);
+      });
+    });
+  });
 
 module.exports = router;

@@ -19,6 +19,8 @@ router.use('/v1/emails', require('./emails'));
 
 
 
+router.use('/v1/reviews', require('./reviews'));
+
 // Make sure this is after all of
 // the registered routes!
 

@@ -37,6 +37,10 @@ app.factory('UsersFactory', function ($http, $q) {
       return $http.delete('api/v1/users/' + id)
       .then()
       .catch(errorFunc);
+    },
+
+    updateUserInfo: function(id, fN, lN, sA, c, s, zC) {
+      return http.put('api/v1/users/myAccount' + id, {firstName:fN, lastName:lN, streetAddress:sA, city:c, state:s, zipCode:zC});
     }
   };
 });

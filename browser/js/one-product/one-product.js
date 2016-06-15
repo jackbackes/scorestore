@@ -20,7 +20,8 @@ app.config(function ($stateProvider) {
     });
 });
 
-app.controller('oneSongController', function($scope, oneSong, $state, similarSongsByInstrument, OneSongFactory, ComposerFactory, CartFactory){
+app.controller('oneSongController', function($scope, oneSong, similarSongsByInstrument, OneSongFactory, ComposerFactory, CartFactory, ReviewFactory){
+
     $scope.song = oneSong;
     $scope.similarSongsByInstrument = similarSongsByInstrument;
     $scope.inventory = [];
@@ -34,7 +35,7 @@ app.controller('oneSongController', function($scope, oneSong, $state, similarSon
 
     ComposerFactory.fetchSimilarComposers(oneSong.composer.id)
         .then(function(similarComposersSongs){
-            $scope.similarSongsByComposer = similarComposersSongs
+            $scope.similarSongsByComposer = similarComposersSongs;
         });
 
     $scope.addToCart = function(song, quantity) {
@@ -44,15 +45,20 @@ app.controller('oneSongController', function($scope, oneSong, $state, similarSon
         });
     };
 
+    ReviewFactory.getReviewBySong(oneSong.id)
+    .then(function(reviews){
+        $scope.reviews = reviews;
+        console.log(reviews);
+    });
+
 });
 
 app.controller('sheetMusicCtrl', function($scope, $stateParams, OneSongFactory){
 
     OneSongFactory.fetchSong($stateParams.songId)
     .then(function(data) {
-        console.log(data)
         $scope.song = data;
-    })
+    });
 
        
 
