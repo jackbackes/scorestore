@@ -38,7 +38,7 @@ app.controller('oneSongController', function($scope, oneSong, $state, similarSon
 
     ComposerFactory.fetchSimilarComposers(oneSong.composer.id)
         .then(function(similarComposersSongs){
-            $scope.similarSongsByComposer = similarComposersSongs
+            $scope.similarSongsByComposer = similarComposersSongs;
         });
 
     $scope.addToCart = function(song, quantity) {
@@ -60,11 +60,8 @@ app.controller('sheetMusicCtrl', function($scope, $stateParams, OneSongFactory){
 
     OneSongFactory.fetchSong($stateParams.songId)
     .then(function(data) {
-        console.log(data)
         $scope.song = data;
-    })
-
-       
+    });
 
 });
 

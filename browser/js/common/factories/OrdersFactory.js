@@ -31,7 +31,6 @@ app.factory('OrdersFactory', function ($http, $q, EmailFactory) {
     submitPayment: function(response, total) {
       return $http.post('/api/v1/order', {response: response, total: total})
       .then(function (res) {
-        console.log(res.data);
         EmailFactory.sendConfirmation(res.data.confirmationNumber);
       })
       .catch(function () {

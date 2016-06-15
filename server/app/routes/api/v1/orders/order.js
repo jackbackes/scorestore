@@ -174,5 +174,5 @@ router.use( function ( error, req, res, next ) {
 } );
 
 function _error( message='not found', data={}, status=404 ) {
-  return {message, data, status}
+  return {message, data, status};
 }
