@@ -5,20 +5,20 @@ app.config(function ($stateProvider) {
         controller: 'homeCtrl',
         resolve:{
         	allSongs:function(SongsFactory){
-        		return SongsFactory.getSongs()
+        		return SongsFactory.getSongs();
         	}
         }
     });
 });
 
 app.controller('homeCtrl', function ($scope, allSongs, CartFactory) {
-  $scope.songs = allSongs
+  $scope.songs = allSongs;
 
   $scope.addToCart = function(song) {
         CartFactory.addToCart(song, 1)
-        .then(function(response) {
-            $scope.cart = response;
-        });
+        // .then(function(response) {
+        //     $scope.cart = response;
+        // });
     };
 
 });

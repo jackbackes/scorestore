@@ -40,9 +40,9 @@ app.controller('oneSongController', function($scope, oneSong, similarSongsByInst
 
     $scope.addToCart = function(song, quantity) {
         CartFactory.addToCart(song, quantity)
-        .then(function(response) {
-            $scope.cart = response;
-        });
+        // .then(function(response) {
+        //     $scope.cart = response;
+        // });
     };
 
     ReviewFactory.getReviewBySong(oneSong.id)

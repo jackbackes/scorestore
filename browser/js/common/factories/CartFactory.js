@@ -72,7 +72,8 @@ app.factory('CartFactory', function($http, $q){
 		getAddress: function() {
 			return $http.get('/api/v1/cart/address')
 			.then(function(response) {
-				return response.data;
+				angular.copy(response.data, cachedAddress);
+				return cachedAddress;
 			});
 		},
 

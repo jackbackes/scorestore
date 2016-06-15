@@ -9,8 +9,8 @@
 				<p>{{ song.description }}</p>
 				<div class="row">
 					<div class="medium-6 large-6 columns">	
-						<p>Composer: <a ui-sref="oneComposser({composerId: song.composer.id})">{{ song.composer.fullName }}</a></p>
-						<p>Genre: <a ui-sref="Genre({genreId: song.genre.id})"> {{ song.genre.genreName }}</a></p>
+						<p>Composer: {{ song.composer.fullName }}</p>
+						<p>Genre: {{ song.genre.genreName }}</p>
 						<p>Year: {{ song.yearComposed }}</p>
 						<p>Instruments: {{ song.instrumentTags.join(', ') }}</p>
 						<p>Price: ${{ song.price }}</p>
