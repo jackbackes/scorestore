@@ -60,7 +60,4 @@ app.controller('sheetMusicCtrl', function($scope, $stateParams, OneSongFactory){
         $scope.song = data;
     });
 
-       
-
 });
-

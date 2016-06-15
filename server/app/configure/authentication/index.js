@@ -63,7 +63,6 @@ module.exports = function (app, db) {
     });
 
     // app.get('/guestsession', function (req, res) {
-    //     console.log("Req", req.session)
     //     if (req.session.guest) {
     //         res.send({ user: req.session.guest, id: req.sessionID });
     //     } else {
