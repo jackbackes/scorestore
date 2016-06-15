@@ -8,17 +8,16 @@ const Address = db.model('address');
 const User = db.model('user');
 const Auth = require('../../../../configure/auth-middleware.js');
 
-
 function getOrders(where){
   let options = where ? {where} : {};
-  return Order.findAll(options)
+  return Order.findAll(where);
 }
 
 router.get('/', Auth.assertAdmin, (req, res, next)=>{
   let where = req.query || undefined;
   getOrders(where).then( orders => res.status(200).send(orders) )
-             .catch(next)
-})
+             .catch(next);
+});
 
 router.get('/userOrders/:id', function(req, res, next){
 	Order.findAll({
@@ -29,5 +28,5 @@ router.get('/userOrders/:id', function(req, res, next){
 	})
 	.then(function(orders){
 		res.send(orders);
-	})
-})
+	});
+});

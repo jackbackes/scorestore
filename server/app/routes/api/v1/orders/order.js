@@ -81,8 +81,8 @@ router.post('/', function (req, res, next) {
         });
       })
       .then(function() {
-        // delete req.session.cart;
-        // delete req.session.shippingAddress;
+        delete req.session.cart;
+        delete req.session.shippingAddress;
         res.status(200).send(res.order);
       })
       .catch(next);    
@@ -174,5 +174,5 @@ router.use( function ( error, req, res, next ) {
 } );
 
 function _error( message='not found', data={}, status=404 ) {
-  return {message, data, status}
+  return {message, data, status};
 }

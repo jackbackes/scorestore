@@ -7,36 +7,36 @@ app.config(function ($stateProvider) {
 });
 
 app.controller('myAccountCtrl', function ($scope, Session, OrdersFactory, $stateParams, ReviewFactory, UsersFactory) {
-    let userId = $stateParams.userId
+    let userId = $stateParams.userId;
 
     OrdersFactory.getUserOrders(userId)
     .then(function(orders){
         $scope.orders = orders;
-    })
+    });
 
     ReviewFactory.getUserReviews(userId)
     .then(function(reviews){
         $scope.userReviews = reviews;
-    })
+    });
 
     UsersFactory.fetchUser(userId)
     .then(function(user){
         $scope.userWithAddress = user;
-    })
+    });
 
     $scope.reviewing = false;
 
     $scope.submitReview = function(stars, review, songId){
         $scope.reviewMade = true;
         ReviewFactory.createReview(stars, review, songId, userId)
-        .then(function(review){})
-    }
+        .then(function(review){});
+    };
 
     $scope.infoChanged = function(){
         UsersFactory.updateUserInfo(userId, $scope.firstName, $scope.lastName, $scope.streetAddress, $scope.city, $scope.state, $scope.zipCode)
         .then(function(updatedUser){
             $scope.userWithAddress = updatedUser;
         });
-    }
+    };
 
 });

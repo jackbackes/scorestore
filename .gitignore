@@ -5,7 +5,7 @@ npm-debug.log
 public
 .DS_Store
 coverage
-server/env/development.js
+server/env/
 process.json
 ecosystem.json
-
+docs

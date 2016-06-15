@@ -6,11 +6,6 @@ app.directive('navbar', function ($rootScope, AuthService, AUTH_EVENTS, $state) 
         templateUrl: 'js/common/directives/navbar/navbar.html',
         link: function (scope) {
 
-            scope.loggedInButtons = [
-                 {label: 'Logout', state: 'logout', auth: true },
-                 { label: 'My Account', state: 'myAccount', auth: true }
-            ];
-
             scope.loggedOutButtons = [
                  {label: 'Login', state: 'login', auth: false},
                  {label: 'Sign Up', state: 'signup', auth: false}
@@ -38,7 +33,6 @@ app.directive('navbar', function ($rootScope, AuthService, AUTH_EVENTS, $state) 
             };
 
             // var setGuest = function () {
-            //     console.log('Here Guest');
             //     AuthService.getGuest().then(function (guest) {
             //         scope.guest = guest;
             //     })

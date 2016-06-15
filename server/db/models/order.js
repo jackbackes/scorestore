@@ -39,7 +39,6 @@ module.exports = function (db) {
             length: 10,
             capitalization: 'uppercase'
           });
-          // console.log(thisOrder);
           this.setDataValue('confirmationNumber', confNumber);
           return this.save();
         }

@@ -1,8 +1,15 @@
+
+/**
+ * The search-bar directive can be placed on any page or in the navbar, and searches songs for similar titles.
+ * Controller: Typeahead Controller
+ * Templates: [directive definition, typeahead-template.html]
+ * @module angular ui-bootstrap
+ */
 app.directive( 'searchBar', function ( $rootScope, AuthService, AUTH_EVENTS, $state ) {
   return {
     controller: 'TypeaheadCtrl',
     template: searchBarTemplate
-  }
+  };
 } );
 
 app.controller( 'TypeaheadCtrl', function ( $scope, $http, $state, $rootScope ) {
@@ -15,7 +22,6 @@ app.controller( 'TypeaheadCtrl', function ( $scope, $http, $state, $rootScope ) 
  * @return {Object[]}             [an array of song objects]
  */
   $scope.getSongs = function ( searchQuery ) {
-    console.log( searchQuery );
     let config = {
       params: {
         where: {
@@ -24,15 +30,15 @@ app.controller( 'TypeaheadCtrl', function ( $scope, $http, $state, $rootScope ) 
           }
         }
       }
-    }
+    };
     return searchQuery ? $http.get( '/api/v1/songs/s', config )
-      .then( response => response.data ) : [];
+      .then( response => response.data ) : new Promise(resolve => resolve([]));
   };
 
   $scope.updateSongs = function ( customSelected ) {
     $scope.getSongs( customSelected )
       .then( songs => $scope.songs = songs );
-  }
+  };
 
   $scope.ngModelOptionsSelected = function ( value ) {
     if ( arguments.length ) {
@@ -51,11 +57,10 @@ app.controller( 'TypeaheadCtrl', function ( $scope, $http, $state, $rootScope ) 
   };
 
   $scope.selectOption = function ( item, model, label ) {
-    console.log( 'selected', item, model, label )
     $state.go( 'oneSong', {
       songId: item.id
-    } )
-  }
+    } );
+  };
 } );
 
 let searchBarTemplate = `
@@ -73,4 +78,4 @@ let searchBarTemplate = `
             <span class="input-group-btn">
             </span>
         </div>
-`
+`;

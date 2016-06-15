@@ -5,11 +5,8 @@ const router = require('express').Router();
 const db = require(path.join(__dirname, '../../../db'));
 const User = db.model('user');
 const Address = db.model('address');
-// const Composer = db.model('composer');
-// const Genre = db.model('genre');
-// const Photo = db.model('photo');
 
-router.get('', function (req, res, next){
+router.get('/', function (req, res, next){
   return User.findAll({
     where: req.query
   })
@@ -22,9 +19,8 @@ router.get('', function (req, res, next){
 router.put('/changePassword', function (req, res, next) {
   if (req.user) {
     req.body.resetPassword = false;
-    req.user.update(req.body, {beforeUpdate: false})
+    req.user.update(req.body)
     .then(function () {
-      console.log(req.user);
       res.sendStatus(200);
     })
     .catch(next);
@@ -108,7 +104,5 @@ router.put('/myAccount/:id', function (req, res, next) {
       });
     });
   });
-
-
 
 module.exports = router;

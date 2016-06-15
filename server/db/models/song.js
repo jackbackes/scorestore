@@ -3,8 +3,6 @@
 
 var Sequelize = require('sequelize');
 var database = require('../_db');
-var Genre = database.model('genre');
-var Photo = database.model('photo');
 //defaultScope include order? photo?
 
 module.exports = function (db) {
@@ -62,7 +60,7 @@ module.exports = function (db) {
         instanceMethods: {
           findSimilarByInstruments: function () {
             return this.Model.findAll({
-              include: [Photo],
+              include: [db.model('photo')],
               where: {
                 id: {
                   $ne: this.id
@@ -96,7 +94,7 @@ module.exports = function (db) {
           },
           findByGenre: function (genre) {
             return this.findAll({
-              include: [Genre],
+              include: [db.model('genre')],
               where: {
                 genreName: genre
               }

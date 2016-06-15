@@ -18,7 +18,7 @@ app.factory('UsersFactory', function ($http, $q) {
     fetchUser: function(id){
       return $http.get('/api/v1/users/' + id)
       .then(function(user){
-        angular.copy(user.data,cachedUser)
+        angular.copy(user.data,cachedUser);
         return cachedUser;
       })
       .catch(errorFunc);
@@ -45,7 +45,7 @@ app.factory('UsersFactory', function ($http, $q) {
       .then(function(data){
         angular.copy(data.data, cachedUser);
         return cachedUser;
-      })
+      });
     }
 
   };
