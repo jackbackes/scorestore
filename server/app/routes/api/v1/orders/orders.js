@@ -3,13 +3,11 @@ var router = require('express').Router();
 module.exports = router;
 const db = require( '../../../../../db' );
 const Order = db.model( 'order' );
-<<<<<<< HEAD
 const Song = db.model('song');
 const Address = db.model('address');
 const User = db.model('user');
-=======
 const Auth = require('../../../../configure/auth-middleware.js');
->>>>>>> master
+
 
 function getOrders(where){
   let options = where ? {where} : {};

@@ -104,7 +104,7 @@ router.put('/myAccount/:id', function (req, res, next) {
       })
       .then(function(addressToUpdate){
         addressToUpdate.update(req.body);
-        res.sendStatus(200);
+        res.send(req.body);
       });
     });
   });

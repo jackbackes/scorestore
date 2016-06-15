@@ -34,7 +34,9 @@ app.controller('myAccountCtrl', function ($scope, Session, OrdersFactory, $state
 
     $scope.infoChanged = function(){
         UsersFactory.updateUserInfo(userId, $scope.firstName, $scope.lastName, $scope.streetAddress, $scope.city, $scope.state, $scope.zipCode)
-        .then(function(updatedUser){});
+        .then(function(updatedUser){
+            $scope.userWithAddress = updatedUser;
+        });
     }
 
 });

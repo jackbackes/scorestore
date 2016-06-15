@@ -1,4 +1,6 @@
 app.factory('UsersFactory', function ($http, $q) {
+
+  var cachedUser = [];
   
   var errorFunc = function(error) {
       return $q.reject(error.statusText);
@@ -16,7 +18,8 @@ app.factory('UsersFactory', function ($http, $q) {
     fetchUser: function(id){
       return $http.get('/api/v1/users/' + id)
       .then(function(user){
-        return user.data;
+        angular.copy(user.data,cachedUser)
+        return cachedUser;
       })
       .catch(errorFunc);
     },
@@ -34,17 +37,16 @@ app.factory('UsersFactory', function ($http, $q) {
     },
 
     deleteUser: function (id) {
-<<<<<<< HEAD
       return $http.delete('api/v1/users/' + id);
     },
 
     updateUserInfo: function(id, fN, lN, sA, c, s, zC) {
-      return http.put('api/v1/users/myAccount' + id, {firstName:fN, lastName:lN, streetAddress:sA, city:c, state:s, zipCode:zC})
-=======
-      return $http.delete('api/v1/users/' + id)
-      .then()
-      .catch(errorFunc);
->>>>>>> master
+      return $http.put('api/v1/users/myAccount/' + id, {firstName:fN, lastName:lN, address:sA, city:c, state:s, zipCode:zC})
+      .then(function(data){
+        angular.copy(data.data, cachedUser);
+        return cachedUser;
+      })
     }
+
   };
 });
