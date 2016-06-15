@@ -19,7 +19,7 @@
             </div>
             <div ng-show="isLoggedIn()">
                 <button ng-click="logout()" class="btn login-button">Logout</button>
-                <button ui-sref="myAccount" class="btn login-button">My Account</button>
+                <button ui-sref="myAccount({userId: user.id})" class="btn login-button">My Account</button>
             </div>
         </ul>
         <div ng-show="user" class="welcome">

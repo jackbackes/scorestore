@@ -12,10 +12,10 @@
 				<div class="row">
 					<div ng-hide="notEditing" class="well col-xs-6">
 						<h5>{{ userWithAddress.fullName }}</h5>
-						<p>Street Address: {{ userWithAddress.streetAddress }}</p>
-						<p>City: {{ userWithAddress.city }}</p>
-						<p>State: {{ userWithAddress.state }}</p>
-						<p>Zip Code: {{ userWithAddress.zipCode }}</p>
+						<p>Street Address: {{ userWithAddress.address.address }}</p>
+						<p>City: {{ userWithAddress.address.city }}</p>
+						<p>State: {{ userWithAddress.address.state }}</p>
+						<p>Zip Code: {{ userWithAddress.address.zipCode }}</p>
 						<a ng-click="notEditing = !notEditing">Edit Address</a>
 					</div>	
 					<div ng-hide="!notEditing" class="medium-6 large-12 columns">	
