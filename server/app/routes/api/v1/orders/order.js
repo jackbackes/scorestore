@@ -81,8 +81,8 @@ router.post('/', function (req, res, next) {
         });
       })
       .then(function() {
-        // delete req.session.cart;
-        // delete req.session.shippingAddress;
+        delete req.session.cart;
+        delete req.session.shippingAddress;
         res.status(200).send(res.order);
       })
       .catch(next);    
